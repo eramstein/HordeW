@@ -9,12 +9,13 @@ export function initBattleState() : BattleState {
     ];
     const initUnits : Unit[] = [];
     for (let i = 0; i < 3; i++) {
-        const unit = makeUnit("bears", "La Horde", { x: i, y: i });
+        const unit = makeUnit("bears", 0, { x: i, y: i });        
         initUnits.push(unit);
     }    
     return {
         tiles: <Tile[][]>MAP_BROCELIANDE,
         factions: initFactions,
         units: initUnits,
+        currentFaction: 0,
     };
 }

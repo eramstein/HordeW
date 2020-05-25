@@ -14,6 +14,12 @@ export interface UI {
     openScreen: Screen;
     screenParameters: any;
     tools: Tools;
+    selected: {
+        unit?: number,
+    };
+    highlighted: {
+        tiles?: {},
+    };
 }
 
 export interface Tools {

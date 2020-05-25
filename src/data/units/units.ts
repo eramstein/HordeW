@@ -2,6 +2,7 @@ import { Unit, UnitType, UnitCategory } from "../../engine/battle/model";
 
 export const UNITS : { [key : string] : Unit } = {
     "bears": {
+        id: "bears",
         name: "Bears",
         category: UnitCategory.Beast,
         hpMax: 12,

@@ -2,7 +2,7 @@ import { get, writable } from "svelte/store";
 import { GameState, initGameState } from "./engine/game";
 import { handleKeyPress } from "./keybinds";
 import { Screen, FullState } from "./ui/model";
-import { onClickTile } from "./ui/game/battle/map";
+import { onClickTile, onClickUnit } from "./ui/game/battle/map";
 
 export const State = createFullState();
 
@@ -22,7 +22,7 @@ function createFullState() {
         setTools: (tools) => update(s => { s.ui.tools = { ...s.ui.tools, ...tools }; return s; }),
 
         onClickTile: (x, y) => update(s => { onClickTile(s, x, y); return s; }),
-        
+        onClickUnit: (index) => update(s => { onClickUnit(s, index); return s; }),
     };
 }
 
@@ -35,7 +35,9 @@ function getNewState(): FullState {
             tools: {
                 terrainEditor: true,
                 terrainType: null,
-            }
+            },
+            selected: {},
+            highlighted: {},
         },
     };
 }

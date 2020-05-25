@@ -1,13 +1,11 @@
 <script>
     import { State } from '../../../stores';
+    import { TILE_WIDTH, TILE_HEIGHT, getTilePixelPos } from './map';
     
     export let data;
     export let x;
     export let y;
-
-    const PADDING = 20;
-    const TILE_HEIGHT = 75;
-    const TILE_WIDTH = Math.sqrt(3)/2 * TILE_HEIGHT;
+    export let highlighted;
 
     const hexPolygonPoints =
         (TILE_WIDTH * 0.5) + ',0 ' +
@@ -17,9 +15,8 @@
         '0,' + (TILE_HEIGHT * 0.75) + ' ' +
         '0,' + (TILE_HEIGHT * 0.25);
 
-    let tx = (x + Math.ceil(y%2)/2) * TILE_WIDTH + PADDING;
-    let ty = y * (TILE_HEIGHT * 0.75) + PADDING;
-    let translate = "translate(" + tx + "," + ty + ")";    
+    const { tx, ty } = getTilePixelPos(x, y);
+    let translate = "translate(" + tx + "," + ty + ")";
 
 </script>
 
@@ -37,7 +34,10 @@
 </style>
 
 <g transform={translate} on:click={() => State.onClickTile(x, y)}>
-    <polygon class="hex" points={hexPolygonPoints} fill="url(#{data.terrain})"></polygon>
+    <polygon class="hex"
+        points={hexPolygonPoints}
+        fill="url(#{data.terrain})"
+        filter={highlighted ? "url('#highlightStroke')" : null }></polygon>
     <text
         x={15}
         y={TILE_HEIGHT/2 + 5}>

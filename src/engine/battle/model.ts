@@ -2,6 +2,7 @@ export interface BattleState {
     tiles: Tile[][],
     factions: Faction[],
     units: Unit[],
+    currentFaction: number,
 }
 
 export interface Tile {
@@ -46,12 +47,14 @@ export enum UnitType {
 
 export interface Unit {
     // state
-    owner?: string,
+    owner?: number,
     destroyed?: boolean,
     hp?: number,
     morale?: number,
     position?: Pos,
+    used?: boolean,
     // template
+    id: string,
     name: string,
     category: UnitCategory,
     type?: UnitType,
