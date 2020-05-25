@@ -14,5 +14,19 @@ export const UNITS : { [key : string] : Unit } = {
         armor: 2,    
         abilities: [],
         movement: 3,
+    },
+    "goblins": {
+        id: "goblins",
+        name: "Goblins",
+        category: UnitCategory.Humanoid,
+        hpMax: 12,
+        moraleInit: 6,    
+        meleeAttack: 2,
+        meleeDefense: 4,
+        rangeDefense: 0,
+        meleeDamage: { min: 4, max: 6 },
+        armor: 2,    
+        abilities: [],
+        movement: 3,
     }
 }

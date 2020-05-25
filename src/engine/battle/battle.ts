@@ -9,13 +9,18 @@ export function initBattleState() : BattleState {
     ];
     const initUnits : Unit[] = [];
     for (let i = 0; i < 3; i++) {
-        const unit = makeUnit("bears", 0, { x: i, y: i });        
+        const unit = makeUnit("bears", 0, { x: 5 + i, y: 10 - i });        
         initUnits.push(unit);
-    }    
+    }
+    for (let i = 0; i < 4; i++) {
+        const unit = makeUnit("goblins", 0, { x: 5 + i, y: i });        
+        initUnits.push(unit);
+    }
     return {
         tiles: <Tile[][]>MAP_BROCELIANDE,
         factions: initFactions,
         units: initUnits,
         currentFaction: 0,
+        round: 1,
     };
 }

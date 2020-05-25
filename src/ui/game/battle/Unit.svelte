@@ -24,6 +24,10 @@
     .unit {
         transition: all .4s ease;
     }
+    .unit-info {
+        font-size: 12px;
+        font-weight: bold;
+    }
 </style>
 
 <g class="unit" transform={translate} on:click={() => State.onClickUnit(index)}>
@@ -31,5 +35,15 @@
     <circle r={ r - 5 } fill="url(#{unit.id}) white">
         { unit.name }
     </circle>
+    {#if unit.movesCount > 0 && unit.attacksCount === 0}        
+        <text class="unit-info" x={13} y={5}>
+            M
+        </text>
+    {/if}
+    {#if unit.attacksCount > 0 && unit.movesCount === 0}        
+        <text class="unit-info" x={13} y={5}>
+            A
+        </text>
+    {/if}
 </g>
 

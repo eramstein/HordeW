@@ -2,6 +2,7 @@ import { UNITS } from "../../data/units/units"
 import { Pos, Unit } from "./model";
 import { GameState } from "../game";
 import { getAdjacentPositions, TERRAIN_SPECS } from "./board";
+import { nextTurn } from "./turn";
 
 export function makeUnit(template : string, faction : number, pos : Pos) : Unit {
     const unit = { ...UNITS[template] };
@@ -10,11 +11,19 @@ export function makeUnit(template : string, faction : number, pos : Pos) : Unit 
     unit.hp = unit.hpMax;
     unit.morale = unit.moraleInit;
     unit.used = false;
+    unit.movesCount = 0;
+    unit.attacksCount = 0;
     return unit;
 }
 
 export function moveUnit(gs : GameState, unit : Unit, pos : Pos) {    
     unit.position = pos;
+    unit.movesCount++;
+    nextTurn(gs);
+}
+
+export function canUnitMove(gs : GameState, unit : Unit) : boolean {    
+    return unit.movesCount === 0;
 }
 
 export function getReachablePositions(gs : GameState, unit : Unit) : Pos[] {

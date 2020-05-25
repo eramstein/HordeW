@@ -16,7 +16,7 @@
 
 <style>
     .map-editor {
-        margin-left: 20px;
+        margin: 20px;
     }
     .terrain-type {
         border: #ccc solid 1px;

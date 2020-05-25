@@ -3,6 +3,7 @@ export interface BattleState {
     factions: Faction[],
     units: Unit[],
     currentFaction: number,
+    round: number,
 }
 
 export interface Tile {
@@ -33,6 +34,7 @@ export interface TerrainSpecs {
 export enum UnitCategory {
     Human = "HUMAN",
     Beast = "BEAST",
+    Humanoid = "HUMANOID",
 }
 
 export enum UnitType {
@@ -53,6 +55,8 @@ export interface Unit {
     morale?: number,
     position?: Pos,
     used?: boolean,
+    movesCount?: number,
+    attacksCount?: number,
     // template
     id: string,
     name: string,

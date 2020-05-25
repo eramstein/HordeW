@@ -16,14 +16,18 @@
         width: 100%;
         display: flex;
     }
-    .map-editor {
+    .sidebar {
+        padding: 10px 20px;
     }
 </style>
 
 <div class="battle">
     <Map />
-    {#if terrainEditor}
-        <MapEditor />
-    {/if}    
+    <div class="sidebar">
+        <div>Round {battle.round}</div>
+        {#if terrainEditor}
+            <MapEditor />
+        {/if}
+    </div>        
 </div>
 

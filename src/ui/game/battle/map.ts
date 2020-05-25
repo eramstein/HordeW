@@ -1,7 +1,7 @@
 import { FullState } from "../../model";
 import { TerrainType } from "../../../engine/battle/model";
 import { updateTile } from "../../../engine/battle/board";
-import { moveUnit, getReachablePositions } from "../../../engine/battle/unit";
+import { moveUnit, getReachablePositions, canUnitMove } from "../../../engine/battle/unit";
 
 export const PADDING = 20;
 export const TILE_HEIGHT = 75;
@@ -14,7 +14,7 @@ export function onClickTile(state : FullState, x, y) {
         updateTile(state.game, x, y, { ...oldTile, terrain: TerrainType[state.ui.tools.terrainType] });
     }
     // UNIT MOVE
-    if (state.ui.selected.unit !== null) {
+    if (state.ui.selected.unit !== null && canUnitMove(state.game, state.game.battle.units[state.ui.selected.unit])) {
         moveUnit(state.game, state.game.battle.units[state.ui.selected.unit], { x, y });
         unselect(state);
     }
@@ -32,10 +32,13 @@ export function onClickUnit(state : FullState, unitIndex : number) {
         state.ui.selected.unit = null;
     } else {
         state.ui.selected.unit = unitIndex;
-        const reachableTiles = getReachablePositions(state.game, state.game.battle.units[unitIndex]);        
-        reachableTiles.forEach(t => {
-            state.ui.highlighted.tiles[t.x + "." + t.y] = true;
-        });        
+        const unit = state.game.battle.units[unitIndex];
+        if (canUnitMove(state.game, unit)) {
+            const reachableTiles = getReachablePositions(state.game, state.game.battle.units[unitIndex]);        
+            reachableTiles.forEach(t => {
+                state.ui.highlighted.tiles[t.x + "." + t.y] = true;
+            });
+        }                
     }    
 }
 
