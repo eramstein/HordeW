@@ -26,6 +26,10 @@ export function canUnitMove(gs : GameState, unit : Unit) : boolean {
     return unit.movesCount === 0;
 }
 
+export function canUnitAttack(gs : GameState, unit : Unit) : boolean {    
+    return unit.attacksCount === 0;
+}
+
 export function getReachablePositions(gs : GameState, unit : Unit) : Pos[] {
     if (unit.used) {
         return [];
@@ -58,8 +62,8 @@ export function getReachablePositions(gs : GameState, unit : Unit) : Pos[] {
                 const bestVisitBefore = visited[p.x + "." + p.y] === undefined ? -1 : visited[p.x + "." + p.y];
                 if (!terrain.blocksMovement &&
                     movesLeft >= terrain.movementCost &&
-                    // at the moment ennemies fully block and allies fully let through
-                    (!occupied[p.x + "." + p.y] || occupied[p.x + "." + p.y] === unit.owner) &&
+                    // all units, ennemies or allies, block (to change, check if occupied === unit.owner)
+                    occupied[p.x + "." + p.y] === undefined &&
                     movesLeftAfter > bestVisitBefore) {
                     visit(p, movesLeftAfter);
                 }

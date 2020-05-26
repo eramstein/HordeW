@@ -13,7 +13,7 @@ export function initBattleState() : BattleState {
         initUnits.push(unit);
     }
     for (let i = 0; i < 4; i++) {
-        const unit = makeUnit("goblins", 0, { x: 5 + i, y: i });        
+        const unit = makeUnit("goblins", 1, { x: 5 + i, y: i });        
         initUnits.push(unit);
     }
     return {
@@ -22,5 +22,6 @@ export function initBattleState() : BattleState {
         units: initUnits,
         currentFaction: 0,
         round: 1,
+        aiLog: [],
     };
 }

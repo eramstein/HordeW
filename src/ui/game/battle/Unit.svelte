@@ -30,7 +30,11 @@
     }
 </style>
 
-<g class="unit" transform={translate} on:click={() => State.onClickUnit(index)}>
+<g class="unit"
+    transform={translate}
+    style="transition-delay:{ unit.owner === 0 ? '0s' : '0.5s'}"
+    on:click={() => State.onClickUnit(index)}
+>
     <circle r={ r } fill="white" stroke={selected ? "red" : "black"} stroke-width={selected ? "2" : "0.5"} />
     <circle r={ r - 5 } fill="url(#{unit.id}) white">
         { unit.name }

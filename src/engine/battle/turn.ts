@@ -1,21 +1,31 @@
 import { GameState } from "../game";
 import { playAiTurn } from "./ai/ai";
-import { canUnitMove } from "./unit";
+import { canUnitMove, canUnitAttack } from "./unit";
+import { Unit } from "./model";
 
-export function nextTurn(gs : GameState) {
+export function nextTurn(gs : GameState) {    
+
     gs.battle.currentFaction = (gs.battle.currentFaction + 1) % gs.battle.factions.length;
-    if (!gs.battle.factions[gs.battle.currentFaction].isPlayer) {
+
+    const isPlayer = gs.battle.factions[gs.battle.currentFaction].isPlayer;
+
+    if (allDone(gs)) {
+        console.log("All done, next round");
+        nextRound(gs);
+        return;
+    }
+
+    if (factionDone(gs, gs.battle.currentFaction) && !isPlayer) {        
+        console.log("Faction done, next turn", gs.battle.currentFaction);
+        nextTurn(gs);
+        return;
+    }
+
+    if (!isPlayer) {
+        console.log("AI turn");
         playAiTurn(gs);
-        if (allDone(gs)) {
-            nextRound(gs);
-        } else {
-            nextTurn(gs);
-        }        
-    } else {
-        if (allDone(gs)) {
-            nextRound(gs);
-        }
     }    
+    
 }
 
 export function nextRound(gs : GameState) {
@@ -27,7 +37,16 @@ export function nextRound(gs : GameState) {
 }
 
 export function allDone(gs : GameState) : boolean {
-    return !gs.battle.units.some(u => {
-        return canUnitMove(gs, u);
+    return unitsDone(gs, gs.battle.units);
+}
+
+export function factionDone(gs : GameState, faction : number) : boolean {    
+    return unitsDone(gs, gs.battle.units.filter(u => u.owner === faction));
+}
+
+export function unitsDone(gs : GameState, units : Unit[]) : boolean {
+    return !units.some(u => {
+        return (canUnitMove(gs, u));
+        //return (canUnitMove(gs, u) || canUnitAttack(gs, u));
     });
 }

@@ -4,6 +4,7 @@ export interface BattleState {
     units: Unit[],
     currentFaction: number,
     round: number,
+    aiLog: AiLog[];
 }
 
 export interface Tile {
@@ -89,4 +90,15 @@ export interface Ability {
 export interface Faction {
     isPlayer: boolean,
     name: string,
+}
+
+export enum AiLogType {
+    Attack = "ATTACK",
+    Move = "MOVE",
+}
+
+export interface AiLog {
+    type: AiLogType,
+    entity: any,
+    target: any,
 }

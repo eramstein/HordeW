@@ -1,7 +1,8 @@
 import { FullState } from "../../model";
 import { TerrainType } from "../../../engine/battle/model";
 import { updateTile } from "../../../engine/battle/board";
-import { moveUnit, getReachablePositions, canUnitMove } from "../../../engine/battle/unit";
+import { getReachablePositions, canUnitMove } from "../../../engine/battle/unit";
+import { sendAction, ActionType } from "./actions";
 
 export const PADDING = 20;
 export const TILE_HEIGHT = 75;
@@ -15,7 +16,10 @@ export function onClickTile(state : FullState, x, y) {
     }
     // UNIT MOVE
     if (state.ui.selected.unit !== null && canUnitMove(state.game, state.game.battle.units[state.ui.selected.unit])) {
-        moveUnit(state.game, state.game.battle.units[state.ui.selected.unit], { x, y });
+        sendAction(state.game, ActionType.Move, { 
+            unit: state.game.battle.units[state.ui.selected.unit], 
+            pos: { x, y }
+        });
         unselect(state);
     }
 }

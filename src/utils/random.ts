@@ -6,7 +6,7 @@ export function shuffle(a : Array<any>) : Array<any> {
     return a;
 }
 
-export function pickFrom(a : Array<any>, count : number) : Array<any> {
+export function pickFrom<T>(a : Array<T>, count : number) : Array<T> {
     const shuffled = shuffle(a);
     return shuffled.slice(0, count);
 }

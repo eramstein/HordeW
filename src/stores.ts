@@ -3,6 +3,7 @@ import { GameState, initGameState } from "./engine/game";
 import { handleKeyPress } from "./keybinds";
 import { Screen, FullState } from "./ui/model";
 import { onClickTile, onClickUnit } from "./ui/game/battle/map";
+import { nextTurn } from "./engine/battle/turn";
 
 export const State = createFullState();
 
@@ -23,6 +24,8 @@ function createFullState() {
 
         onClickTile: (x, y) => update(s => { onClickTile(s, x, y); return s; }),
         onClickUnit: (index) => update(s => { onClickUnit(s, index); return s; }),
+
+        passTurn: () => update(s => { nextTurn(s.game); return s; }),
     };
 }
 
