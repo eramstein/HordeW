@@ -65,3 +65,22 @@ export function getAdjacentPositions(pos : Pos) : Pos[] {
     }
     return positions;
 }
+
+export function getDistance(pos1 : Pos, pos2 : Pos) : number {
+    let x1 = pos1.x;
+    let x2 = pos2.x;
+    let y1 = pos1.y;
+    let y2 = pos2.y;
+    // un-apply the "visual shift" we do on the map to make it squarish (e.g. 1.2 is actually 0.2)
+    x1 -= Math.floor(y1/2);
+    x2 -= Math.floor(y2/2);
+    // distance calc : if x and y change in the same direction, add up distances on each dimension
+    // else, the max projected distance on either dimension is the distance (the other dim is irrelevant, doesn't add to the dist)
+    const xDiff = x1 - x2;
+    const yDiff = y1 - y2;
+    if (xDiff >= 0 && yDiff >= 0 || xDiff <= 0 && yDiff <= 0) { 
+        return Math.abs(xDiff) + Math.abs(yDiff);
+    } else {
+        return Math.max(Math.abs(xDiff), Math.abs(yDiff));
+    }    
+}

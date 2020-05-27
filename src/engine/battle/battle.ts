@@ -9,7 +9,7 @@ export function initBattleState() : BattleState {
     ];
     const initUnits : Unit[] = [];
     for (let i = 0; i < 3; i++) {
-        const unit = makeUnit("bears", 0, { x: 5 + i, y: 10 - i });        
+        const unit = makeUnit("bears", 0, { x: 5 + i, y: 5 - i });        
         initUnits.push(unit);
     }
     for (let i = 0; i < 4; i++) {
@@ -20,8 +20,9 @@ export function initBattleState() : BattleState {
         tiles: <Tile[][]>MAP_BROCELIANDE,
         factions: initFactions,
         units: initUnits,
+        graveyard: [],
         currentFaction: 0,
         round: 1,
-        aiLog: [],
+        log: [],
     };
 }

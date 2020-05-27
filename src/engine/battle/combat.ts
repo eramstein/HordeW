@@ -41,3 +41,91 @@ Disengage while in melee: TBD
 Flanking effects: TBD
 
 */
+
+import { GameState } from "../game";
+import { Unit, LogType, LogResult } from "./model";
+import { canUnitAttack, getAttackablePositions, damageUnit } from "./unit";
+import { getDistance } from "./board";
+import { getRandomInt } from "../../utils/random";
+
+export function isValidAttackTarget(gs : GameState, attacker : Unit, target : Unit) : boolean {
+
+    if (!canUnitAttack(gs, attacker)) {
+        return false;
+    }
+
+    const validRangeMap = getAttackablePositions(gs, attacker).reduce((acc, pos) => {
+        acc[pos.x + "." + pos.y] = true;
+        return acc;
+    }, {});
+
+    if (!validRangeMap[target.position.x + "." + target.position.y]) {
+        return false;
+    }
+    
+    return true;
+}
+
+export function attack(gs : GameState, attacker : Unit, defender : Unit) {
+    const isRange = !!(getDistance(attacker.position, defender.position) > 1);
+    
+    if (isRange) {
+        rangeAttack(gs, attacker, defender);
+    } else {
+        meleeAttack(gs, attacker, defender);
+    }
+    
+}
+
+function meleeAttack(gs : GameState, attacker : Unit, defender : Unit) {
+
+    attacker.attacksCount++;
+    
+    // hit or miss
+    const skillDiff = attacker.meleeAttack - defender.meleeDefense;
+    let hitChance = 0;
+    if (skillDiff <= -3) {
+        hitChance = 0;
+    } else if(skillDiff === -2) {
+        hitChance = 0.1;
+    } else if(skillDiff === -1) {
+        hitChance = 0.333;
+    } else if(skillDiff === 0) {
+        hitChance = 0.5;
+    } else if(skillDiff === 1) {
+        hitChance = 0.666;
+    } else if(skillDiff === 2) {
+        hitChance = 0.9;
+    } else if(skillDiff > 2) {
+        hitChance = 1;
+    }
+    const hitRoll = Math.random();
+
+    if (hitRoll > hitChance) {
+        gs.battle.log.push({ 
+            type: LogType.Attack,
+            entity: attacker,
+            target: defender,
+            result: LogResult.Miss,
+            text: `${attacker.name} misses ${defender.name}`,
+        });
+        return;
+    }
+
+    // damage
+    let damage = getRandomInt(attacker.meleeDamage.min, attacker.meleeDamage.max);
+    damage = Math.max(0, damage - defender.armor);
+    damageUnit(gs, defender, damage);    
+    gs.battle.log.push({
+        type: LogType.Attack,
+        entity: attacker,
+        target: defender,
+        result: LogResult.Hit,
+        data: { damage },
+        text: `${attacker.name} hits ${defender.name} for ${damage}`,
+    });
+    
+}
+
+function rangeAttack(gs : GameState, attacker : Unit, defender : Unit) {    
+}

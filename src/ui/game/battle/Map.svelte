@@ -25,11 +25,18 @@
         height="1200"
     >
         <defs>
-            <filter id="highlightStroke">
+            <filter id="highlight">
                 <feComponentTransfer>
                     <feFuncR type="linear" slope="2" />
                     <feFuncG type="linear" slope="2" />
                     <feFuncB type="linear" slope="2" />
+                </feComponentTransfer>
+            </filter>
+            <filter id="used">
+                <feComponentTransfer>
+                    <feFuncR type="linear" slope="0.6" />
+                    <feFuncG type="linear" slope="0.6" />
+                    <feFuncB type="linear" slope="0.6" />
                 </feComponentTransfer>
             </filter>
 

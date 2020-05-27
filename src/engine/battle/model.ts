@@ -2,9 +2,10 @@ export interface BattleState {
     tiles: Tile[][],
     factions: Faction[],
     units: Unit[],
+    graveyard: Unit[],
     currentFaction: number,
     round: number,
-    aiLog: AiLog[];
+    log: Log[];
 }
 
 export interface Tile {
@@ -50,8 +51,8 @@ export enum UnitType {
 
 export interface Unit {
     // state
+    id?: string,
     owner?: number,
-    destroyed?: boolean,
     hp?: number,
     morale?: number,
     position?: Pos,
@@ -59,7 +60,7 @@ export interface Unit {
     movesCount?: number,
     attacksCount?: number,
     // template
-    id: string,
+    template: string,
     name: string,
     category: UnitCategory,
     type?: UnitType,
@@ -92,13 +93,21 @@ export interface Faction {
     name: string,
 }
 
-export enum AiLogType {
+export enum LogType {
     Attack = "ATTACK",
     Move = "MOVE",
 }
 
-export interface AiLog {
-    type: AiLogType,
-    entity: any,
-    target: any,
+export enum LogResult {
+    Hit = "HIT",
+    Miss = "MISS",
+}
+
+export interface Log {
+    type: LogType,
+    entity?: any,
+    target?: any,
+    result?: any,
+    data?: any,
+    text?: any,
 }

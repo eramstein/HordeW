@@ -2,12 +2,12 @@ import { Unit, UnitType, UnitCategory } from "../../engine/battle/model";
 
 export const UNITS : { [key : string] : Unit } = {
     "bears": {
-        id: "bears",
+        template: "bears",
         name: "Bears",
         category: UnitCategory.Beast,
-        hpMax: 12,
+        hpMax: 20,
         moraleInit: 6,    
-        meleeAttack: 2,
+        meleeAttack: 3,
         meleeDefense: 4,
         rangeDefense: 0,
         meleeDamage: { min: 4, max: 6 },
@@ -16,16 +16,16 @@ export const UNITS : { [key : string] : Unit } = {
         movement: 3,
     },
     "goblins": {
-        id: "goblins",
+        template: "goblins",
         name: "Goblins",
         category: UnitCategory.Humanoid,
-        hpMax: 12,
+        hpMax: 7,
         moraleInit: 6,    
         meleeAttack: 2,
-        meleeDefense: 4,
+        meleeDefense: 2,
         rangeDefense: 0,
         meleeDamage: { min: 4, max: 6 },
-        armor: 2,    
+        armor: 1,    
         abilities: [],
         movement: 3,
     }

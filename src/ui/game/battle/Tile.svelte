@@ -33,11 +33,14 @@
     }
 </style>
 
-<g transform={translate} on:click={() => State.onClickTile(x, y)}>
+<g transform={translate}
+    on:click={() => State.onClickTile(x, y)}
+    on:contextmenu={() => State.onClickRightTile(x, y)}
+>
     <polygon class="hex"
         points={hexPolygonPoints}
         fill="url(#{data.terrain})"
-        filter={highlighted ? "url('#highlightStroke')" : null }></polygon>
+        filter={highlighted ? "url('#highlight')" : null }></polygon>
     <text
         x={15}
         y={TILE_HEIGHT/2 + 5}>

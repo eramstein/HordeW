@@ -18,7 +18,7 @@ export function useUnit(gs : GameState, unit : Unit) {
         const moveTo = pickFrom(canMoveTo, 1)[0];
         moveUnit(gs, unit, moveTo);
     } else {
-        unit.movesCount++;
+        unit.used = true;
         nextTurn(gs);
     }    
 }

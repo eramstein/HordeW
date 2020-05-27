@@ -6,6 +6,7 @@ import { nextTurn } from "./turn";
 
 export function makeUnit(template : string, faction : number, pos : Pos) : Unit {
     const unit = { ...UNITS[template] };
+    unit.id = template + Math.floor(Math.random() * 1000000000000000);
     unit.owner = faction;
     unit.position = pos;
     unit.hp = unit.hpMax;
@@ -16,18 +17,28 @@ export function makeUnit(template : string, faction : number, pos : Pos) : Unit 
     return unit;
 }
 
-export function moveUnit(gs : GameState, unit : Unit, pos : Pos) {    
+export function moveUnit(gs : GameState, unit : Unit, pos : Pos) {
+    const validPos = getReachablePositions(gs, unit).filter(p => p.x === pos.x && p.y === pos.y);
+    
+    if (validPos.length === 0) {
+        console.log("invalid pos");        
+        return;
+    }
+    
     unit.position = pos;
     unit.movesCount++;
+    if (unit.attacksCount > 0) {
+        unit.used = true;
+    }
     nextTurn(gs);
 }
 
 export function canUnitMove(gs : GameState, unit : Unit) : boolean {    
-    return unit.movesCount === 0;
+    return !unit.used && unit.movesCount === 0;
 }
 
 export function canUnitAttack(gs : GameState, unit : Unit) : boolean {    
-    return unit.attacksCount === 0;
+    return !unit.used && unit.attacksCount === 0;
 }
 
 export function getReachablePositions(gs : GameState, unit : Unit) : Pos[] {
@@ -75,4 +86,29 @@ export function getReachablePositions(gs : GameState, unit : Unit) : Pos[] {
     visit(unit.position, unit.movement);    
     
     return positions;
+}
+
+export function getAttackablePositions(gs : GameState, unit : Unit) : Pos[] {
+    if (unit.used) {
+        return [];
+    }
+
+    const positions = getAdjacentPositions(unit.position);
+    
+    return positions;
+}
+
+export function damageUnit(gs : GameState, unit : Unit, damage : number) {
+    if (damage <= 0) {
+        return;
+    }
+    unit.hp -= damage;
+    if (unit.hp < 0) {
+        destroyUnit(gs, unit);
+    }
+}
+
+export function destroyUnit(gs : GameState, unit : Unit) {
+    gs.battle.units = gs.battle.units.filter(u => u.id !== unit.id);
+    gs.battle.graveyard.push(unit);
 }

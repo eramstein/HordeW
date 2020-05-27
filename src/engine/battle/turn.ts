@@ -2,6 +2,7 @@ import { GameState } from "../game";
 import { playAiTurn } from "./ai/ai";
 import { canUnitMove, canUnitAttack } from "./unit";
 import { Unit } from "./model";
+import { UNITS } from "../../data/units/units";
 
 export function nextTurn(gs : GameState) {    
 
@@ -33,6 +34,7 @@ export function nextRound(gs : GameState) {
     gs.battle.units.forEach(u => {
         u.movesCount = 0;
         u.attacksCount = 0;
+        u.used = false;
     });
 }
 
@@ -46,7 +48,6 @@ export function factionDone(gs : GameState, faction : number) : boolean {
 
 export function unitsDone(gs : GameState, units : Unit[]) : boolean {
     return !units.some(u => {
-        return (canUnitMove(gs, u));
-        //return (canUnitMove(gs, u) || canUnitAttack(gs, u));
+        return u.used === false;
     });
 }

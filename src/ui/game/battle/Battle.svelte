@@ -24,7 +24,14 @@
 <div class="battle">
     <Map />
     <div class="sidebar">
-        <div>Round {battle.round}</div>
+        <div>
+            Round {battle.round}
+        </div>
+        <div>
+            {#each battle.log as log}
+                <div>{ log.text }</div>
+            {/each}
+        </div>
         {#if terrainEditor}
             <MapEditor />
         {/if}

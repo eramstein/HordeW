@@ -2,6 +2,7 @@
     import { State } from '../../stores';
     import { Screen } from '../model';
     import Battle from './battle/Battle.svelte';
+    document.addEventListener('contextmenu', event => event.preventDefault());
 </script>
 
 <style>    

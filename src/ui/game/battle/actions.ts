@@ -1,12 +1,14 @@
 import { State } from '../../../stores';
 import { GameState } from "../../../engine/game";
 import { moveUnit } from "../../../engine/battle/unit";
-import { factionDone, nextTurn } from "../../../engine/battle/turn";
+import { factionDone } from "../../../engine/battle/turn";
+import { attack } from '../../../engine/battle/combat';
 
 const AUTO_PASS_DELAY = 1000;
 
 export enum ActionType {
     Move = "MOVE",
+    Attack = "ATTACK",
 }
 
 export function sendAction(gs : GameState, actionType : ActionType, params : any) {
@@ -15,6 +17,10 @@ export function sendAction(gs : GameState, actionType : ActionType, params : any
     switch (actionType) {
         case ActionType.Move:
             moveUnit(gs, params.unit, params.pos);
+            break;
+
+        case ActionType.Attack:
+            attack(gs, params.attacker, params.defender);
             break;
     
         default:
