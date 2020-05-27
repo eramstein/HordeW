@@ -65,10 +65,9 @@
                 />
             {/each}
 	    {/each}
-        {#each units as unit, i}
+        {#each units as unit (unit.id)}
             <Unit
                 unit={unit}
-                index={i}
             />
         {/each}
     </svg>

@@ -1,5 +1,5 @@
 import { GameState } from "../engine/game";
-import { TerrainType } from "../engine/battle/model";
+import { TerrainType, Unit } from "../engine/battle/model";
 
 export interface FullState {
     game: GameState;
@@ -15,7 +15,7 @@ export interface UI {
     screenParameters: any;
     tools: Tools;
     selected: {
-        unit?: number,
+        unit?: Unit,
     };
     highlighted: {
         tiles?: {},

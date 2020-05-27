@@ -1,5 +1,5 @@
 import { FullState } from "../../model";
-import { TerrainType } from "../../../engine/battle/model";
+import { TerrainType, Unit } from "../../../engine/battle/model";
 import { updateTile, getDistance } from "../../../engine/battle/board";
 import { getReachablePositions, canUnitMove, canUnitAttack } from "../../../engine/battle/unit";
 import { sendAction, ActionType } from "./actions";
@@ -19,12 +19,11 @@ export function onClickTile(state : FullState, x, y) {
 
 export function onClickRightTile(state : FullState, x, y) {
     // UNIT MOVE
-    if (state.ui.selected.unit !== null &&
-        state.ui.selected.unit !== undefined &&
-        canUnitMove(state.game, state.game.battle.units[state.ui.selected.unit])
+    if (state.ui.selected.unit &&
+        canUnitMove(state.game, state.ui.selected.unit)
     ) {
         sendAction(state.game, ActionType.Move, { 
-            unit: state.game.battle.units[state.ui.selected.unit], 
+            unit: state.ui.selected.unit, 
             pos: { x, y },
         });
         unselect(state);
@@ -37,15 +36,14 @@ export function getTilePixelPos(x, y : number) : { tx: number, ty : number} {
     return { tx, ty,};
 }
 
-export function onClickUnit(state : FullState, unitIndex : number) {
+export function onClickUnit(state : FullState, clickedUnit : Unit) {    
     state.ui.highlighted.tiles = {};
-    if (state.ui.selected.unit !== null && state.ui.selected.unit === unitIndex) {
+    if (state.ui.selected.unit && state.ui.selected.unit.id === clickedUnit.id) {
         state.ui.selected.unit = null;
     } else {
-        state.ui.selected.unit = unitIndex;
-        const unit = state.game.battle.units[unitIndex];
-        if (canUnitMove(state.game, unit)) {
-            const reachableTiles = getReachablePositions(state.game, state.game.battle.units[unitIndex]);        
+        state.ui.selected.unit = clickedUnit;
+        if (canUnitMove(state.game, clickedUnit)) {
+            const reachableTiles = getReachablePositions(state.game, clickedUnit);        
             reachableTiles.forEach(t => {
                 state.ui.highlighted.tiles[t.x + "." + t.y] = true;
             });
@@ -53,14 +51,11 @@ export function onClickUnit(state : FullState, unitIndex : number) {
     }    
 }
 
-export function onClickRightUnit(state : FullState, unitIndex : number) {
-    const units = state.game.battle.units;
-    const selectedUnit = units[state.ui.selected.unit];
-    const clickedUnit = units[unitIndex];
+export function onClickRightUnit(state : FullState, clickedUnit : Unit) {
+    const selectedUnit = state.ui.selected.unit;
     
     // UNIT ATTACK
-    if (state.ui.selected.unit !== null &&
-        state.ui.selected.unit !== undefined &&
+    if (state.ui.selected.unit &&
         isValidAttackTarget(state.game, selectedUnit, clickedUnit)
     ) {
         sendAction(state.game, ActionType.Attack, { 

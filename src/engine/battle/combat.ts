@@ -44,9 +44,10 @@ Flanking effects: TBD
 
 import { GameState } from "../game";
 import { Unit, LogType, LogResult } from "./model";
-import { canUnitAttack, getAttackablePositions, damageUnit } from "./unit";
+import { canUnitAttack, getAttackablePositions, damageUnit, checkIfUnitExhausted } from "./unit";
 import { getDistance } from "./board";
 import { getRandomInt } from "../../utils/random";
+import { nextTurn } from "./turn";
 
 export function isValidAttackTarget(gs : GameState, attacker : Unit, target : Unit) : boolean {
 
@@ -74,12 +75,15 @@ export function attack(gs : GameState, attacker : Unit, defender : Unit) {
     } else {
         meleeAttack(gs, attacker, defender);
     }
+
+    nextTurn(gs);
     
 }
 
 function meleeAttack(gs : GameState, attacker : Unit, defender : Unit) {
 
     attacker.attacksCount++;
+    checkIfUnitExhausted(gs, attacker);
     
     // hit or miss
     const skillDiff = attacker.meleeAttack - defender.meleeDefense;

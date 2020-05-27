@@ -17,6 +17,12 @@ export function makeUnit(template : string, faction : number, pos : Pos) : Unit 
     return unit;
 }
 
+export function checkIfUnitExhausted(gs : GameState, unit : Unit) {
+    if (unit.attacksCount > 0 && unit.movesCount > 0) {
+        unit.used = true;
+    }
+}
+
 export function moveUnit(gs : GameState, unit : Unit, pos : Pos) {
     const validPos = getReachablePositions(gs, unit).filter(p => p.x === pos.x && p.y === pos.y);
     
@@ -27,9 +33,7 @@ export function moveUnit(gs : GameState, unit : Unit, pos : Pos) {
     
     unit.position = pos;
     unit.movesCount++;
-    if (unit.attacksCount > 0) {
-        unit.used = true;
-    }
+    checkIfUnitExhausted(gs, unit);
     nextTurn(gs);
 }
 

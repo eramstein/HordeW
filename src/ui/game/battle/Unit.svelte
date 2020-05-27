@@ -2,13 +2,12 @@
     import { State } from '../../../stores';
     import { getTilePixelPos, TILE_WIDTH, TILE_HEIGHT } from './map';
     
-    export let index;
     export let unit;
 
     const HP_BAR_SIZE = TILE_HEIGHT * 0.5;
     const HP_BAR_SHIFT = -TILE_HEIGHT * 0.25;
 
-    $: selected = $State.ui.selected.unit === index;
+    $: selected = $State.ui.selected.unit && $State.ui.selected.unit.id === unit.id;
 
     let pos;
     let translate;
@@ -50,8 +49,8 @@
 <g class="unit"
     transform={translate}
     style="transition-delay:{ unit.owner === 0 ? '0s' : '0.5s'}"
-    on:click={() => State.onClickUnit(index)}
-    on:contextmenu={() => State.onClickRightUnit(index)}
+    on:click={() => State.onClickUnit(unit)}
+    on:contextmenu={() => State.onClickRightUnit(unit)}
     filter={unit.used ? "url('#used')" : null }
 >
     <circle r={ r } fill="white" stroke={selected ? "red" : "black"} stroke-width={selected ? "2" : "0.5"} />

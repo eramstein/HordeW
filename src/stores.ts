@@ -24,8 +24,8 @@ function createFullState() {
 
         onClickTile: (x, y) => update(s => { onClickTile(s, x, y); return s; }),
         onClickRightTile: (x, y) => update(s => { onClickRightTile(s, x, y); return s; }),
-        onClickUnit: (index) => update(s => { onClickUnit(s, index); return s; }),
-        onClickRightUnit: (index) => update(s => { onClickRightUnit(s, index); return s; }),
+        onClickUnit: (unit) => update(s => { onClickUnit(s, unit); return s; }),
+        onClickRightUnit: (unit) => update(s => { onClickRightUnit(s, unit); return s; }),
 
         passTurn: () => update(s => { nextTurn(s.game); return s; }),
     };
