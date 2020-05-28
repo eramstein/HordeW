@@ -18,7 +18,9 @@ export interface UI {
         unit?: Unit,
     };
     highlighted: {
-        tiles?: {},
+        tiles: {},
+        meleeAttackableUnits: {},
+        rangeAttackableUnits: {},
     };
 }
 

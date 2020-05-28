@@ -8,6 +8,8 @@
     const HP_BAR_SHIFT = -TILE_HEIGHT * 0.25;
 
     $: selected = $State.ui.selected.unit && $State.ui.selected.unit.id === unit.id;
+    $: meleeAttackable = $State.ui.highlighted.meleeAttackableUnits[unit.id];
+    $: rangeAttackable = $State.ui.highlighted.rangeAttackableUnits[unit.id];
 
     let pos;
     let translate;
@@ -44,6 +46,10 @@
         stroke-width:0.5;
         stroke:#333;
     }
+    .attack-icon {
+        width: 20px;
+        height: 20px;
+    }
 </style>
 
 <g class="unit"
@@ -66,6 +72,18 @@
         <text class="unit-info" x={13} y={5}>
             A
         </text>
+    {/if}
+    {#if meleeAttackable}        
+        <image class="attack-icon"
+            x={TILE_WIDTH/2-20-1}
+            y={-1}
+            href="assets/icons/sword.png" alt="" />
+    {/if}
+    {#if rangeAttackable}        
+        <image class="attack-icon"
+            x={TILE_WIDTH/2-20-1}
+            y={-1}
+            href="assets/icons/bow.png" alt="" />
     {/if}
     {#each hpBars as hpBar,i}
         <rect

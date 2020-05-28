@@ -14,6 +14,9 @@ export const UNITS : { [key : string] : Unit } = {
         armor: 2,    
         abilities: [],
         movement: 3,
+        range: 3,
+        rangeAttack: 3,
+        rangeDamage: { min: 4, max: 6 },
     },
     "goblins": {
         template: "goblins",

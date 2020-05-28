@@ -42,7 +42,11 @@ function getNewState(): FullState {
                 terrainType: null,
             },
             selected: {},
-            highlighted: {},
+            highlighted: {
+                meleeAttackableUnits: {},
+                rangeAttackableUnits: {},
+                tiles: {},
+            },
         },
     };
 }

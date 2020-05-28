@@ -16,6 +16,9 @@ export function initBattleState() : BattleState {
         const unit = makeUnit("goblins", 1, { x: 5 + i, y: i });        
         initUnits.push(unit);
     }
+    initUnits.push(makeUnit("goblins", 1, { x: 9, y: 3 }));
+    initUnits.push(makeUnit("goblins", 1, { x: 5, y: 3 }));
+    initUnits.push(makeUnit("goblins", 1, { x: 9, y: 1 }));
     return {
         tiles: <Tile[][]>MAP_BROCELIANDE,
         factions: initFactions,

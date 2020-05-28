@@ -1,9 +1,8 @@
 import { FullState } from "../../model";
 import { TerrainType, Unit } from "../../../engine/battle/model";
 import { updateTile, getDistance } from "../../../engine/battle/board";
-import { getReachablePositions, canUnitMove, canUnitAttack } from "../../../engine/battle/unit";
+import { getReachablePositions, canUnitMove, getAttackableUnits } from "../../../engine/battle/unit";
 import { sendAction, ActionType } from "./actions";
-import { isValidAttackTarget } from "../../../engine/battle/combat";
 
 export const PADDING = 20;
 export const TILE_HEIGHT = 75;
@@ -36,18 +35,28 @@ export function getTilePixelPos(x, y : number) : { tx: number, ty : number} {
     return { tx, ty,};
 }
 
-export function onClickUnit(state : FullState, clickedUnit : Unit) {    
-    state.ui.highlighted.tiles = {};
-    if (state.ui.selected.unit && state.ui.selected.unit.id === clickedUnit.id) {
-        state.ui.selected.unit = null;
+export function onClickUnit(state : FullState, clickedUnit : Unit) {
+    const isUnit = state.ui.selected.unit && state.ui.selected.unit.id === clickedUnit.id;
+    unselect(state);
+    if (isUnit) {
+        state.ui.selected.unit = null;        
     } else {
         state.ui.selected.unit = clickedUnit;
-        if (canUnitMove(state.game, clickedUnit)) {
-            const reachableTiles = getReachablePositions(state.game, clickedUnit);        
-            reachableTiles.forEach(t => {
-                state.ui.highlighted.tiles[t.x + "." + t.y] = true;
-            });
-        }                
+        // HIGHLIGHT REACHABLE TILES
+        const reachableTiles = getReachablePositions(state.game, clickedUnit);        
+        reachableTiles.forEach(t => {
+            state.ui.highlighted.tiles[t.x + "." + t.y] = true;
+        });
+        // HIGHLIGHT ATTACKABLE UNITS
+        const attackableUnits = getAttackableUnits(state.game, clickedUnit);        
+        attackableUnits.forEach(u => {
+            const distance = getDistance(clickedUnit.position, u.position);
+            if (distance === 1) {
+                state.ui.highlighted.meleeAttackableUnits[u.id] = true;
+            } else {
+                state.ui.highlighted.rangeAttackableUnits[u.id] = true;
+            }            
+        });
     }    
 }
 
@@ -55,9 +64,7 @@ export function onClickRightUnit(state : FullState, clickedUnit : Unit) {
     const selectedUnit = state.ui.selected.unit;
     
     // UNIT ATTACK
-    if (state.ui.selected.unit &&
-        isValidAttackTarget(state.game, selectedUnit, clickedUnit)
-    ) {
+    if (state.ui.selected.unit) {
         sendAction(state.game, ActionType.Attack, { 
             attacker: selectedUnit, 
             defender: clickedUnit,
@@ -69,4 +76,6 @@ export function onClickRightUnit(state : FullState, clickedUnit : Unit) {
 function unselect(state : FullState) {
     state.ui.selected.unit = null;
     state.ui.highlighted.tiles = {};
+    state.ui.highlighted.meleeAttackableUnits = {};
+    state.ui.highlighted.rangeAttackableUnits = {};
 }

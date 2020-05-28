@@ -44,7 +44,7 @@ Flanking effects: TBD
 
 import { GameState } from "../game";
 import { Unit, LogType, LogResult } from "./model";
-import { canUnitAttack, getAttackablePositions, damageUnit, checkIfUnitExhausted } from "./unit";
+import { canUnitAttack, damageUnit, checkIfUnitExhausted, getAttackableUnits } from "./unit";
 import { getDistance } from "./board";
 import { getRandomInt } from "../../utils/random";
 import { nextTurn } from "./turn";
@@ -55,12 +55,12 @@ export function isValidAttackTarget(gs : GameState, attacker : Unit, target : Un
         return false;
     }
 
-    const validRangeMap = getAttackablePositions(gs, attacker).reduce((acc, pos) => {
-        acc[pos.x + "." + pos.y] = true;
+    const validTargets = getAttackableUnits(gs, attacker).reduce((acc, u) => {
+        acc[u.id] = true;
         return acc;
-    }, {});
+    }, {});    
 
-    if (!validRangeMap[target.position.x + "." + target.position.y]) {
+    if (!validTargets[target.id]) {
         return false;
     }
     
@@ -68,6 +68,11 @@ export function isValidAttackTarget(gs : GameState, attacker : Unit, target : Un
 }
 
 export function attack(gs : GameState, attacker : Unit, defender : Unit) {
+    if (!isValidAttackTarget(gs, attacker, defender)) {
+        console.log("invalid target");        
+        return false;
+    }
+    
     const isRange = !!(getDistance(attacker.position, defender.position) > 1);
     
     if (isRange) {
