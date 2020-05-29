@@ -1,13 +1,26 @@
 <script>
     import { State } from '../../../stores';
 
+    import { getActionLabels, STAGGERING_DELAY } from './map';
+
     import Tile from './Tile.svelte';
     import Unit from './Unit.svelte';
+    import ActionLabel from './ActionLabel.svelte';
     
     $: tiles = $State.game.battle.tiles;
     $: units = $State.game.battle.units;
     $: highlighted = $State.ui.highlighted.tiles || {};
     $: unitPatterns = units.map(u => u.template);
+
+    $: actionLabels = getActionLabels($State.game.battle.tempLog);
+
+    $: {
+        // if (actionLabels && actionLabels.length > 0) {
+        //     actionLabels.forEach(label => {
+        //         setTimeout((label) => { console.log('done', label); label.done = true; }, label.index * STAGGERING_DELAY, label); 
+        //     });
+        // }
+    }
 
 </script>
 
@@ -66,6 +79,12 @@
         {#each units as unit (unit.id)}
             <Unit
                 unit={unit}
+            />
+        {/each}
+        {#each actionLabels as actionLabel,i}
+            <ActionLabel
+                labelIndex={i}
+                data={actionLabel}
             />
         {/each}
     </svg>

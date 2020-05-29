@@ -1,5 +1,5 @@
 import { FullState } from "../../model";
-import { TerrainType, Unit } from "../../../engine/battle/model";
+import { TerrainType, Unit, LogType, LogResult, Log } from "../../../engine/battle/model";
 import { updateTile, getDistance } from "../../../engine/battle/board";
 import { getReachablePositions, canUnitMove, getAttackableUnits } from "../../../engine/battle/unit";
 import { sendAction, ActionType } from "./actions";
@@ -7,6 +7,15 @@ import { sendAction, ActionType } from "./actions";
 export const PADDING = 20;
 export const TILE_HEIGHT = 75;
 export const TILE_WIDTH = Math.sqrt(3)/2 * TILE_HEIGHT;
+export const STAGGERING_DELAY = 1000;
+
+export interface ActionLabel {
+    index: number,
+    color: string,
+    text: string,
+    unit: Unit,
+    done: boolean,
+}
 
 export function onClickTile(state : FullState, x, y) {
     // TERRAIN EDIT
@@ -78,4 +87,29 @@ export function unselect(state : FullState) {
     state.ui.highlighted.tiles = {};
     state.ui.highlighted.meleeAttackableUnits = {};
     state.ui.highlighted.rangeAttackableUnits = {};
+}
+
+export function getActionLabels(logs : Log[]) : ActionLabel[] {
+    const labels : ActionLabel[] = [];
+
+    logs.forEach((log, i) => {
+        if (log.type === LogType.Attack) {
+            labels.push({
+                index: i,
+                unit: log.entity,
+                color: 'black',
+                text: 'WHAAAG',
+                done: false,
+            });
+            labels.push({
+                index: i,
+                unit: log.target,
+                color: log.result === LogResult.Hit ? 'red' : 'green',
+                text: log.result === LogResult.Hit ? log.data.damage : 'MISS',
+                done: false,
+            });
+        }
+    });
+
+    return labels;
 }

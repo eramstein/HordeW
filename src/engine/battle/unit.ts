@@ -147,7 +147,7 @@ export function getVisiblePositions(gs : GameState, unit : Unit, range : number)
 }
 
 export function getAttackableUnits(gs : GameState, unit : Unit) : Unit[] {
-    if (unit.used || unit.attacksCount > 0) {
+    if (canUnitAttack(gs, unit) === false) {
         return [];
     }
 

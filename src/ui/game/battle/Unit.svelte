@@ -1,6 +1,6 @@
 <script>
-    import { State } from '../../../stores';
-    import { getTilePixelPos, TILE_WIDTH, TILE_HEIGHT } from './map';
+    import { State } from '../../../stores';    
+    import { getTilePixelPos, TILE_WIDTH, TILE_HEIGHT, STAGGERING_DELAY } from './map';
     
     export let unit;
 
@@ -10,7 +10,7 @@
     $: selected = $State.ui.selected.unit && $State.ui.selected.unit.id === unit.id;
     $: meleeAttackable = $State.ui.highlighted.meleeAttackableUnits[unit.id];
     $: rangeAttackable = $State.ui.highlighted.rangeAttackableUnits[unit.id];
-    $: indexInAiLog = $State.game.battle.aiLog.map(l => l.entity.id).indexOf(unit.id);
+    $: indexInTempLog = $State.game.battle.tempLog.map(l => l.entity.id).indexOf(unit.id) + 1;
 
     let pos;
     let translate;
@@ -30,7 +30,6 @@
         for (let i = Math.max(0, unit.hp); i < unit.hpMax; i++) {
             hpBars.push('empty');            
         }
-        
     }
 
 </script>
@@ -55,10 +54,10 @@
 
 <g class="unit"
     transform={translate}
-    style="transition-delay:{ unit.owner === 0 ? '0s' : (indexInAiLog + 1) * 0.5 + 's'}"
+    style="transition-delay:{ unit.owner === 0 ? '0s' : (indexInTempLog || 1) * STAGGERING_DELAY + 'ms'}"
     on:click={() => State.onClickUnit(unit)}
     on:contextmenu={() => State.onClickRightUnit(unit)}
-    filter={unit.used ? "url('#used')" : null }
+    filter={ unit.used ? "url('#used')" : null }
 >
     <circle r={ r } fill="white" stroke={selected ? "red" : "black"} stroke-width={selected ? "2" : "0.5"} />
     <circle r={ r - 5 } fill="url(#{unit.template}) white">

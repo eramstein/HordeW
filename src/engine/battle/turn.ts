@@ -1,35 +1,29 @@
 import { GameState } from "../game";
 import { playAiTurn } from "./ai/ai";
-import { canUnitMove, canUnitAttack } from "./unit";
 import { Unit } from "./model";
-import { UNITS } from "../../data/units/units";
-import { clearAiLog } from "./log";
+import { clearTempLog } from "./log";
 
 export function nextTurn(gs : GameState) {    
 
     gs.battle.currentFaction = (gs.battle.currentFaction + 1) % gs.battle.factions.length;
 
-    const isPlayer = gs.battle.factions[gs.battle.currentFaction].isPlayer;    
-
-    if (factionDone(gs, gs.battle.currentFaction)) {        
-        console.log("Faction done, next turn", gs.battle.currentFaction);
-        nextTurn(gs);
-        return;
-    } else {
-        if (isPlayer) {
-            clearAiLog(gs);
-        }
-    }
-
-    if (!isPlayer) {
-        console.log("AI turn");        
-        playAiTurn(gs);
-    }
+    const isPlayer = gs.battle.factions[gs.battle.currentFaction].isPlayer;
 
     if (allDone(gs)) {
         console.log("All done, next round");
         nextRound(gs);
         return;
+    }
+
+    if (factionDone(gs, gs.battle.currentFaction)) {        
+        console.log("Faction done, next turn", gs.battle.currentFaction);
+        nextTurn(gs);
+        return;
+    }
+
+    if (!isPlayer) {
+        console.log("AI turn");        
+        playAiTurn(gs);
     }
     
 }

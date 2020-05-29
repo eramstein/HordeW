@@ -6,7 +6,7 @@ export interface BattleState {
     currentFaction: number,
     round: number,
     log: Log[];
-    aiLog: Log[];
+    tempLog: Log[];
 }
 
 export interface Tile {

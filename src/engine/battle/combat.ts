@@ -68,7 +68,7 @@ export function isValidAttackTarget(gs : GameState, attacker : Unit, target : Un
     return true;
 }
 
-export function attack(gs : GameState, attacker : Unit, defender : Unit) {
+export function attack(gs : GameState, attacker : Unit, defender : Unit) {    
     if (!isValidAttackTarget(gs, attacker, defender)) {
         console.log("invalid target");        
         return false;
@@ -82,8 +82,7 @@ export function attack(gs : GameState, attacker : Unit, defender : Unit) {
         meleeAttack(gs, attacker, defender);
     }
 
-    nextTurn(gs);
-    
+    nextTurn(gs);    
 }
 
 function meleeAttack(gs : GameState, attacker : Unit, defender : Unit) {
@@ -120,12 +119,12 @@ function inflictDamage(gs : GameState, attacker : Unit, defender : Unit, min, ma
     damageUnit(gs, defender, damage);    
     addLog(gs, {
         type: LogType.Attack,
-        entity: attacker,
-        target: defender,
+        entity: { ...attacker },
+        target: { ...defender },
         result: LogResult.Hit,
         data: { damage },
         text: `${attacker.name} hits ${defender.name} for ${damage}`,
-    }); 
+    });
 }
 
 function checkIfHit(gs : GameState, attacker : Unit, defender : Unit, skillDiff : number) : boolean {
@@ -150,8 +149,8 @@ function checkIfHit(gs : GameState, attacker : Unit, defender : Unit, skillDiff 
     if (hitRoll > hitChance) {
         addLog(gs, {
             type: LogType.Attack,
-            entity: attacker,
-            target: defender,
+            entity: { ...attacker },
+            target: { ...defender },
             result: LogResult.Miss,
             text: `${attacker.name} misses ${defender.name}`,
         });
