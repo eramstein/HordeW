@@ -1,15 +1,13 @@
 <script>
     import { State } from '../../../stores';
-    import { UNITS } from '../../../data/units/units';
 
     import Tile from './Tile.svelte';
     import Unit from './Unit.svelte';
-
-    const unitPatterns = Object.keys(UNITS);    
     
     $: tiles = $State.game.battle.tiles;
     $: units = $State.game.battle.units;
     $: highlighted = $State.ui.highlighted.tiles || {};
+    $: unitPatterns = units.map(u => u.template);
 
 </script>
 

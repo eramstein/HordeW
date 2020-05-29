@@ -41,10 +41,12 @@
         points={hexPolygonPoints}
         fill="url(#{data.terrain})"
         filter={highlighted ? "url('#highlight')" : null }></polygon>
-    <text
-        x={15}
-        y={TILE_HEIGHT/2 + 5}>
-        {x}.{y}
-    </text>
+        <!--
+        <text
+            x={15}
+            y={TILE_HEIGHT/2 + 5}>
+            {x}.{y}
+        </text>
+        -->
 </g>
 

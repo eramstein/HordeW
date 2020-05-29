@@ -86,12 +86,48 @@ export function attack(gs : GameState, attacker : Unit, defender : Unit) {
 }
 
 function meleeAttack(gs : GameState, attacker : Unit, defender : Unit) {
-
     attacker.attacksCount++;
     checkIfUnitExhausted(gs, attacker);
     
     // hit or miss
     const skillDiff = attacker.meleeAttack - defender.meleeDefense;
+    const hits = checkIfHit(gs, attacker, defender, skillDiff);
+
+    // damage
+    if (hits) {
+        inflictDamage(gs, attacker, defender, attacker.meleeDamage.min, attacker.meleeDamage.max);
+    }    
+}
+
+function rangeAttack(gs : GameState, attacker : Unit, defender : Unit) {    
+    attacker.attacksCount++;
+    checkIfUnitExhausted(gs, attacker);
+    
+    // hit or miss
+    const skillDiff = attacker.rangeAttack - defender.rangeDefense - getDistance(attacker.position, defender.position);
+    const hits = checkIfHit(gs, attacker, defender, skillDiff);
+
+    // damage
+    if (hits) {
+        inflictDamage(gs, attacker, defender, attacker.rangeDamage.min, attacker.rangeDamage.max);
+    }
+}
+
+function inflictDamage(gs : GameState, attacker : Unit, defender : Unit, min, max : number) {
+    let damage = getRandomInt(min, max);
+    damage = Math.max(0, damage - defender.armor);
+    damageUnit(gs, defender, damage);    
+    gs.battle.log.push({
+        type: LogType.Attack,
+        entity: attacker,
+        target: defender,
+        result: LogResult.Hit,
+        data: { damage },
+        text: `${attacker.name} hits ${defender.name} for ${damage}`,
+    }); 
+}
+
+function checkIfHit(gs : GameState, attacker : Unit, defender : Unit, skillDiff : number) : boolean {
     let hitChance = 0;
     if (skillDiff <= -3) {
         hitChance = 0;
@@ -118,23 +154,8 @@ function meleeAttack(gs : GameState, attacker : Unit, defender : Unit) {
             result: LogResult.Miss,
             text: `${attacker.name} misses ${defender.name}`,
         });
-        return;
+        return false;
     }
 
-    // damage
-    let damage = getRandomInt(attacker.meleeDamage.min, attacker.meleeDamage.max);
-    damage = Math.max(0, damage - defender.armor);
-    damageUnit(gs, defender, damage);    
-    gs.battle.log.push({
-        type: LogType.Attack,
-        entity: attacker,
-        target: defender,
-        result: LogResult.Hit,
-        data: { damage },
-        text: `${attacker.name} hits ${defender.name} for ${damage}`,
-    });
-    
-}
-
-function rangeAttack(gs : GameState, attacker : Unit, defender : Unit) {    
+    return true;
 }

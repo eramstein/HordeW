@@ -93,6 +93,8 @@ export function getReachablePositions(gs : GameState, unit : Unit) : Pos[] {
 }
 
 // visibility: can we "go" from A to B in less than <range> moves without getting vision blocked?
+// TODO: 2 issues: inefficient (we go in all directions) and works only fine at exactly <range> distance,
+//                 it will return close tiles by going around obstacles
 export function getVisiblePositions(gs : GameState, unit : Unit, range : number) : Pos[] {
     
     const positions = [];
@@ -190,7 +192,7 @@ export function canSeeUnit(gs : GameState, unit1 : Unit, unit2 : Unit) : boolean
         return !!visibleTilesMap[unit2.position.x + "." + unit2.position.y];
     }    
 
-    // case distance 3+: artillery, always see (unless unit is in blocking hex, checked above)
+    // case distance 4+: artillery, always see (unless unit is in blocking hex, checked above)
     if (dist > 3) {
         return true;
     }
