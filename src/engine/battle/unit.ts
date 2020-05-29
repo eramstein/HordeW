@@ -1,8 +1,9 @@
 import { UNITS } from "../../data/units/units"
-import { Pos, Unit } from "./model";
+import { Pos, Unit, LogType } from "./model";
 import { GameState } from "../game";
-import { getAdjacentPositions, TERRAIN_SPECS, getPositionsInRange, getDistance } from "./board";
+import { getAdjacentPositions, TERRAIN_SPECS, getDistance } from "./board";
 import { nextTurn } from "./turn";
+import { addLog } from "./log";
 
 export function makeUnit(template : string, faction : number, pos : Pos) : Unit {
     const unit = { ...UNITS[template] };
@@ -23,6 +24,11 @@ export function checkIfUnitExhausted(gs : GameState, unit : Unit) {
     }
 }
 
+export function passUnitTurn(gs : GameState, unit : Unit) {
+    unit.used = true;    
+    nextTurn(gs);
+}
+
 export function moveUnit(gs : GameState, unit : Unit, pos : Pos) {
     const validPos = getReachablePositions(gs, unit).filter(p => p.x === pos.x && p.y === pos.y);
     
@@ -33,6 +39,14 @@ export function moveUnit(gs : GameState, unit : Unit, pos : Pos) {
     
     unit.position = pos;
     unit.movesCount++;
+
+    addLog(gs, {
+        type: LogType.Move,
+        entity: unit,
+        target: pos,
+        text: `${unit.name} moved to ${pos.x}.${pos.y}`,
+    });
+
     checkIfUnitExhausted(gs, unit);
     nextTurn(gs);
 }

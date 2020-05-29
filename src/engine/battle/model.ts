@@ -6,6 +6,7 @@ export interface BattleState {
     currentFaction: number,
     round: number,
     log: Log[];
+    aiLog: Log[];
 }
 
 export interface Tile {
@@ -75,7 +76,13 @@ export interface Unit {
     range?: number,
     armor: number,    
     abilities: Ability[],
-    movement: number,    
+    movement: number,
+    // ai stuff
+    ai?: UnitAi,
+}
+
+export interface UnitAi {
+    moveOrder: number,
 }
 
 export interface Damage {

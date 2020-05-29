@@ -1,6 +1,6 @@
 import { State } from '../../../stores';
 import { GameState } from "../../../engine/game";
-import { moveUnit } from "../../../engine/battle/unit";
+import { moveUnit, passUnitTurn } from "../../../engine/battle/unit";
 import { factionDone } from "../../../engine/battle/turn";
 import { attack } from '../../../engine/battle/combat';
 
@@ -9,6 +9,7 @@ const AUTO_PASS_DELAY = 1000;
 export enum ActionType {
     Move = "MOVE",
     Attack = "ATTACK",
+    Pass = "PASS",
 }
 
 export function sendAction(gs : GameState, actionType : ActionType, params : any) {
@@ -22,14 +23,18 @@ export function sendAction(gs : GameState, actionType : ActionType, params : any
         case ActionType.Attack:
             attack(gs, params.attacker, params.defender);
             break;
+
+        case ActionType.Pass:
+            passUnitTurn(gs, params.unit);
+            break;
     
         default:
             break;
     }
 
     // If player has no move, auto-pass after x ms
-    if (factionDone(gs, 0)) {
-        setTimeout(State.passTurn, AUTO_PASS_DELAY, gs);        
-    }
+    // if (factionDone(gs, 0)) {      
+    //     setTimeout(State.passTurn, AUTO_PASS_DELAY, gs);        
+    // }
     
 }

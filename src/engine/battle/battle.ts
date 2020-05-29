@@ -27,5 +27,6 @@ export function initBattleState() : BattleState {
         currentFaction: 0,
         round: 1,
         log: [],
+        aiLog: [],
     };
 }

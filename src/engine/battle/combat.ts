@@ -48,6 +48,7 @@ import { canUnitAttack, damageUnit, checkIfUnitExhausted, getAttackableUnits } f
 import { getDistance } from "./board";
 import { getRandomInt } from "../../utils/random";
 import { nextTurn } from "./turn";
+import { addLog } from "./log";
 
 export function isValidAttackTarget(gs : GameState, attacker : Unit, target : Unit) : boolean {
 
@@ -117,7 +118,7 @@ function inflictDamage(gs : GameState, attacker : Unit, defender : Unit, min, ma
     let damage = getRandomInt(min, max);
     damage = Math.max(0, damage - defender.armor);
     damageUnit(gs, defender, damage);    
-    gs.battle.log.push({
+    addLog(gs, {
         type: LogType.Attack,
         entity: attacker,
         target: defender,
@@ -147,7 +148,7 @@ function checkIfHit(gs : GameState, attacker : Unit, defender : Unit, skillDiff 
     const hitRoll = Math.random();
 
     if (hitRoll > hitChance) {
-        gs.battle.log.push({ 
+        addLog(gs, {
             type: LogType.Attack,
             entity: attacker,
             target: defender,

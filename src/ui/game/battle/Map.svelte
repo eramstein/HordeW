@@ -32,9 +32,9 @@
             </filter>
             <filter id="used">
                 <feComponentTransfer>
-                    <feFuncR type="linear" slope="0.6" />
-                    <feFuncG type="linear" slope="0.6" />
-                    <feFuncB type="linear" slope="0.6" />
+                    <feFuncR type="linear" slope="0.3" />
+                    <feFuncG type="linear" slope="0.3" />
+                    <feFuncB type="linear" slope="0.3" />
                 </feComponentTransfer>
             </filter>
 

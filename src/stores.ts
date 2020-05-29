@@ -2,8 +2,9 @@ import { get, writable } from "svelte/store";
 import { GameState, initGameState } from "./engine/game";
 import { handleKeyPress } from "./keybinds";
 import { Screen, FullState } from "./ui/model";
-import { onClickTile, onClickUnit, onClickRightTile, onClickRightUnit } from "./ui/game/battle/map";
+import { onClickTile, onClickUnit, onClickRightTile, onClickRightUnit, unselect } from "./ui/game/battle/map";
 import { nextTurn } from "./engine/battle/turn";
+import { passUnitTurn } from "./engine/battle/unit";
 
 export const State = createFullState();
 
@@ -27,7 +28,9 @@ function createFullState() {
         onClickUnit: (unit) => update(s => { onClickUnit(s, unit); return s; }),
         onClickRightUnit: (unit) => update(s => { onClickRightUnit(s, unit); return s; }),
 
+        passUnitTurn: (unit) => update(s => { passUnitTurn(s.game, unit); return s; }),
         passTurn: () => update(s => { nextTurn(s.game); return s; }),
+        unselect: () => update(s => { unselect(s); return s; }),
     };
 }
 

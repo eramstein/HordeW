@@ -73,7 +73,7 @@ export function onClickRightUnit(state : FullState, clickedUnit : Unit) {
     }
 }
 
-function unselect(state : FullState) {
+export function unselect(state : FullState) {    
     state.ui.selected.unit = null;
     state.ui.highlighted.tiles = {};
     state.ui.highlighted.meleeAttackableUnits = {};
