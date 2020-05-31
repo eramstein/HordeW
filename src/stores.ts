@@ -5,6 +5,7 @@ import { Screen, FullState } from "./ui/model";
 import { onClickTile, onClickUnit, onClickRightTile, onClickRightUnit, unselect } from "./ui/game/battle/map";
 import { nextTurn } from "./engine/battle/turn";
 import { passUnitTurn } from "./engine/battle/unit";
+import { sendAction, ActionType } from "./ui/game/battle/actions";
 
 export const State = createFullState();
 
@@ -20,6 +21,8 @@ function createFullState() {
         initialize: () => set(getNewState()),
         load: data => set(data),
         tempTest: () => update(s => { return s; }),
+
+        setGameState: (gs) => update(s => { s.game = gs; return s; }),
 
         setTools: (tools) => update(s => { s.ui.tools = { ...s.ui.tools, ...tools }; return s; }),
 
@@ -82,8 +85,12 @@ export function tempTest() {
     State.tempTest();
 }
 
-export function pass() {
-    State.passUnitTurn(get(State).ui.selected.unit);
+export function passUnit() {
+    const state = get(State);
+    sendAction(state.game, ActionType.Pass, {
+        unit: state.game.battle.units.filter(u => u.id === state.ui.selected.unit.id)[0], 
+    });
+    State.unselect();
 }
 
 window.onbeforeunload = () => {

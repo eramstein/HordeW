@@ -3,7 +3,6 @@
     import { getTilePixelPos, TILE_WIDTH, TILE_HEIGHT, STAGGERING_DELAY } from './map';
     
     export let data;
-    export let labelIndex;
 
     let pos;
     let translate;
@@ -15,24 +14,9 @@
         translate = "translate(" + pos.tx + "," + pos.ty + ")";
     }
 
-    setTimeout(
-        (data) => { document.getElementById('label-' + labelIndex).style.visibility = 'hidden'; },
-        (data.index + 1) * STAGGERING_DELAY,
-        labelIndex,
-    );
-
-    setTimeout(
-        (data) => { document.getElementById('label-' + labelIndex).style.visibility = 'visible'; },
-        data.index * STAGGERING_DELAY,
-        labelIndex,
-    );
-
 </script>
 
 <style>
-    .action-label {
-        visibility: hidden;
-    }
     text {
         text-anchor: middle;
         font-weight: bold;
@@ -41,7 +25,6 @@
 </style>
 
 <g class="action-label"
-    id={"label-"+labelIndex}
     transform={translate}
 >
     <rect x={-TILE_WIDTH/2} y="-9" width={TILE_WIDTH} height="20" stroke="black" stroke-width="1px" fill="white"/>

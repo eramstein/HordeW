@@ -10,7 +10,6 @@
     $: selected = $State.ui.selected.unit && $State.ui.selected.unit.id === unit.id;
     $: meleeAttackable = $State.ui.highlighted.meleeAttackableUnits[unit.id];
     $: rangeAttackable = $State.ui.highlighted.rangeAttackableUnits[unit.id];
-    $: indexInTempLog = $State.game.battle.tempLog.map(l => l.entity.id).indexOf(unit.id) + 1;
 
     let pos;
     let translate;
@@ -58,7 +57,7 @@
 
 <g class="unit"
     transform={translate}
-    style="transition-delay:{ unit.owner === 0 ? '0s' : (indexInTempLog || 1) * STAGGERING_DELAY + 'ms'}"
+    style="transition-delay:{ unit.owner === 0 ? '0s' : STAGGERING_DELAY + 'ms'}"
     on:click={() => State.onClickUnit(unit)}
     on:contextmenu={() => State.onClickRightUnit(unit)}
     filter={ unit.used ? "url('#used')" : null }

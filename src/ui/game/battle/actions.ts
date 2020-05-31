@@ -1,9 +1,11 @@
 import { State } from '../../../stores';
 import { GameState } from "../../../engine/game";
 import { moveUnit, passUnitTurn } from "../../../engine/battle/unit";
-import { factionDone } from "../../../engine/battle/turn";
+import { factionDone, nextTurn, allDone } from "../../../engine/battle/turn";
 import { attack } from '../../../engine/battle/combat';
 import { clearTempLog } from '../../../engine/battle/log';
+
+const TURN_TIME = 1000;
 
 export enum ActionType {
     Move = "MOVE",
@@ -32,5 +34,24 @@ export function sendAction(gs : GameState, actionType : ActionType, params : any
         default:
             break;
     }
+
+    setTimeout((gs) => {
+        clearTempLog(gs);
+        State.setGameState(gs);
+    }, TURN_TIME, gs);
+
+    loopTurns(gs, 0);
     
+}
+
+function loopTurns(gs, iteration) {
+    console.log("auto turn loop ", iteration);
+    if (factionDone(gs, 0) && !allDone(gs)) {
+        setTimeout((gs) => {
+            clearTempLog(gs);
+            nextTurn(gs);
+            State.setGameState(gs);
+            loopTurns(gs, iteration + 1);
+        }, TURN_TIME, gs);
+    }
 }

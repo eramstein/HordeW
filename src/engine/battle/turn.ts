@@ -15,7 +15,7 @@ export function nextTurn(gs : GameState) {
         return;
     }
 
-    if (factionDone(gs, gs.battle.currentFaction)) {        
+    if (factionDone(gs, gs.battle.currentFaction) && !isPlayer) {        
         console.log("Faction done, next turn", gs.battle.currentFaction);
         nextTurn(gs);
         return;

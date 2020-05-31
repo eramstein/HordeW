@@ -73,9 +73,8 @@
                 unit={unit}
             />
         {/each}
-        {#each actionLabels as actionLabel,i}
+        {#each actionLabels as actionLabel}
             <ActionLabel
-                labelIndex={i}
                 data={actionLabel}
             />
         {/each}

@@ -1,4 +1,4 @@
-import { resetState, saveState, State, printState, tempTest, pass } from "./stores";
+import { resetState, saveState, State, printState, tempTest, passUnit } from "./stores";
 
 export function handleKeyPress(event) {    
 
@@ -22,7 +22,7 @@ export function handleKeyPress(event) {
 
         case 32: // space -> pass unit
         event.preventDefault();
-        pass();
+        passUnit();
         break;
         
         default: return;

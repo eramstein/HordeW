@@ -10,7 +10,6 @@ export const TILE_WIDTH = Math.sqrt(3)/2 * TILE_HEIGHT;
 export const STAGGERING_DELAY = 1000;
 
 export interface ActionLabel {
-    index: number,
     color: string,
     text: string,
     unit: Unit,
@@ -95,24 +94,22 @@ export function unselect(state : FullState) {
 export function getActionLabels(logs : Log[]) : ActionLabel[] {
     const labels : ActionLabel[] = [];
 
-    logs.forEach((log, i) => {
+    logs.forEach(log => {
         if (log.type === LogType.Attack) {
             labels.push({
-                index: i,
                 unit: log.entity,
                 color: 'black',
                 text: 'WHAAAG',
                 done: false,
             });
             labels.push({
-                index: i,
                 unit: log.target,
                 color: log.result === LogResult.Hit ? 'red' : 'green',
                 text: log.result === LogResult.Hit ? log.data.damage : 'MISS',
                 done: false,
             });
         }
-    });
+    });    
 
     return labels;
 }
