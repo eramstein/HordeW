@@ -28,7 +28,7 @@ function createFullState() {
         onClickUnit: (unit) => update(s => { onClickUnit(s, unit); return s; }),
         onClickRightUnit: (unit) => update(s => { onClickRightUnit(s, unit); return s; }),
 
-        passUnitTurn: (unit) => update(s => { passUnitTurn(s.game, unit); return s; }),
+        passUnitTurn: (unit) => update(s => { passUnitTurn(s.game, unit); unselect(s); return s; }),
         passTurn: () => update(s => { nextTurn(s.game); return s; }),
         unselect: () => update(s => { unselect(s); return s; }),
     };
@@ -80,6 +80,10 @@ export function resetState() {
 
 export function tempTest() {
     State.tempTest();
+}
+
+export function pass() {
+    State.passUnitTurn(get(State).ui.selected.unit);
 }
 
 window.onbeforeunload = () => {

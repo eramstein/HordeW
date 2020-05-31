@@ -1,6 +1,23 @@
 import { Unit, UnitType, UnitCategory } from "../../engine/battle/model";
 
 export const UNITS : { [key : string] : Unit } = {
+    "caravan": {
+        template: "caravan",
+        name: "Caravan",
+        category: UnitCategory.Human,
+        hpMax: 5,
+        moraleInit: 0,    
+        meleeAttack: 0,
+        meleeDefense: 0,
+        rangeDefense: 0,
+        meleeDamage: { min: 0, max: 0 },
+        armor: 0,    
+        abilities: [],
+        movement: 0,
+        surviveCondition: true,
+        defender: true,
+        passive: true,
+    },
     "bears": {
         template: "bears",
         name: "Bears",

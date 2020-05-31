@@ -14,14 +14,6 @@
 
     $: actionLabels = getActionLabels($State.game.battle.tempLog);
 
-    $: {
-        // if (actionLabels && actionLabels.length > 0) {
-        //     actionLabels.forEach(label => {
-        //         setTimeout((label) => { console.log('done', label); label.done = true; }, label.index * STAGGERING_DELAY, label); 
-        //     });
-        // }
-    }
-
 </script>
 
 <style>

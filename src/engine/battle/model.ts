@@ -1,4 +1,5 @@
 export interface BattleState {
+    outcome?: BattleOutcome,
     tiles: Tile[][],
     factions: Faction[],
     units: Unit[],
@@ -7,6 +8,11 @@ export interface BattleState {
     round: number,
     log: Log[];
     tempLog: Log[];
+}
+
+export enum BattleOutcome {
+    Win = "WIN",
+    Lose = "LOSE",
 }
 
 export interface Tile {
@@ -67,16 +73,21 @@ export interface Unit {
     type?: UnitType,
     hpMax: number,
     moraleInit: number,    
-    meleeAttack: number,
-    meleeDefense: number,
-    rangeAttack?: number,
+    meleeDefense: number,    
     rangeDefense: number,
+    meleeAttack: number,
     meleeDamage: Damage,
-    rangeDamage?: Damage,
     range?: number,
+    rangeAttack?: number,
+    rangeDamage?: Damage,
     armor: number,    
     abilities: Ability[],
     movement: number,
+    // special optional stuff
+    surviveCondition?: boolean, // lose if all destroyed
+    loseCondition?: boolean,  // lose if any destroyed
+    defender?: boolean,
+    passive?: boolean, // auto-skip even if not used
     // ai stuff
     ai?: UnitAi,
 }

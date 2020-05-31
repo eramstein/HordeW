@@ -4,6 +4,7 @@ import { GameState } from "../game";
 import { getAdjacentPositions, TERRAIN_SPECS, getDistance } from "./board";
 import { nextTurn } from "./turn";
 import { addLog } from "./log";
+import { checkWinStateOnUnitDestruction } from "./battle";
 
 export function makeUnit(template : string, faction : number, pos : Pos) : Unit {
     const unit = { ...UNITS[template] };
@@ -52,11 +53,11 @@ export function moveUnit(gs : GameState, unit : Unit, pos : Pos) {
 }
 
 export function canUnitMove(gs : GameState, unit : Unit) : boolean {    
-    return !unit.used && unit.movesCount === 0;
+    return !unit.used && unit.movement > 0 && unit.movesCount === 0;
 }
 
 export function canUnitAttack(gs : GameState, unit : Unit) : boolean {    
-    return !unit.used && unit.attacksCount === 0;
+    return !unit.used && !unit.defender && unit.attacksCount === 0;
 }
 
 export function getReachablePositions(gs : GameState, unit : Unit) : Pos[] {
@@ -174,6 +175,7 @@ export function damageUnit(gs : GameState, unit : Unit, damage : number) {
 export function destroyUnit(gs : GameState, unit : Unit) {
     gs.battle.units = gs.battle.units.filter(u => u.id !== unit.id);
     gs.battle.graveyard.push(unit);
+    checkWinStateOnUnitDestruction(gs, unit);
 }
 
 export function canSeeUnit(gs : GameState, unit1 : Unit, unit2 : Unit) : boolean {

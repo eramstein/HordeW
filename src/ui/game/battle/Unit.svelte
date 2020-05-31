@@ -22,7 +22,9 @@
         pos.tx += TILE_WIDTH/2;
         pos.ty += TILE_HEIGHT/2;
         translate = "translate(" + pos.tx + "," + pos.ty + ")";
+    }
 
+    $: {
         hpBars = [];
         for (let i = 0; i < unit.hp; i++) {
             hpBars.push('full');            
@@ -31,6 +33,8 @@
             hpBars.push('empty');            
         }
     }
+
+    $: hpColor = unit.owner === 0 ? 'green' : '#ce0e0e';
 
 </script>
 
@@ -92,7 +96,7 @@
             y={HP_BAR_SHIFT + HP_BAR_SIZE/hpBars.length*i}
             width="5"
             height={HP_BAR_SIZE/hpBars.length}
-            style="fill:{hpBar === 'full' ? '#ce0e0e' : 'gray'}"
+            style="fill:{hpBar === 'full' ? hpColor : 'gray'}"
         />
     {/each}
 </g>

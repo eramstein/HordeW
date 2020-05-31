@@ -46,7 +46,7 @@ export function factionDone(gs : GameState, faction : number) : boolean {
 }
 
 export function unitsDone(gs : GameState, units : Unit[]) : boolean {
-    return !units.some(u => {
+    return !units.filter(u => !u.passive).some(u => {
         return u.used === false;
     });
 }

@@ -26,12 +26,15 @@ export function onClickTile(state : FullState, x, y) {
 }
 
 export function onClickRightTile(state : FullState, x, y) {
+    const selectedUnit = state.ui.selected.unit;
+
     // UNIT MOVE
-    if (state.ui.selected.unit &&
-        canUnitMove(state.game, state.ui.selected.unit)
+    if (selectedUnit &&
+        selectedUnit.owner === 0 &&
+        canUnitMove(state.game, selectedUnit)
     ) {
         sendAction(state.game, ActionType.Move, { 
-            unit: state.ui.selected.unit, 
+            unit: selectedUnit, 
             pos: { x, y },
         });
         unselect(state);
@@ -73,7 +76,7 @@ export function onClickRightUnit(state : FullState, clickedUnit : Unit) {
     const selectedUnit = state.ui.selected.unit;
     
     // UNIT ATTACK
-    if (state.ui.selected.unit) {
+    if (selectedUnit && selectedUnit.owner === 0) {
         sendAction(state.game, ActionType.Attack, { 
             attacker: selectedUnit, 
             defender: clickedUnit,

@@ -1,6 +1,6 @@
-import { resetState, saveState, State, printState, tempTest } from "./stores";
+import { resetState, saveState, State, printState, tempTest, pass } from "./stores";
 
-export function handleKeyPress(event) {
+export function handleKeyPress(event) {    
 
     switch(event.charCode) {        
         
@@ -18,6 +18,11 @@ export function handleKeyPress(event) {
 
         case 114: // r -> reset
         resetState();
+        break;
+
+        case 32: // space -> pass unit
+        event.preventDefault();
+        pass();
         break;
         
         default: return;
