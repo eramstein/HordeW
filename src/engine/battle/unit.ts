@@ -26,7 +26,14 @@ export function checkIfUnitExhausted(gs : GameState, unit : Unit) {
 }
 
 export function passUnitTurn(gs : GameState, unit : Unit) {
-    unit.used = true;    
+    unit.used = true;
+
+    addLog(gs, {
+        type: LogType.Pass,
+        entity: unit,
+        text: `${unit.name} passed`,
+    });
+
     nextTurn(gs);
 }
 
@@ -167,7 +174,7 @@ export function damageUnit(gs : GameState, unit : Unit, damage : number) {
         return;
     }
     unit.hp -= damage;
-    if (unit.hp < 0) {
+    if (unit.hp <= 0) {
         destroyUnit(gs, unit);
     }
 }

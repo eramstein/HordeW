@@ -1,7 +1,7 @@
 <script>
     import { State } from '../../../stores';
 
-    import { getActionLabels, STAGGERING_DELAY } from './map';
+    import { getActionLabels } from './map';
 
     import Tile from './Tile.svelte';
     import Unit from './Unit.svelte';
@@ -40,6 +40,13 @@
                     <feFuncR type="linear" slope="0.3" />
                     <feFuncG type="linear" slope="0.3" />
                     <feFuncB type="linear" slope="0.3" />
+                </feComponentTransfer>
+            </filter>
+            <filter id="alert">
+                <feComponentTransfer>
+                    <feFuncR type="linear" slope="1" />
+                    <feFuncG type="linear" slope="3" />
+                    <feFuncB type="linear" slope="1" />
                 </feComponentTransfer>
             </filter>
 

@@ -3,9 +3,8 @@ import { GameState } from "../../../engine/game";
 import { moveUnit, passUnitTurn } from "../../../engine/battle/unit";
 import { factionDone, nextTurn, allDone } from "../../../engine/battle/turn";
 import { attack } from '../../../engine/battle/combat';
-import { clearTempLog } from '../../../engine/battle/log';
-
-const TURN_TIME = 1000;
+import { clearTempLog, clearPlayerTempLog } from '../../../engine/battle/log';
+import { PLAYER_ANIMATION_DURATION, AI_ANIMATION_DELAY, AI_ANIMATION_DURATION } from './config';
 
 export enum ActionType {
     Move = "MOVE",
@@ -14,8 +13,6 @@ export enum ActionType {
 }
 
 export function sendAction(gs : GameState, actionType : ActionType, params : any) {
-
-    clearTempLog(gs);
 
     // Send action to engine which will mutate the state
     switch (actionType) {
@@ -33,25 +30,36 @@ export function sendAction(gs : GameState, actionType : ActionType, params : any
     
         default:
             break;
-    }
+    }    
 
+    // remove labels
+    setTimeout((gs) => {
+        clearPlayerTempLog(gs);
+        State.setGameState(gs);
+    }, PLAYER_ANIMATION_DURATION, gs);
     setTimeout((gs) => {
         clearTempLog(gs);
         State.setGameState(gs);
-    }, TURN_TIME, gs);
+    }, PLAYER_ANIMATION_DURATION + AI_ANIMATION_DELAY + AI_ANIMATION_DURATION, gs);
 
-    loopTurns(gs, 0);
+    loopTurns(gs, gs.battle.round);
     
 }
 
-function loopTurns(gs, iteration) {
-    console.log("auto turn loop ", iteration);
+function loopTurns(gs, round) {
+    console.log("auto turn loop ", round);
     if (factionDone(gs, 0) && !allDone(gs)) {
         setTimeout((gs) => {
             clearTempLog(gs);
             nextTurn(gs);
             State.setGameState(gs);
-            loopTurns(gs, iteration + 1);
-        }, TURN_TIME, gs);
+            loopTurns(gs, round);
+        }, PLAYER_ANIMATION_DURATION + AI_ANIMATION_DELAY + AI_ANIMATION_DURATION, gs);        
+    }
+    if (gs.battle.round !== round) {
+        setTimeout((gs) => {
+            clearTempLog(gs);
+            State.setGameState(gs);
+        }, PLAYER_ANIMATION_DURATION + AI_ANIMATION_DELAY + AI_ANIMATION_DURATION, gs);
     }
 }

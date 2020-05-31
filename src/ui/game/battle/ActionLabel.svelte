@@ -1,6 +1,8 @@
 <script>
-    import { State } from '../../../stores';    
-    import { getTilePixelPos, TILE_WIDTH, TILE_HEIGHT, STAGGERING_DELAY } from './map';
+    import { fade } from 'svelte/transition';
+    import { State } from '../../../stores';
+    import { getTilePixelPos, TILE_WIDTH, TILE_HEIGHT } from './map';
+    import { PLAYER_ANIMATION_DURATION, AI_ANIMATION_DELAY, AI_ANIMATION_DURATION } from './config';
     
     export let data;
 
@@ -25,6 +27,7 @@
 </style>
 
 <g class="action-label"
+    in:fade="{{ delay: data.isPlayer ? 0 : PLAYER_ANIMATION_DURATION + AI_ANIMATION_DELAY }}"
     transform={translate}
 >
     <rect x={-TILE_WIDTH/2} y="-9" width={TILE_WIDTH} height="20" stroke="black" stroke-width="1px" fill="white"/>

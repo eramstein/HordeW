@@ -114,6 +114,7 @@ export interface Faction {
 export enum LogType {
     Attack = "ATTACK",
     Move = "MOVE",
+    Pass = "PASS",
 }
 
 export enum LogResult {
@@ -122,6 +123,7 @@ export enum LogResult {
 }
 
 export interface Log {
+    currentFaction?: number,
     type: LogType,
     entity?: any,
     target?: any,

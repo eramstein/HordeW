@@ -1,7 +1,6 @@
 import { GameState } from "../game";
 import { playAiTurn } from "./ai/ai";
 import { Unit } from "./model";
-import { clearTempLog } from "./log";
 
 export function nextTurn(gs : GameState) {    
 
@@ -35,6 +34,7 @@ export function nextRound(gs : GameState) {
         u.attacksCount = 0;
         u.used = false;
     });
+    gs.battle.currentFaction = 0;
 }
 
 export function allDone(gs : GameState) : boolean {

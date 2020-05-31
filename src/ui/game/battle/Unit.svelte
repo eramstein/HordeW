@@ -1,6 +1,8 @@
 <script>
+    import { fade } from 'svelte/transition';
     import { State } from '../../../stores';    
-    import { getTilePixelPos, TILE_WIDTH, TILE_HEIGHT, STAGGERING_DELAY } from './map';
+    import { getTilePixelPos, isUnitActive, TILE_WIDTH, TILE_HEIGHT } from './map';
+    import { AI_ANIMATION_DELAY, PLAYER_ANIMATION_DURATION, AI_ANIMATION_DURATION } from './config';
     
     export let unit;
 
@@ -10,6 +12,7 @@
     $: selected = $State.ui.selected.unit && $State.ui.selected.unit.id === unit.id;
     $: meleeAttackable = $State.ui.highlighted.meleeAttackableUnits[unit.id];
     $: rangeAttackable = $State.ui.highlighted.rangeAttackableUnits[unit.id];
+    $: active = $State.game.battle.tempLog.length > 0 && isUnitActive(unit, $State.game.battle.tempLog);
 
     let pos;
     let translate;
@@ -57,22 +60,25 @@
 
 <g class="unit"
     transform={translate}
-    style="transition-delay:{ unit.owner === 0 ? '0s' : STAGGERING_DELAY + 'ms'}"
+    style="transition-delay:{ unit.owner === 0 ? '0s' : (PLAYER_ANIMATION_DURATION + AI_ANIMATION_DELAY) + 'ms'}"
     on:click={() => State.onClickUnit(unit)}
     on:contextmenu={() => State.onClickRightUnit(unit)}
-    filter={ unit.used ? "url('#used')" : null }
+    out:fade="{{ delay: PLAYER_ANIMATION_DURATION + AI_ANIMATION_DELAY + AI_ANIMATION_DURATION }}"
+    filter={ unit.used && !active ? "url('#used')" : null }
 >
-    <circle r={ r } fill="white" stroke={selected ? "red" : "black"} stroke-width={selected ? "2" : "0.5"} />
+    <circle r={ r } fill="white" stroke={selected || active ? "red" : "black"} stroke-width={selected || active ? "2" : "0.5"} />
     <circle r={ r - 5 } fill="url(#{unit.template}) white">
         { unit.name }
     </circle>
     {#if unit.movesCount > 0 && !unit.used}        
-        <text class="unit-info" x={13} y={5}>
+        <text class="unit-info" x={13} y={5}
+            in:fade="{{ delay: unit.owner === 0 ? 0 : PLAYER_ANIMATION_DURATION }}">
             M
         </text>
     {/if}
     {#if unit.attacksCount > 0 && !unit.used}        
-        <text class="unit-info" x={13} y={5}>
+        <text class="unit-info" x={13} y={5}
+            in:fade="{{ delay: unit.owner === 0 ? 0 : PLAYER_ANIMATION_DURATION }}">
             A
         </text>
     {/if}

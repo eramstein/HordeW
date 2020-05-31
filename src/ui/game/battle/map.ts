@@ -7,13 +7,13 @@ import { sendAction, ActionType } from "./actions";
 export const PADDING = 20;
 export const TILE_HEIGHT = 75;
 export const TILE_WIDTH = Math.sqrt(3)/2 * TILE_HEIGHT;
-export const STAGGERING_DELAY = 1000;
 
 export interface ActionLabel {
     color: string,
     text: string,
     unit: Unit,
     done: boolean,
+    isPlayer: boolean,
 }
 
 export function onClickTile(state : FullState, x, y) {
@@ -101,15 +101,43 @@ export function getActionLabels(logs : Log[]) : ActionLabel[] {
                 color: 'black',
                 text: 'WHAAAG',
                 done: false,
+                isPlayer: log.currentFaction === 0,
             });
             labels.push({
                 unit: log.target,
                 color: log.result === LogResult.Hit ? 'red' : 'green',
                 text: log.result === LogResult.Hit ? log.data.damage : 'MISS',
                 done: false,
+                isPlayer: log.currentFaction === 0,
+            });
+        }
+        if (log.type === LogType.Pass && log.currentFaction !== 0) {
+            labels.push({
+                unit: log.entity,
+                color: 'black',
+                text: 'PASS',
+                done: false,
+                isPlayer: false,
             });
         }
     });    
 
     return labels;
+}
+
+export function isUnitActive(unit : Unit, logs : Log[]) : boolean {
+    if (unit.owner === 0) {
+        return false;
+    }
+
+    let active = false;
+
+    logs.filter(log => log.entity.id === unit.id)
+        .forEach(log => {
+            if (log.currentFaction === unit.owner) {
+                active = true;
+            }
+        });    
+
+    return active;
 }
