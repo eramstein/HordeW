@@ -16,6 +16,7 @@ export interface UI {
     tools: Tools;
     selected: {
         unit?: Unit,
+        benchUnit?: Unit,
     };
     highlighted: {
         tiles: {},

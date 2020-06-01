@@ -1,5 +1,6 @@
 export interface BattleState {
     outcome?: BattleOutcome,
+    stage: BattleStage,
     tiles: Tile[][],
     factions: Faction[],
     units: Unit[],
@@ -8,6 +9,11 @@ export interface BattleState {
     round: number,
     log: Log[];
     tempLog: Log[];
+}
+
+export enum BattleStage {
+    Deployment = "DEPLOYMENT",
+    Battle = "BATTLE",
 }
 
 export enum BattleOutcome {
@@ -109,6 +115,7 @@ export interface Ability {
 export interface Faction {
     isPlayer: boolean,
     name: string,
+    bench: Unit[],
 }
 
 export enum LogType {

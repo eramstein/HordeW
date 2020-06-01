@@ -65,7 +65,7 @@
     on:click={() => State.onClickUnit(unit)}
     on:contextmenu={() => State.onClickRightUnit(unit)}
     out:fade="{{ delay: unit.owner === 0 ? PLAYER_ANIMATION_DURATION + AI_ANIMATION_DELAY + AI_ANIMATION_DURATION : 0 }}"
-    filter={ unit.used && !active ? "url('#used')" : null }
+    filter={ unit.used && !active ? "url('#shade')" : null }
 >
     <circle r={ r } fill="white" stroke={selected || active ? "red" : "black"} stroke-width={selected || active ? "2" : "0.5"} />
     <circle r={ r - 5 } fill="url(#{unit.template}) white">

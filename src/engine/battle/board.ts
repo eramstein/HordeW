@@ -9,7 +9,7 @@ Note: a cube coordinates system would make more elegant algorithms, maybe a TODO
       refactoring might only be useful if AI has to use these algorithms many times quickly
 */
 
-const MAP_SIZE = 20;
+export const MAP_SIZE = 20;
 
 export const TERRAIN_SPECS : { [key in TerrainType] : TerrainSpecs } = {
     [TerrainType.Plains]: {

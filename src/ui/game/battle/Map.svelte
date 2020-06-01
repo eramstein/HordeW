@@ -36,7 +36,7 @@
                     <feFuncB type="linear" slope="2" />
                 </feComponentTransfer>
             </filter>
-            <filter id="used">
+            <filter id="shade">
                 <feComponentTransfer>
                     <feFuncR type="linear" slope="0.3" />
                     <feFuncG type="linear" slope="0.3" />

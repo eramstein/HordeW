@@ -3,6 +3,7 @@ import { TerrainType, Unit, LogType, LogResult, Log } from "../../../engine/batt
 import { updateTile, getDistance } from "../../../engine/battle/board";
 import { getReachablePositions, canUnitMove, getAttackableUnits } from "../../../engine/battle/unit";
 import { sendAction, ActionType } from "./actions";
+import { deployUnit } from "../../../engine/battle/deployment";
 
 export const PADDING = 20;
 export const TILE_HEIGHT = 75;
@@ -21,7 +22,11 @@ export function onClickTile(state : FullState, x, y) {
     if (state.ui.tools.terrainEditor && state.ui.tools.terrainType) {
         const oldTile = state.game.battle.tiles[x][y];
         updateTile(state.game, x, y, { ...oldTile, terrain: TerrainType[state.ui.tools.terrainType] });
-    } 
+    }
+    // UNIT DEPLOYMENT
+    if (state.ui.selected.benchUnit) {
+        deployUnit(state.game, state.ui.selected.benchUnit, { x, y });
+    }
 }
 
 export function onClickRightTile(state : FullState, x, y) {
