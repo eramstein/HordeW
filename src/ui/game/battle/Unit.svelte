@@ -28,12 +28,12 @@
 
     $: {
         hpBars = [];
-        for (let i = 0; i < unit.hp; i++) {
-            hpBars.push('full');            
-        }
         for (let i = Math.max(0, unit.hp); i < unit.hpMax; i++) {
             hpBars.push('empty');            
         }
+        for (let i = 0; i < unit.hp; i++) {
+            hpBars.push('full');            
+        }        
     }
 
     $: hpColor = unit.owner === 0 ? 'green' : '#ce0e0e';
@@ -51,6 +51,7 @@
     rect.hp {
         stroke-width:0.5;
         stroke:#333;
+        transition: all .4s ease;
     }
     .attack-icon {
         width: 20px;
@@ -63,7 +64,7 @@
     style="transition-delay:{ unit.owner === 0 ? '0s' : (PLAYER_ANIMATION_DURATION + AI_ANIMATION_DELAY) + 'ms'}"
     on:click={() => State.onClickUnit(unit)}
     on:contextmenu={() => State.onClickRightUnit(unit)}
-    out:fade="{{ delay: PLAYER_ANIMATION_DURATION + AI_ANIMATION_DELAY + AI_ANIMATION_DURATION }}"
+    out:fade="{{ delay: unit.owner === 0 ? PLAYER_ANIMATION_DURATION + AI_ANIMATION_DELAY + AI_ANIMATION_DURATION : 0 }}"
     filter={ unit.used && !active ? "url('#used')" : null }
 >
     <circle r={ r } fill="white" stroke={selected || active ? "red" : "black"} stroke-width={selected || active ? "2" : "0.5"} />

@@ -96,13 +96,15 @@ export function getActionLabels(logs : Log[]) : ActionLabel[] {
 
     logs.forEach(log => {
         if (log.type === LogType.Attack) {
-            labels.push({
-                unit: log.entity,
-                color: 'black',
-                text: 'WHAAAG',
-                done: false,
-                isPlayer: log.currentFaction === 0,
-            });
+            if (log.entity.owner !== 0) {
+                labels.push({
+                    unit: log.entity,
+                    color: 'black',
+                    text: 'WHAAAG',
+                    done: false,
+                    isPlayer: log.currentFaction === 0,
+                });
+            }
             labels.push({
                 unit: log.target,
                 color: log.result === LogResult.Hit ? 'red' : 'green',

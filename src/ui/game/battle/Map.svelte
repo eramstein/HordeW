@@ -9,8 +9,9 @@
     
     $: tiles = $State.game.battle.tiles;
     $: units = $State.game.battle.units;
+    $: graveyard = $State.game.battle.graveyard;
     $: highlighted = $State.ui.highlighted.tiles || {};
-    $: unitPatterns = units.map(u => u.template);
+    $: unitPatterns = units.concat(graveyard).map(u => u.template);
 
     $: actionLabels = getActionLabels($State.game.battle.tempLog);
 
