@@ -1,5 +1,4 @@
 import { GameState } from "../game";
-import { playAiTurn } from "./ai/ai";
 import { Unit } from "./model";
 
 export function nextTurn(gs : GameState) {    
@@ -18,11 +17,6 @@ export function nextTurn(gs : GameState) {
         console.log("Faction done, next turn", gs.battle.currentFaction);
         nextTurn(gs);
         return;
-    }
-
-    if (!isPlayer) {
-        console.log("AI turn");        
-        playAiTurn(gs);
     }
     
 }

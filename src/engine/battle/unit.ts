@@ -4,7 +4,7 @@ import { GameState } from "../game";
 import { getAdjacentPositions, TERRAIN_SPECS, getDistance } from "./board";
 import { nextTurn } from "./turn";
 import { addLog } from "./log";
-import { checkWinStateOnUnitDestruction } from "./battle";
+import { checkWinStateOnUnitDestruction } from "./winCondition";
 
 export function makeUnit(template : string, faction : number, pos : Pos) : Unit {
     const unit = { ...UNITS[template] };

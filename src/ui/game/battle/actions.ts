@@ -5,6 +5,7 @@ import { factionDone, nextTurn, allDone } from "../../../engine/battle/turn";
 import { attack } from '../../../engine/battle/combat';
 import { clearTempLog, clearPlayerTempLog } from '../../../engine/battle/log';
 import { PLAYER_ANIMATION_DURATION, AI_ANIMATION_DELAY, AI_ANIMATION_DURATION } from './config';
+import { playAiTurn } from '../../../engine/battle/ai/ai';
 
 export enum ActionType {
     Move = "MOVE",
@@ -47,11 +48,15 @@ export function sendAction(gs : GameState, actionType : ActionType, params : any
 }
 
 function loopTurns(gs, round) {
-    console.log("auto turn loop ", round);
+    console.log("auto turn loop ");
+    if (!gs.battle.factions[gs.battle.currentFaction].isPlayer) {
+        console.log("AI turn");        
+        playAiTurn(gs);
+    }
     if (factionDone(gs, 0) && !allDone(gs)) {
         setTimeout((gs) => {
             clearTempLog(gs);
-            nextTurn(gs);
+            playAiTurn(gs);
             State.setGameState(gs);
             loopTurns(gs, round);
         }, PLAYER_ANIMATION_DURATION + AI_ANIMATION_DELAY + AI_ANIMATION_DURATION, gs);        
