@@ -55,6 +55,7 @@ function loopTurns(gs, round) {
     }
     if (factionDone(gs, 0) && !allDone(gs)) {
         setTimeout((gs) => {
+            nextTurn(gs);
             clearTempLog(gs);
             playAiTurn(gs);
             State.setGameState(gs);

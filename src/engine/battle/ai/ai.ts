@@ -10,13 +10,18 @@ export enum AiActionType {
     Move = "MOVE",
 }
 
-export function playAiTurn(gs : GameState) {    
+export function playAiTurn(gs : GameState) {
+    const t0 = performance.now();
+
     const activeUnit = selectUnit(gs);
     if (activeUnit) {
         useUnit(gs, activeUnit);
     } else {
         nextTurn(gs);
     }
+
+    const t1 = performance.now();
+    console.log(`playAiTurn - ${t1 - t0} ms`);
 }
 
 function useUnit(gs : GameState, unit : Unit) {

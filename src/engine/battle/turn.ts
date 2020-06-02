@@ -1,7 +1,8 @@
 import { GameState } from "../game";
 import { Unit } from "./model";
 
-export function nextTurn(gs : GameState) {    
+export function nextTurn(gs : GameState) {
+    console.log("next turn");    
 
     gs.battle.currentFaction = (gs.battle.currentFaction + 1) % gs.battle.factions.length;
 

@@ -4,7 +4,7 @@ import { getActiveUnits } from "../faction";
 import { BossPersoType, Unit } from "../model";
 
 export function selectUnit(gs : GameState) : Unit {
-    let unit;
+    let unit;    
     const perso = gs.battle.factions[gs.battle.currentFaction].perso;
     const activeUnits = getActiveUnits(gs, gs.battle.currentFaction);
 

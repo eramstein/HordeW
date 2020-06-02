@@ -11,7 +11,7 @@ export const UNITS : { [key : string] : Unit } = {
         meleeDefense: 0,
         rangeDefense: 0,
         meleeDamage: { min: 0, max: 0 },
-        armor: 0,    
+        armor: 5,    
         abilities: [],
         movement: 0,
         surviveCondition: true,
@@ -49,7 +49,7 @@ export const UNITS : { [key : string] : Unit } = {
         abilities: [],
         movement: 3,
         ai: {
-            perso: UnitAiPerso.Random,
+            perso: UnitAiPerso.Zombie,
         }
     }
 }
