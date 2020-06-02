@@ -1,4 +1,4 @@
-import { Unit, UnitType, UnitCategory } from "../../engine/battle/model";
+import { Unit, UnitType, UnitCategory, UnitAiPerso } from "../../engine/battle/model";
 
 export const UNITS : { [key : string] : Unit } = {
     "caravan": {
@@ -48,5 +48,8 @@ export const UNITS : { [key : string] : Unit } = {
         armor: 1,    
         abilities: [],
         movement: 3,
+        ai: {
+            perso: UnitAiPerso.Random,
+        }
     }
 }

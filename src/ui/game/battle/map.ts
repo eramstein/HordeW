@@ -1,5 +1,5 @@
 import { FullState } from "../../model";
-import { TerrainType, Unit, LogType, LogResult, Log } from "../../../engine/battle/model";
+import { TerrainType, Unit, LogType, LogResult, Log, BattleStage } from "../../../engine/battle/model";
 import { updateTile, getDistance } from "../../../engine/battle/board";
 import { getReachablePositions, canUnitMove, getAttackableUnits } from "../../../engine/battle/unit";
 import { sendAction, ActionType } from "./actions";
@@ -24,7 +24,7 @@ export function onClickTile(state : FullState, x, y) {
         updateTile(state.game, x, y, { ...oldTile, terrain: TerrainType[state.ui.tools.terrainType] });
     }
     // UNIT DEPLOYMENT
-    if (state.ui.selected.benchUnit) {
+    if (state.game.battle.stage === BattleStage.Deployment && state.ui.selected.benchUnit) {
         deployUnit(state.game, state.ui.selected.benchUnit, { x, y });
     }
 }

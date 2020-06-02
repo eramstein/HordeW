@@ -13,5 +13,6 @@ export function onClickBenchUnit(state : FullState, clickedUnit : Unit) {
 
 export function onClickEndDeployment(state : FullState) {
     state.ui.highlighted.tiles = {};
+    state.ui.selected.benchUnit = null;
     finishDeployment(state.game);  
 }

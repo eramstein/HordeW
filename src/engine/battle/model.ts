@@ -96,10 +96,23 @@ export interface Unit {
     passive?: boolean, // auto-skip even if not used
     // ai stuff
     ai?: UnitAi,
+    aiNotes?: UnitAiNotes,
 }
 
 export interface UnitAi {
-    moveOrder: number,
+    perso: UnitAiPerso,
+}
+
+export interface UnitAiNotes {
+    threatLevel: number,
+}
+
+export enum UnitAiPerso {
+    Random = "RANDOM",
+    Zombie = "ZOMBIE",
+    Raider = "RAIDER",
+    Killer = "KILLER",
+    Survivor = "SURVIVOR",
 }
 
 export interface Damage {
@@ -116,6 +129,11 @@ export interface Faction {
     isPlayer: boolean,
     name: string,
     bench: Unit[],
+    perso?: BossPersoType,
+}
+
+export enum BossPersoType {
+    Random = "RANDOM",
 }
 
 export enum LogType {

@@ -67,9 +67,7 @@ function initUiState() {
     };
     // highlight deployment tiles
     for (let y = MAP_SIZE - DEPLOYMENT_RANGE; y < MAP_SIZE; y++) {
-        for (let x = 0; x < MAP_SIZE; x++) {
-            console.log(x, y);
-            
+        for (let x = 0; x < MAP_SIZE; x++) {            
             init.highlighted.tiles[x + "." + y] = true;
         }
     }    
