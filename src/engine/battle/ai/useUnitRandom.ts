@@ -1,6 +1,7 @@
 import { GameState } from "../../game";
 import { Unit } from "../model";
-import { getAttackableUnits, canUnitMove, passUnitTurn, getReachablePositions, moveUnit } from "../unit";
+import { getAttackableUnits, canUnitMove, passUnitTurn, getReachablePositions } from "../unit";
+import { moveUnit } from "../movement";
 import { AiActionType } from "./ai";
 import { pickFrom } from "../../../utils/random";
 import { attack } from "../combat";
@@ -52,5 +53,5 @@ function doAttack(gs : GameState, unit : Unit, possibleTargets : Unit[]) {
         return;
     }
     const target = pickFrom(possibleTargets, 1)[0];
-    attack(gs, unit, target);
+    attack(gs, unit, target, false);
 }

@@ -37,28 +37,6 @@ export function passUnitTurn(gs : GameState, unit : Unit) {
     nextTurn(gs);
 }
 
-export function moveUnit(gs : GameState, unit : Unit, pos : Pos) {
-    const validPos = getReachablePositions(gs, unit).filter(p => p.x === pos.x && p.y === pos.y);
-    
-    if (validPos.length === 0) {
-        console.log("invalid pos");        
-        return;
-    }
-    
-    unit.position = pos;
-    unit.movesCount++;
-
-    addLog(gs, {
-        type: LogType.Move,
-        entity: unit,
-        target: pos,
-        text: `${unit.name} moved to ${pos.x}.${pos.y}`,
-    });
-
-    checkIfUnitExhausted(gs, unit);
-    nextTurn(gs);
-}
-
 export function canUnitMove(gs : GameState, unit : Unit) : boolean {    
     return !unit.used && unit.movement > 0 && unit.movesCount === 0;
 }
@@ -163,7 +141,6 @@ export function getAttackableUnits(gs : GameState, unit : Unit) : Unit[] {
         return u.owner !== unit.owner && getDistance(u.position, unit.position) <= (unit.range || 1);
     });    
 
-    // TODO
     const visibleUnitsInRange = unitsInRange.filter(u => canSeeUnit(gs, unit, u));
     
     return visibleUnitsInRange;

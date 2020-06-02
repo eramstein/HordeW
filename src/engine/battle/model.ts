@@ -111,7 +111,7 @@ export enum UnitAiPerso {
     Random = "RANDOM",
     Zombie = "ZOMBIE",
     Raider = "RAIDER",
-    Killer = "KILLER",
+    Hunter = "HUNTER",
     Survivor = "SURVIVOR",
 }
 

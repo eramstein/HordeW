@@ -68,8 +68,8 @@ export function isValidAttackTarget(gs : GameState, attacker : Unit, target : Un
     return true;
 }
 
-export function attack(gs : GameState, attacker : Unit, defender : Unit) {    
-    if (!isValidAttackTarget(gs, attacker, defender)) {
+export function attack(gs : GameState, attacker : Unit, defender : Unit, free : boolean) {    
+    if (!free && !isValidAttackTarget(gs, attacker, defender)) {
         console.log("invalid target");        
         return false;
     }
@@ -82,13 +82,14 @@ export function attack(gs : GameState, attacker : Unit, defender : Unit) {
         meleeAttack(gs, attacker, defender);
     }
 
-    nextTurn(gs);    
+    if (!free) {
+        attacker.attacksCount++;
+        checkIfUnitExhausted(gs, attacker);
+        nextTurn(gs);
+    }    
 }
 
-function meleeAttack(gs : GameState, attacker : Unit, defender : Unit) {
-    attacker.attacksCount++;
-    checkIfUnitExhausted(gs, attacker);
-    
+function meleeAttack(gs : GameState, attacker : Unit, defender : Unit) {    
     // hit or miss
     const skillDiff = attacker.meleeAttack - defender.meleeDefense;
     const hits = checkIfHit(gs, attacker, defender, skillDiff);
@@ -99,10 +100,7 @@ function meleeAttack(gs : GameState, attacker : Unit, defender : Unit) {
     }    
 }
 
-function rangeAttack(gs : GameState, attacker : Unit, defender : Unit) {    
-    attacker.attacksCount++;
-    checkIfUnitExhausted(gs, attacker);
-    
+function rangeAttack(gs : GameState, attacker : Unit, defender : Unit) {        
     // hit or miss
     const skillDiff = attacker.rangeAttack - defender.rangeDefense - getDistance(attacker.position, defender.position);
     const hits = checkIfHit(gs, attacker, defender, skillDiff);

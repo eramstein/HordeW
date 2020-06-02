@@ -1,6 +1,7 @@
 import { State } from '../../../stores';
 import { GameState } from "../../../engine/game";
-import { moveUnit, passUnitTurn } from "../../../engine/battle/unit";
+import { passUnitTurn } from "../../../engine/battle/unit";
+import { moveUnit } from "../../../engine/battle/movement";
 import { factionDone, nextTurn, allDone } from "../../../engine/battle/turn";
 import { attack } from '../../../engine/battle/combat';
 import { clearTempLog, clearPlayerTempLog } from '../../../engine/battle/log';
@@ -22,7 +23,7 @@ export function sendAction(gs : GameState, actionType : ActionType, params : any
             break;
 
         case ActionType.Attack:
-            attack(gs, params.attacker, params.defender);
+            attack(gs, params.attacker, params.defender, false);
             break;
 
         case ActionType.Pass:
