@@ -96,15 +96,11 @@ export interface Unit {
     passive?: boolean, // auto-skip even if not used
     // ai stuff
     ai?: UnitAi,
-    aiNotes?: UnitAiNotes,
+    aiValue?: number, // how much the AI values killing it - computed by default based on stats, this is for special cases
 }
 
 export interface UnitAi {
     perso: UnitAiPerso,
-}
-
-export interface UnitAiNotes {
-    threatLevel: number,
 }
 
 export enum UnitAiPerso {

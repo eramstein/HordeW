@@ -1,6 +1,7 @@
 import { GameState } from "../../game";
 import { Unit, Pos } from "../model";
 import { getDistance } from "../board";
+import { getHitChance } from "../combat";
 
 export function getClosestEnemyLoseCondition(gs : GameState, unit : Unit) : Unit {
     const loseCons = gs.battle.units.filter(u => u.loseCondition && u.owner !== unit.owner);
@@ -37,4 +38,16 @@ export function getNextStepTowards(gs : GameState, reachablePositions : Pos[], t
         }
     });
     return closestPos;
-}   
+}
+
+export function damageExpectationMelee(gs : GameState, attacker : Unit, defender : Unit) : number {
+    const avgDamage = (attacker.meleeDamage.max + attacker.meleeDamage.min) / 2;
+    const hitChance = getHitChance(attacker.meleeAttack - defender.meleeDefense);
+    return hitChance * attacker.meleeDamage.max;
+}
+
+export function damageExpectationRange(gs : GameState, attacker : Unit, defender : Unit) : number {
+    const avgDamage = (attacker.rangeDamage.max + attacker.rangeDamage.min) / 2;
+    const hitChance = getHitChance(attacker.rangeAttack - defender.rangeDefense);
+    return hitChance * attacker.rangeDamage.max;
+}

@@ -48,5 +48,12 @@
             {x}.{y}
         </text>
         -->
+        <text
+            x={20}
+            y={TILE_HEIGHT/2 + 5}
+            style="font-size:19px;fill:{$State.ui.tools.aiTileValues ? $State.ui.tools.aiTileValues[x][y] >= 0 ? 'green' : 'red' : null}"
+        >
+            {$State.ui.tools.aiTileValues && $State.ui.tools.aiTileValues[x][y]}
+        </text>
 </g>
 

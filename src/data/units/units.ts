@@ -48,8 +48,11 @@ export const UNITS : { [key : string] : Unit } = {
         armor: 1,    
         abilities: [],
         movement: 3,
+        range: 3,
+        rangeAttack: 3,
+        rangeDamage: { min: 4, max: 6 },
         ai: {
-            perso: UnitAiPerso.Zombie,
+            perso: UnitAiPerso.Raider,
         }
     }
 }

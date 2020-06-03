@@ -28,5 +28,6 @@ export interface UI {
 export interface Tools {
     terrainEditor: boolean;
     terrainType: TerrainType;
+    aiTileValues: number[][],
 }
 

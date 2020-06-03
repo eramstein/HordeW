@@ -57,6 +57,7 @@ function initUiState() {
         tools: {
             terrainEditor: true,
             terrainType: null,
+            aiTileValues: null,
         },
         selected: {},
         highlighted: {

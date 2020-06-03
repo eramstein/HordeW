@@ -126,6 +126,24 @@ function inflictDamage(gs : GameState, attacker : Unit, defender : Unit, min, ma
 }
 
 function checkIfHit(gs : GameState, attacker : Unit, defender : Unit, skillDiff : number) : boolean {
+    let hitChance = getHitChance(skillDiff);
+    const hitRoll = Math.random();
+
+    if (hitRoll > hitChance) {
+        addLog(gs, {
+            type: LogType.Attack,
+            entity: { ...attacker },
+            target: { ...defender },
+            result: LogResult.Miss,
+            text: `${attacker.name} misses ${defender.name}`,
+        });
+        return false;
+    }
+
+    return true;
+}
+
+export function getHitChance(skillDiff : number) : number {
     let hitChance = 0;
     if (skillDiff <= -3) {
         hitChance = 0;
@@ -142,18 +160,5 @@ function checkIfHit(gs : GameState, attacker : Unit, defender : Unit, skillDiff 
     } else if(skillDiff > 2) {
         hitChance = 1;
     }
-    const hitRoll = Math.random();
-
-    if (hitRoll > hitChance) {
-        addLog(gs, {
-            type: LogType.Attack,
-            entity: { ...attacker },
-            target: { ...defender },
-            result: LogResult.Miss,
-            text: `${attacker.name} misses ${defender.name}`,
-        });
-        return false;
-    }
-
-    return true;
+    return hitChance;
 }

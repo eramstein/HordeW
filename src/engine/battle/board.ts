@@ -72,6 +72,21 @@ export function getPositionsInRange(pos : Pos, range : number) : Pos[] {
     return getPositionsInMap(positions);
 }
 
+export function getPositionsInRangeRange(pos : Pos, range : number, minRange : number) : Pos[] {
+    const positions = [];
+    for (let x = pos.x - range; x <= pos.x + range; x++) {
+        for (let y = pos.y - range + Math.max(0, pos.x - x); y <= pos.y + range - Math.max(0, x - pos.x); y++) {
+            const shiftX = (pos.y % 2 === 1 && y % 2 === 0) ? 1 : 0;
+            const pos2 = { x: x + Math.floor((y-pos.y)/2) + shiftX, y };
+            // TODO: there must be a more efficient way, seems redundant
+            if (getDistance(pos, pos2) >= minRange) {
+                positions.push({ x: x + Math.floor((y-pos.y)/2) + shiftX, y });
+            }            
+        }
+    }
+    return getPositionsInMap(positions);
+}
+
 export function getDistance(pos1 : Pos, pos2 : Pos) : number {
     let x1 = pos1.x;
     let x2 = pos2.x;

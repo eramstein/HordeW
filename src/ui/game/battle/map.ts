@@ -4,6 +4,8 @@ import { updateTile, getDistance } from "../../../engine/battle/board";
 import { getReachablePositions, canUnitMove, getAttackableUnits } from "../../../engine/battle/unit";
 import { sendAction, ActionType } from "./actions";
 import { deployUnit } from "../../../engine/battle/deployment";
+import { TOOL_TILE_VALUES } from "./config";
+import { preProcessTiles } from "../../../engine/battle/ai/preProcessTiles";
 
 export const PADDING = 20;
 export const TILE_HEIGHT = 75;
@@ -73,7 +75,13 @@ export function onClickUnit(state : FullState, clickedUnit : Unit) {
                 state.ui.highlighted.rangeAttackableUnits[u.id] = true;
             }            
         });
-    }    
+    }
+    // TOOLS : AI TILE VALUES
+    if (TOOL_TILE_VALUES) {
+        const tiles = preProcessTiles(state.game, clickedUnit);
+        console.log('preProcessTiles', tiles);
+        state.ui.tools.aiTileValues = tiles;
+    }
 }
 
 export function onClickRightUnit(state : FullState, clickedUnit : Unit) {

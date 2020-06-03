@@ -16,8 +16,6 @@ export function moveUnit(gs: GameState, unit: Unit, pos: Pos) {
 
     triggerOpportunityAttacks(gs, unit);
 
-    console.log(unit);    
-
     unit.position = pos;
     unit.movesCount++;
 
