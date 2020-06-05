@@ -77,7 +77,7 @@ export function onClickUnit(state : FullState, clickedUnit : Unit) {
         });
     }
     // TOOLS : AI TILE VALUES
-    if (TOOL_TILE_VALUES) {
+    if (TOOL_TILE_VALUES && clickedUnit.owner !== 0) {
         const tiles = preProcessTiles(state.game, clickedUnit);
         console.log('preProcessTiles', tiles);
         state.ui.tools.aiTileValues = tiles;

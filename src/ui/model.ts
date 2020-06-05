@@ -1,5 +1,6 @@
 import { GameState } from "../engine/game";
 import { TerrainType, Unit } from "../engine/battle/model";
+import { AiTileValue } from "../engine/battle/ai/model";
 
 export interface FullState {
     game: GameState;
@@ -28,6 +29,6 @@ export interface UI {
 export interface Tools {
     terrainEditor: boolean;
     terrainType: TerrainType;
-    aiTileValues: number[][],
+    aiTileValues: AiTileValue[][],
 }
 

@@ -1,5 +1,5 @@
-import { AiPersoPrefs } from "./ai";
-import { UnitAiPerso } from "../model";
+import { AiPersoPrefs } from "./model";
+import { UnitAiPerso,  } from "../model";
 
 export const UNIT_PREFS : { [key in UnitAiPerso] : AiPersoPrefs }  = {
     [UnitAiPerso.Random]: {
@@ -15,7 +15,7 @@ export const UNIT_PREFS : { [key in UnitAiPerso] : AiPersoPrefs }  = {
         help: 1,
     },
     [UnitAiPerso.Raider]: {
-        survival: 1,
+        survival: 0,
         kill: 0,
         wincon: 1,
         help: 0,

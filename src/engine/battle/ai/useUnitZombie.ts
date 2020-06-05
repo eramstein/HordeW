@@ -1,6 +1,6 @@
 import { GameState } from "../../game";
 import { Unit } from "../model";
-import { getAttackableUnits, canUnitMove, passUnitTurn, getReachablePositions } from "../unit";
+import { getAttackableUnits, canUnitMove, passUnitTurn, getReachablePositions, getVisibleEnemiesInRange } from "../unit";
 import { moveUnit } from "../movement";
 import { attack } from "../combat";
 import { getClosestEnemyLoseCondition, getClosestEnemySurviveCondition, getNextStepTowards } from "./utils";
@@ -10,7 +10,7 @@ export function useUnitZombie(gs : GameState, unit : Unit) {
     const attackTargets = getAttackableUnits(gs, unit);
     if (attackTargets.length > 0) {
         doAttack(gs, unit, attackTargets);
-    } else if (canUnitMove(gs, unit)) {
+    } else if (canUnitMove(gs, unit) && getVisibleEnemiesInRange(gs, unit).length === 0) {
         doMove(gs, unit);
     } else {
         passUnitTurn(gs, unit);

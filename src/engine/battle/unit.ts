@@ -45,6 +45,10 @@ export function canUnitAttack(gs : GameState, unit : Unit) : boolean {
     return !unit.used && !unit.defender && unit.attacksCount === 0;
 }
 
+export function canUnitOpportunityAttack(gs : GameState, unit : Unit) : boolean {    
+    return !unit.defender;
+}
+
 export function getReachablePositions(gs : GameState, unit : Unit) : Pos[] {
     if (unit.used || unit.movesCount > 0) {
         return [];
@@ -135,15 +139,19 @@ export function getVisiblePositions(gs : GameState, unit : Unit, range : number)
 export function getAttackableUnits(gs : GameState, unit : Unit) : Unit[] {
     if (canUnitAttack(gs, unit) === false) {
         return [];
-    }
+    }    
+    return getVisibleEnemiesInRange(gs, unit);
+}
 
-    const unitsInRange = gs.battle.units.filter(u => {
+export function getEnemiesInRange(gs : GameState, unit : Unit) : Unit[] {
+    return gs.battle.units.filter(u => {
         return u.owner !== unit.owner && getDistance(u.position, unit.position) <= (unit.range || 1);
-    });    
+    });
+}
 
-    const visibleUnitsInRange = unitsInRange.filter(u => canSeeUnit(gs, unit, u));
-    
-    return visibleUnitsInRange;
+export function getVisibleEnemiesInRange(gs : GameState, unit : Unit) : Unit[] {
+    const unitsInRange = getEnemiesInRange(gs, unit);
+    return unitsInRange.filter(u => canSeeUnit(gs, unit, u.position));
 }
 
 export function damageUnit(gs : GameState, unit : Unit, damage : number) {
@@ -162,34 +170,34 @@ export function destroyUnit(gs : GameState, unit : Unit) {
     checkWinStateOnUnitDestruction(gs, unit);
 }
 
-export function canSeeUnit(gs : GameState, unit1 : Unit, unit2 : Unit) : boolean {
-    const sourceUnitTerrain = TERRAIN_SPECS[gs.battle.tiles[unit2.position.x][unit2.position.y].terrain];
-    const targetUnitTerrain = TERRAIN_SPECS[gs.battle.tiles[unit2.position.x][unit2.position.y].terrain];
-    const dist = getDistance(unit1.position, unit2.position);
+export function canSeeUnit(gs : GameState, unit : Unit, targetUnitPos : Pos) : boolean {
+    const sourceUnitTerrain = TERRAIN_SPECS[gs.battle.tiles[targetUnitPos.x][targetUnitPos.y].terrain];
+    const targetUnitTerrain = TERRAIN_SPECS[gs.battle.tiles[targetUnitPos.x][targetUnitPos.y].terrain];
+    const dist = getDistance(unit.position, targetUnitPos);
 
     // case distance 1: always see
     if (dist === 1) {
         return true;
     }
 
-    // else, if unit2 is in blocking hex, it's hidden
+    // else, if targetUnitPos is in blocking hex, it's hidden
     if (targetUnitTerrain.blocksVision) {
         return false;
     }
 
-    // else, if unit1 is on higher ground, it always see
+    // else, if unit is on higher ground, it always see
     if (sourceUnitTerrain.altitude > targetUnitTerrain.altitude) {
         return true;
     }
 
     // case distance 2 or 3: check if there is a path in less than 2 or 3 without blocking vision   
     if (dist === 2 || dist === 3) {
-        const visibleTiles = getVisiblePositions(gs, unit1, dist);
+        const visibleTiles = getVisiblePositions(gs, unit, dist);
         const visibleTilesMap = visibleTiles.reduce((acc, tile) => {
             acc[tile.x + "." + tile.y] = true;
             return acc;
         }, {});
-        return !!visibleTilesMap[unit2.position.x + "." + unit2.position.y];
+        return !!visibleTilesMap[targetUnitPos.x + "." + targetUnitPos.y];
     }    
 
     // case distance 4+: artillery, always see (unless unit is in blocking hex, checked above)

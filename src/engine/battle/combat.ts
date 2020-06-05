@@ -43,7 +43,7 @@ Flanking effects: TBD
 */
 
 import { GameState } from "../game";
-import { Unit, LogType, LogResult } from "./model";
+import { Unit, LogType, LogResult, Pos } from "./model";
 import { canUnitAttack, damageUnit, checkIfUnitExhausted, getAttackableUnits } from "./unit";
 import { getDistance } from "./board";
 import { getRandomInt } from "../../utils/random";
@@ -102,7 +102,7 @@ function meleeAttack(gs : GameState, attacker : Unit, defender : Unit) {
 
 function rangeAttack(gs : GameState, attacker : Unit, defender : Unit) {        
     // hit or miss
-    const skillDiff = attacker.rangeAttack - defender.rangeDefense - getDistance(attacker.position, defender.position);
+    const skillDiff = getRangeSkillDiff(attacker, defender);
     const hits = checkIfHit(gs, attacker, defender, skillDiff);
 
     // damage
@@ -161,4 +161,12 @@ export function getHitChance(skillDiff : number) : number {
         hitChance = 1;
     }
     return hitChance;
+}
+
+export function getRangeSkillDiff(attacker : Unit, defender : Unit) : number {
+    return getRangeSkillDiffFromPos(attacker, defender, attacker.position, defender.position);
+}
+
+export function getRangeSkillDiffFromPos(attacker : Unit, defender : Unit, attackerPos : Pos, defenderPos : Pos) : number {
+    return attacker.rangeAttack - defender.rangeDefense - getDistance(attackerPos, defenderPos);
 }

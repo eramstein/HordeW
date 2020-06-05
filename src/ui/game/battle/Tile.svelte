@@ -48,12 +48,23 @@
             {x}.{y}
         </text>
         -->
+        <!--
         <text
-            x={20}
-            y={TILE_HEIGHT/2 + 5}
-            style="font-size:19px;fill:{$State.ui.tools.aiTileValues ? $State.ui.tools.aiTileValues[x][y] >= 0 ? 'green' : 'red' : null}"
+            x={0}
+            y={TILE_HEIGHT/2 - 5}
+            style="font-size:12px;fill:red"
         >
-            {$State.ui.tools.aiTileValues && $State.ui.tools.aiTileValues[x][y]}
+            {$State.ui.tools.aiTileValues && $State.ui.tools.aiTileValues[x][y].threatMax}
+            to
+            {$State.ui.tools.aiTileValues && $State.ui.tools.aiTileValues[x][y].threatTotal}
         </text>
+        <text
+            x={15}
+            y={TILE_HEIGHT/2 + 20}
+            style="font-size:12px;fill:green"
+        >
+            {$State.ui.tools.aiTileValues && $State.ui.tools.aiTileValues[x][y].bounty}
+        </text>
+        -->
 </g>
 

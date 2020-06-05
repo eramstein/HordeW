@@ -4,20 +4,7 @@ import { nextTurn } from "../turn";
 import { selectUnit } from "./unitSelection";
 import { useUnitRandom } from "./useUnitRandom";
 import { useUnitZombie } from "./useUnitZombie";
-import { useUnitRaider } from "./useUnitRaider";
-
-// how much the unit values...
-export interface AiPersoPrefs {
-    survival: number; // its own survival
-    kill: number; // killing enemy units
-    wincon: number; // going after win conditions
-    help: number; // helping allied units
-}
-
-export enum AiActionType {
-    Attack = "ATTACK",
-    Move = "MOVE",
-}
+import { useUnitGeneral } from "./useUnit";
 
 export function playAiTurn(gs : GameState) {
     const t0 = performance.now();
@@ -44,13 +31,9 @@ function useUnit(gs : GameState, unit : Unit) {
         case UnitAiPerso.Zombie:
             useUnitZombie(gs, unit);
         break;
-
-        case UnitAiPerso.Raider:
-            useUnitRaider(gs, unit);
-        break;
         
         default:
-            console.log("useUnit - perso not found", unit.ai.perso);
+            useUnitGeneral(gs, unit);
         break;
     }
     

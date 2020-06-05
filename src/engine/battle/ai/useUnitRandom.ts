@@ -2,7 +2,7 @@ import { GameState } from "../../game";
 import { Unit } from "../model";
 import { getAttackableUnits, canUnitMove, passUnitTurn, getReachablePositions } from "../unit";
 import { moveUnit } from "../movement";
-import { AiActionType } from "./ai";
+import { AiActionType } from "./model";
 import { pickFrom } from "../../../utils/random";
 import { attack } from "../combat";
 
