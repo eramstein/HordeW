@@ -131,8 +131,7 @@ export function unselect(state : FullState) {
 }
 
 export function getActionLabels(logs : Log[]) : ActionLabel[] {
-    const labels : ActionLabel[] = [];
-
+    const labels : ActionLabel[] = [];    
     logs.forEach(log => {
         if (log.type === LogType.Attack) {
             labels.push({
@@ -142,10 +141,30 @@ export function getActionLabels(logs : Log[]) : ActionLabel[] {
                 done: false,
                 isPlayer: log.currentFaction === 0,
             });
+            if (log.result === LogResult.Miss) {
+                labels.push({
+                    unit: log.target,
+                    color: 'green',
+                    text: 'MISS',
+                    done: false,
+                    isPlayer: log.currentFaction === 0,
+                });
+            }
+        }
+        if (log.type === LogType.Damage) {
             labels.push({
-                unit: log.target,
-                color: log.result === LogResult.Hit ? 'red' : 'green',
-                text: log.result === LogResult.Hit ? log.data.damage : 'MISS',
+                unit: log.entity,
+                color: 'red',
+                text: log.data.damage,
+                done: false,
+                isPlayer: log.currentFaction === 0,
+            });
+        }
+        if (log.type === LogType.Ability) {
+            labels.push({
+                unit: log.entity,
+                color: 'black',
+                text: log.data.name,
                 done: false,
                 isPlayer: log.currentFaction === 0,
             });

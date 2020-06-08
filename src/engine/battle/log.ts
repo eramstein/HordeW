@@ -7,7 +7,7 @@ export function clearTempLog(gs : GameState) {
 
 export function clearPlayerTempLog(gs : GameState) {
     gs.battle.tempLog = gs.battle.tempLog.filter(log => {
-        return !log.entity || log.entity.owner !== 0;
+        return log.currentFaction !== 0;
     });
 }
 

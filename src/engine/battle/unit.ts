@@ -177,6 +177,14 @@ export function damageUnit(gs : GameState, unit : Unit, damage : number) {
     if (damage <= 0) {
         return;
     }
+
+    addLog(gs, {
+        type: LogType.Damage,
+        entity: { ...unit },
+        data: { damage },
+        text: `${unit.name} gets ${damage} damage`,
+    });
+
     unit.hp -= damage;
     if (unit.hp <= 0) {
         destroyUnit(gs, unit);

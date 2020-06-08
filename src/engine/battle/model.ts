@@ -135,6 +135,8 @@ export enum LogType {
     Attack = "ATTACK",
     Move = "MOVE",
     Pass = "PASS",
+    Ability = "ABILITY",
+    Damage = "DAMAGE",
 }
 
 export enum LogResult {
@@ -162,6 +164,7 @@ export interface Ability {
     fast?: boolean,
     exhausts?: boolean,
     template?: string,
+    visualEffect?: string,
 }
 
 export interface Trigger {    

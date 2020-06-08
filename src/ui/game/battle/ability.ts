@@ -6,6 +6,8 @@ export function onClickAbility(state : FullState, clickedAbility : Ability) {
     const isAbility = state.ui.selected.ability && state.ui.selected.ability.name === clickedAbility.name;
     if (isAbility) {
         state.ui.selected.ability = null;
+        state.ui.highlighted.abilityTargettableUnits = {};
+        state.ui.selected.abilityTargettedUnits = {};
         return;
     }
 

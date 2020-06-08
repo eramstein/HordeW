@@ -38,7 +38,7 @@ export function sendAction(gs : GameState, actionType : ActionType, params : any
     
         default:
             break;
-    }    
+    }
 
     // remove labels
     setTimeout((gs) => {

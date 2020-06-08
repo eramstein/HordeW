@@ -42,6 +42,7 @@ function createFullState() {
         passUnitTurn: (unit) => update(s => { passUnitTurn(s.game, unit); unselect(s); return s; }),
         passTurn: () => update(s => { nextTurn(s.game); return s; }),
         unselect: () => update(s => { unselect(s); return s; }),
+        selectAbility: (i) => update(s => { onClickAbility(s, s.ui.selected.unit.abilities[i]); return s; }),
     };
 }
 
@@ -72,13 +73,13 @@ function initUiState() {
             abilityTargettablePositions: {},
             tiles: {},
         },
-    };
+    };    
     // highlight deployment tiles
-    for (let y = MAP_SIZE - DEPLOYMENT_RANGE; y < MAP_SIZE; y++) {
-        for (let x = 0; x < MAP_SIZE; x++) {            
-            init.highlighted.tiles[x + "." + y] = true;
-        }
-    }    
+    // for (let y = MAP_SIZE - DEPLOYMENT_RANGE; y < MAP_SIZE; y++) {
+    //     for (let x = 0; x < MAP_SIZE; x++) {            
+    //         init.highlighted.tiles[x + "." + y] = true;
+    //     }
+    // }
     return init;
 }
 

@@ -9,6 +9,7 @@ export const DataAbilityTemplates : { [key:string]:(AbilityParams, ...any) => Ab
         range = range || 1;
         return {            
             text: "PING +" + damage,
+            visualEffect: "Bzzt",
             trigger: ACT,
             target: ENEMIES({ count, range }),
             effect: ET.damage(damage),

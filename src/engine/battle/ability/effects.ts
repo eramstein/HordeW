@@ -7,7 +7,7 @@ export const EffectTemplates : { [key:string]: (...any) => (gs : GameState, unit
         return (gs : GameState, unit : Unit, targetUnits : Unit[], targetPositions : Pos[]) => {            
             if (!targetUnits) { return }
             targetUnits.forEach(t => {
-                damageUnit(gs, t, damage);
+                damageUnit(gs, t, damage);                
             });
         };
     },

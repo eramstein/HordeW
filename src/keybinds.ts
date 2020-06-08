@@ -1,6 +1,6 @@
 import { resetState, saveState, State, printState, tempTest, passUnit } from "./stores";
 
-export function handleKeyPress(event) {    
+export function handleKeyPress(event) {
 
     switch(event.charCode) {        
         
@@ -18,6 +18,10 @@ export function handleKeyPress(event) {
 
         case 114: // r -> reset
         resetState();
+        break;
+
+        case 38: // 1 -> ability select // TODO: that's on my keyboard...
+        State.selectAbility(0);
         break;
 
         case 32: // space -> pass unit

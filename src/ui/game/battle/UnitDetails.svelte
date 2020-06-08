@@ -45,6 +45,10 @@
         text-align: center;
         margin-bottom: 10px;
     }
+    .ability-name {
+        font-weight: bold;
+        margin-bottom: 5px;
+    }
 </style>
 
 <div class="unit-card">
@@ -116,7 +120,8 @@
             style="background-color:{ ability.name === selectedAbilityName ? '#f1c1c1' : null }"
             on:click={() => State.onClickAbility(ability)}
         >
-            { ability.text }
+            <div class="ability-name">{ ability.name }</div>
+            <div class="ability-text">{ ability.text }</div>
         </div>
     {/each}
     <div>

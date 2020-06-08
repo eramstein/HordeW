@@ -1,6 +1,7 @@
-import { Ability, Unit, TargetType, Pos } from "../model";
+import { Ability, Unit, TargetType, Pos, LogType } from "../model";
 import { GameState } from "../../game";
 import { nextTurn } from "../turn";
+import { addLog } from "../log";
 
 export function newAbility(template : Ability) : Ability {
     return {
@@ -31,7 +32,16 @@ export function playAbility(gs : GameState, unit : Unit, ability : Ability, targ
 
     // EFFECT
     // ----------------------------------------------------------------------
-    ability.effect(gs, unit, targetUnits, targetPositions, {});    
+    ability.effect(gs, unit, targetUnits, targetPositions, {});
+
+    // LOG
+    // ----------------------------------------------------------------------
+    addLog(gs, {
+        type: LogType.Ability,
+        entity: { ...unit },
+        data: { name: ability.visualEffect || ability.name },
+        text: `${unit.name} used ${ability.name} on ${targetUnits && targetUnits.map(t => t.name).join(", ")}`,
+    });
 
     // NEXT ROUND
     // ----------------------------------------------------------------------

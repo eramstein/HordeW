@@ -73,6 +73,13 @@ export function attack(gs : GameState, attacker : Unit, defender : Unit, free : 
         console.log("invalid target");        
         return false;
     }
+
+    addLog(gs, {
+        type: LogType.Attack,
+        entity: { ...attacker },
+        target: { ...defender },
+        text: `${attacker.name} attacks ${defender.name}`,
+    });
     
     const isRange = !!(getDistance(attacker.position, defender.position) > 1);
     
@@ -80,13 +87,13 @@ export function attack(gs : GameState, attacker : Unit, defender : Unit, free : 
         rangeAttack(gs, attacker, defender);
     } else {
         meleeAttack(gs, attacker, defender);
-    }
+    }    
 
     if (!free) {
         attacker.attacksCount++;
         checkIfUnitExhausted(gs, attacker);
         nextTurn(gs);
-    }    
+    }
 }
 
 function meleeAttack(gs : GameState, attacker : Unit, defender : Unit) {    
@@ -114,15 +121,7 @@ function rangeAttack(gs : GameState, attacker : Unit, defender : Unit) {
 function inflictDamage(gs : GameState, attacker : Unit, defender : Unit, min, max : number) {
     let damage = getRandomInt(min, max);
     damage = Math.max(0, damage - defender.armor);
-    damageUnit(gs, defender, damage);    
-    addLog(gs, {
-        type: LogType.Attack,
-        entity: { ...attacker },
-        target: { ...defender },
-        result: LogResult.Hit,
-        data: { damage },
-        text: `${attacker.name} hits ${defender.name} for ${damage}`,
-    });
+    damageUnit(gs, defender, damage);
 }
 
 function checkIfHit(gs : GameState, attacker : Unit, defender : Unit, skillDiff : number) : boolean {
