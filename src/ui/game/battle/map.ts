@@ -56,9 +56,8 @@ export function getTilePixelPos(x, y : number) : { tx: number, ty : number} {
 export function onClickUnit(state : FullState, clickedUnit : Unit) {
     const isUnit = state.ui.selected.unit && state.ui.selected.unit.id === clickedUnit.id;
     unselect(state);
-    if (isUnit) {
-        state.ui.selected.unit = null;        
-    } else {
+
+    if (!isUnit) {
         state.ui.selected.unit = clickedUnit;
         // HIGHLIGHT REACHABLE TILES
         const reachableTiles = getReachablePositions(state.game, clickedUnit);        
@@ -76,6 +75,7 @@ export function onClickUnit(state : FullState, clickedUnit : Unit) {
             }            
         });
     }
+
     // TOOLS : AI TILE VALUES
     if (TOOL_TILE_VALUES && clickedUnit.owner !== 0) {
         const tiles = preProcessTiles(state.game, clickedUnit);
@@ -86,15 +86,38 @@ export function onClickUnit(state : FullState, clickedUnit : Unit) {
 
 export function onClickRightUnit(state : FullState, clickedUnit : Unit) {
     const selectedUnit = state.ui.selected.unit;
+    const selectedAbility = state.ui.selected.ability;
     
+    // ABILITY USE
+    if (selectedAbility && selectedAbility.target) {
+        if (state.ui.selected.abilityTargettedUnits[clickedUnit.id]) {
+            delete state.ui.selected.abilityTargettedUnits[clickedUnit.id];
+        } else {
+            state.ui.selected.abilityTargettedUnits[clickedUnit.id] = true;        
+            if (Object.keys(state.ui.selected.abilityTargettedUnits).length === selectedAbility.target.count) {
+                const targetUnits = state.game.battle.units.filter(u => state.ui.selected.abilityTargettedUnits[u.id]);
+                sendAction(state.game, ActionType.Ability, { 
+                    unit: selectedUnit,
+                    ability: selectedAbility,
+                    targetUnits: targetUnits,
+                    targetPositions: state.ui.selected.abilityTargettedPositions,
+                });
+                unselect(state);                
+            }
+        }        
+        return;
+    }
+
     // UNIT ATTACK
     if (selectedUnit && selectedUnit.owner === 0) {
         sendAction(state.game, ActionType.Attack, { 
             attacker: selectedUnit, 
             defender: clickedUnit,
         });
-        unselect(state);        
+        unselect(state);
+        return;   
     }
+
 }
 
 export function unselect(state : FullState) {    
@@ -102,6 +125,9 @@ export function unselect(state : FullState) {
     state.ui.highlighted.tiles = {};
     state.ui.highlighted.meleeAttackableUnits = {};
     state.ui.highlighted.rangeAttackableUnits = {};
+    state.ui.highlighted.abilityTargettableUnits = {};
+    state.ui.selected.abilityTargettedUnits = {};
+    state.ui.selected.ability = null;
 }
 
 export function getActionLabels(logs : Log[]) : ActionLabel[] {

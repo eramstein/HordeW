@@ -1,4 +1,5 @@
 import { Unit, UnitType, UnitCategory, UnitAiPerso } from "../../engine/battle/model";
+import { DataAbilities as AB } from "../abilities/abilities";
 
 export const UNITS : { [key : string] : Unit } = {
     "caravan": {
@@ -15,8 +16,8 @@ export const UNITS : { [key : string] : Unit } = {
         abilities: [],
         movement: 0,
         surviveCondition: true,
-        defender: true,
         passive: true,
+        defender: true,
     },
     "bears": {
         template: "bears",
@@ -29,11 +30,11 @@ export const UNITS : { [key : string] : Unit } = {
         rangeDefense: 0,
         meleeDamage: { min: 2, max: 3 },
         armor: 2,    
-        abilities: [],
+        abilities: [AB.magicMissile],
         movement: 3,
         range: 3,
         rangeAttack: 3,
-        rangeDamage: { min: 4, max: 6 },
+        rangeDamage: { min: 4, max: 6 },        
     },
     "goblins": {
         template: "goblins",
@@ -53,6 +54,6 @@ export const UNITS : { [key : string] : Unit } = {
         rangeDamage: { min: 4, max: 6 },
         ai: {
             perso: UnitAiPerso.Raider,
-        }
+        },        
     }
 }

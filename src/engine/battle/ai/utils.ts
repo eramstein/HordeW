@@ -1,7 +1,7 @@
 import { GameState } from "../../game";
 import { Unit, Pos } from "../model";
 import { getDistance } from "../board";
-import { getHitChance, getRangeSkillDiff, getRangeSkillDiffFromPos } from "../combat";
+import { getHitChance, getRangeSkillDiff, getRangeSkillDiffFromPos, getMeleeSkillDiff } from "../combat";
 import { UNIT_PREFS } from "./config";
 
 export const MAX_UNIT_VAL = 100;
@@ -45,7 +45,7 @@ export function getNextStepTowards(gs : GameState, reachablePositions : Pos[], t
 
 export function damageExpectationMelee(gs : GameState, attacker : Unit, defender : Unit) : number {
     const avgDamage = (attacker.meleeDamage.max + attacker.meleeDamage.min) / 2;
-    const hitChance = getHitChance(attacker.meleeAttack - defender.meleeDefense);    
+    const hitChance = getHitChance(getMeleeSkillDiff(gs, attacker, defender));    
     return hitChance * avgDamage;
 }
 

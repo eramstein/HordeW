@@ -1,5 +1,5 @@
 import { GameState } from "../engine/game";
-import { TerrainType, Unit } from "../engine/battle/model";
+import { TerrainType, Unit, Ability } from "../engine/battle/model";
 import { AiTileValue } from "../engine/battle/ai/model";
 
 export interface FullState {
@@ -18,11 +18,16 @@ export interface UI {
     selected: {
         unit?: Unit,
         benchUnit?: Unit,
+        ability?: Ability,
+        abilityTargettedUnits: {},
+        abilityTargettedPositions: {},
     };
     highlighted: {
         tiles: {},
         meleeAttackableUnits: {},
         rangeAttackableUnits: {},
+        abilityTargettableUnits: {},
+        abilityTargettablePositions: {},
     };
 }
 

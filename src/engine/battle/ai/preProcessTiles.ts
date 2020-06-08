@@ -7,20 +7,10 @@ import { damageExpectationMelee, damageExpectationRange, getAttackValue } from "
 import { AiTileValue } from "./model";
 
 /*
-For a given AI unit, assign a value to each tile, based on how much it wants to be on this tile
-Can be negative
-
-1: assign to each enemy units:
-    - threat level (by distance)
-    - attack value value (by distance)
-   and to each allied unit
-    - protection level that ally provides
-    - help level that ally needs
-2: assign to tiles (apply unit's PREF coeficients):
-    - total threat of nearby units -> negative value
-    - highest attack value of nearby units -> positive value
-    - total protection provided by nearby units -> positive value
-    - total help needed by nearby units -> positive value
+For a given AI unit, assign a values to each tile:
+- how dangerous it is to be here (max expected damage in one hit, and total expected damage if all attack me)
+- what the juicest reachable target from here (with diminished value if it can still move)
+We loop through each unit aggregate values on the tiles around it
 */
 
 export function preProcessTiles(gs : GameState, myUnit : Unit) : AiTileValue[][] {        

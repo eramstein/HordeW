@@ -105,7 +105,9 @@ function doAttack(gs : GameState, unit : Unit, possibleTargets : Unit[]) {
     let bestUnitValue = -Infinity;
     let bestUnitIndex = 0;
     possibleTargets.forEach((u, i) => {
-        const value = getAttackValue(gs, unit, u, unit.position);
+        const distance = getDistance(unit.position, u.position);
+        const rangeAttackPosition = distance === 1 ? null : unit.position;
+        const value = getAttackValue(gs, unit, u, rangeAttackPosition);
         if (value > bestUnitValue) {
             bestUnitValue = value;
             bestUnitIndex = i;

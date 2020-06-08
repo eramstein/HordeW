@@ -5,6 +5,7 @@
     export let unit;
 
     $: owner = $State.game.battle.factions[unit.owner];
+    $: selectedAbilityName = $State.ui.selected.ability && $State.ui.selected.ability.name;
 
     function onClickPass() {
         sendAction($State.game, ActionType.Pass, {
@@ -37,7 +38,13 @@
     .block-end td {
         padding-bottom: 10px;
     }
-
+    .ability {
+        border: 1px solid #ccc;
+        padding: 10px 20px;
+        width: 80%;
+        text-align: center;
+        margin-bottom: 10px;
+    }
 </style>
 
 <div class="unit-card">
@@ -104,6 +111,14 @@
             </tbody>
         </table>
     </div>
+    {#each unit.abilities as ability}
+        <div class="ability"
+            style="background-color:{ ability.name === selectedAbilityName ? '#f1c1c1' : null }"
+            on:click={() => State.onClickAbility(ability)}
+        >
+            { ability.text }
+        </div>
+    {/each}
     <div>
         <button on:click={onClickPass}>PASS</button>
     </div>

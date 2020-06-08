@@ -5,6 +5,7 @@ import { getAdjacentPositions, TERRAIN_SPECS, getDistance } from "./board";
 import { nextTurn } from "./turn";
 import { addLog } from "./log";
 import { checkWinStateOnUnitDestruction } from "./winCondition";
+import { newAbility } from "./ability/ability";
 
 export function makeUnit(template : string, faction : number, pos : Pos) : Unit {
     const unit = { ...UNITS[template] };
@@ -16,7 +17,12 @@ export function makeUnit(template : string, faction : number, pos : Pos) : Unit 
     unit.used = false;
     unit.movesCount = 0;
     unit.attacksCount = 0;
+    unit.abilities = UNITS[template].abilities.map(a => newAbility(a));
     return unit;
+}
+
+export function restoreUnitAbilities(unit : Unit) {
+    unit.abilities = UNITS[unit.template].abilities.map(a => newAbility(a));
 }
 
 export function checkIfUnitExhausted(gs : GameState, unit : Unit) {
@@ -144,14 +150,27 @@ export function getAttackableUnits(gs : GameState, unit : Unit) : Unit[] {
 }
 
 export function getEnemiesInRange(gs : GameState, unit : Unit) : Unit[] {
+    const canShoot = unit.range && !isEngagedInMelee(gs, unit);
     return gs.battle.units.filter(u => {
-        return u.owner !== unit.owner && getDistance(u.position, unit.position) <= (unit.range || 1);
+        return u.owner !== unit.owner && getDistance(u.position, unit.position) <= (canShoot ? unit.range : 1);
     });
 }
 
 export function getVisibleEnemiesInRange(gs : GameState, unit : Unit) : Unit[] {
     const unitsInRange = getEnemiesInRange(gs, unit);
     return unitsInRange.filter(u => canSeeUnit(gs, unit, u.position));
+}
+
+export function isEngagedInMelee(gs : GameState, unit : Unit) : boolean {
+    let result = false;
+    gs.battle.units.forEach(u => {
+        if (unit.owner !== u.owner
+            && canUnitOpportunityAttack(gs, u)
+            && getDistance(u.position, unit.position) === 1) {
+                result = true;
+        }
+    });
+    return result;
 }
 
 export function damageUnit(gs : GameState, unit : Unit, damage : number) {

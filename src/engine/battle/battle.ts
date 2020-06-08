@@ -17,7 +17,7 @@ export function initBattleState() : BattleState {
         { name: "Les Bestiaux", isPlayer: false, bench: [], perso: BossPersoType.Random },
     ];
     return {
-        stage: BattleStage.Deployment,
+        stage: BattleStage.Battle,
         tiles: <Tile[][]>MAP_BROCELIANDE,
         factions: initFactions,
         units: aiRoster.concat(playerRoster),

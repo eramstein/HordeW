@@ -7,11 +7,13 @@ import { attack } from '../../../engine/battle/combat';
 import { clearTempLog, clearPlayerTempLog } from '../../../engine/battle/log';
 import { PLAYER_ANIMATION_DURATION, AI_ANIMATION_DELAY, AI_ANIMATION_DURATION } from './config';
 import { playAiTurn } from '../../../engine/battle/ai/ai';
+import { playAbility } from '../../../engine/battle/ability/ability';
 
 export enum ActionType {
     Move = "MOVE",
     Attack = "ATTACK",
     Pass = "PASS",
+    Ability = "ABILITY",
 }
 
 export function sendAction(gs : GameState, actionType : ActionType, params : any) {
@@ -28,6 +30,10 @@ export function sendAction(gs : GameState, actionType : ActionType, params : any
 
         case ActionType.Pass:
             passUnitTurn(gs, params.unit);
+            break;
+
+        case ActionType.Ability:
+            playAbility(gs, params.unit, params.ability, params.targetUnits, params.targetPositions);
             break;
     
         default:

@@ -103,9 +103,13 @@ export function getDistance(pos1 : Pos, pos2 : Pos) : number {
         return Math.abs(xDiff) + Math.abs(yDiff);
     } else {
         return Math.max(Math.abs(xDiff), Math.abs(yDiff));
-    }    
+    }
 }
 
 export function getPositionsInMap(posArray : Pos[]) : Pos[] {
     return posArray.filter(p => p.x >= 0 && p.x < MAP_SIZE && p.y >= 0 && p.y < MAP_SIZE);
+}
+
+export function getPositionAcross(fromPos : Pos, overPos : Pos) : Pos {
+    return fromPos;
 }

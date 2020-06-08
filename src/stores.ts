@@ -4,11 +4,12 @@ import { handleKeyPress } from "./keybinds";
 import { Screen, FullState } from "./ui/model";
 import { onClickTile, onClickUnit, onClickRightTile, onClickRightUnit, unselect } from "./ui/game/battle/map";
 import { nextTurn } from "./engine/battle/turn";
-import { passUnitTurn } from "./engine/battle/unit";
+import { passUnitTurn, restoreUnitAbilities } from "./engine/battle/unit";
 import { sendAction, ActionType } from "./ui/game/battle/actions";
 import { onClickBenchUnit, onClickEndDeployment } from "./ui/game/battle/bench";
 import { finishDeployment, DEPLOYMENT_RANGE } from "./engine/battle/deployment";
 import { MAP_SIZE } from "./engine/battle/board";
+import { onClickAbility } from "./ui/game/battle/ability";
 
 export const State = createFullState();
 
@@ -34,6 +35,7 @@ function createFullState() {
         onClickUnit: (unit) => update(s => { onClickUnit(s, unit); return s; }),
         onClickRightUnit: (unit) => update(s => { onClickRightUnit(s, unit); return s; }),
 
+        onClickAbility: (ability) => update(s => { onClickAbility(s, ability); return s; }),
         onClickBenchUnit: (unit) => update(s => { onClickBenchUnit(s, unit); return s; }),
         onClickEndDeployment: () => update(s => { onClickEndDeployment(s); return s; }),
 
@@ -59,10 +61,15 @@ function initUiState() {
             terrainType: null,
             aiTileValues: null,
         },
-        selected: {},
+        selected: {
+            abilityTargettedUnits: {},
+            abilityTargettedPositions: {},
+        },
         highlighted: {
             meleeAttackableUnits: {},
             rangeAttackableUnits: {},
+            abilityTargettableUnits: {},
+            abilityTargettablePositions: {},
             tiles: {},
         },
     };
@@ -80,7 +87,8 @@ export function loadState(): FullState {
     if (!savedData || savedData === "undefined" || savedData === "nope") {
       return getNewState()
     } else {
-      const parsedData = JSON.parse(savedData)
+      const parsedData : FullState = JSON.parse(savedData)
+      parsedData.game.battle.units.forEach(u => { restoreUnitAbilities(u) });      
       return parsedData
     }
 }

@@ -1,3 +1,5 @@
+import { GameState } from "../game";
+
 export interface BattleState {
     outcome?: BattleOutcome,
     stage: BattleStage,
@@ -91,9 +93,9 @@ export interface Unit {
     movement: number,
     // special optional stuff
     surviveCondition?: boolean, // lose if all destroyed
-    loseCondition?: boolean,  // lose if any destroyed
-    defender?: boolean,
+    loseCondition?: boolean,  // lose if any destroyed    
     passive?: boolean, // auto-skip even if not used
+    defender?: boolean, // can't attack
     // ai stuff
     ai?: UnitAi,
     aiValue?: number, // how much the AI values killing it - computed by default based on stats, this is for special cases
@@ -116,9 +118,6 @@ export interface Damage {
     max: number,
     fire?: boolean,
     magic?: boolean,
-}
-
-export interface Ability {
 }
 
 export interface Faction {
@@ -151,4 +150,52 @@ export interface Log {
     result?: any,
     data?: any,
     text?: any,
+}
+
+export interface Ability {    
+    name: string,
+    text: string,
+    effect(gs : GameState, unit : Unit, targetUnits : Unit[], targetPositions : Pos[], params? : {}): void,
+    trigger: Trigger,
+    target?: Target,
+    cost?: number,
+    fast?: boolean,
+    exhausts?: boolean,
+    template?: string,
+}
+
+export interface Trigger {    
+    type: TriggerType,
+    condition?(gs : GameState, unit : Unit, ...any): boolean,
+}
+
+export interface Target {    
+    type: TargetType,
+    count?: number,
+    range?: number,
+    eligible?(gs : GameState, unit : Unit, ability : Ability): Unit[],
+}
+
+export enum TriggerType {
+    Activated = "ACTIVATED",
+    BeforeDamage = "BEFORE_DAMAGE",
+    AfterCombat = "AFTER_COMBAT",
+    BeforeMove = "BEFORE_MOVE",
+    AfterDeath = "AFTER_DEATH",
+    OnSummon = "ON_SUMMON",
+}
+
+export enum TargetType {
+    Unit = "UNIT",
+    Self = "SELF",
+    Tile = "TILE",
+}
+
+export interface AbilityParams { 
+    name : string,
+    cost?: number,
+    target?: Target,
+    trigger?: Trigger,
+    fast?: boolean,
+    exhausts?: boolean,
 }

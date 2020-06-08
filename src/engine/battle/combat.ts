@@ -91,7 +91,7 @@ export function attack(gs : GameState, attacker : Unit, defender : Unit, free : 
 
 function meleeAttack(gs : GameState, attacker : Unit, defender : Unit) {    
     // hit or miss
-    const skillDiff = attacker.meleeAttack - defender.meleeDefense;
+    const skillDiff = getMeleeSkillDiff(gs, attacker, defender);
     const hits = checkIfHit(gs, attacker, defender, skillDiff);
 
     // damage
@@ -161,6 +161,10 @@ export function getHitChance(skillDiff : number) : number {
         hitChance = 1;
     }
     return hitChance;
+}
+
+export function getMeleeSkillDiff(gs : GameState, attacker : Unit, defender : Unit) : number {
+    return attacker.meleeAttack - defender.meleeDefense;
 }
 
 export function getRangeSkillDiff(attacker : Unit, defender : Unit) : number {

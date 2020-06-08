@@ -12,6 +12,8 @@
     $: selected = $State.ui.selected.unit && $State.ui.selected.unit.id === unit.id;
     $: meleeAttackable = $State.ui.highlighted.meleeAttackableUnits[unit.id];
     $: rangeAttackable = $State.ui.highlighted.rangeAttackableUnits[unit.id];
+    $: abilityTargettable = $State.ui.highlighted.abilityTargettableUnits[unit.id];
+    $: abilityTargetted = $State.ui.selected.abilityTargettedUnits[unit.id];
     $: active = $State.game.battle.tempLog.length > 0 && isUnitActive(unit, $State.game.battle.tempLog);
 
     let pos;
@@ -37,6 +39,7 @@
     }
 
     $: hpColor = unit.owner === 0 ? 'green' : '#ce0e0e';
+    $: circleStroke = selected || active ? "red" : (abilityTargetted ? "blue" : "black");
 
 </script>
 
@@ -67,7 +70,7 @@
     out:fade="{{ delay: unit.owner === 0 ? PLAYER_ANIMATION_DURATION + AI_ANIMATION_DELAY + AI_ANIMATION_DURATION : 0 }}"
     filter={ unit.used && !active ? "url('#shade')" : null }
 >
-    <circle r={ r } fill="white" stroke={selected || active ? "red" : "black"} stroke-width={selected || active ? "2" : "0.5"} />
+    <circle r={ r } fill="white" stroke={circleStroke} stroke-width={selected || active || abilityTargetted ? "2" : "0.5"} />
     <circle r={ r - 5 } fill="url(#{unit.template}) white">
         { unit.name }
     </circle>
@@ -94,6 +97,12 @@
             x={TILE_WIDTH/2-20-1}
             y={-1}
             href="assets/icons/bow.png" alt="" />
+    {/if}
+    {#if abilityTargettable}        
+        <image class="attack-icon"
+            x={TILE_WIDTH/2-20-1}
+            y={-1}
+            href="assets/icons/target.png" alt="" />
     {/if}
     {#each hpBars as hpBar,i}
         <rect
