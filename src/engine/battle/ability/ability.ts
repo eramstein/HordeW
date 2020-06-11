@@ -101,7 +101,7 @@ export function getEligibleTargetUnits(gs : GameState, unit : Unit, ability : Ab
     }
     if (!ability.target.eligible) {
         // TODO
-    }    
+    }
     return ability.target.eligible(gs, unit, ability);
 }
 

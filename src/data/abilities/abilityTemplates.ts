@@ -16,4 +16,18 @@ export const DataAbilityTemplates : { [key:string]:(AbilityParams, ...any) => Ab
             ...p,
         };
     },
+    zoneDamage: (p, { damage, range, count, radius }) => {
+        count = count || 1;
+        damage = damage || 1;
+        range = range || 1;
+        radius = radius || 1;
+        return {            
+            text: "BOOM +" + damage,
+            visualEffect: "Boom",
+            trigger: ACT,
+            target: ENEMIES({ count, range }),
+            effect: ET.damageZone(damage, radius),
+            ...p,
+        };
+    },
 }

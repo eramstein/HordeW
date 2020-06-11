@@ -1,6 +1,7 @@
 import { GameState } from "../../game";
 import { Unit, Pos } from "../model";
 import { damageUnit } from "../unit";
+import { getDistance } from "../board";
 
 export const EffectTemplates : { [key:string]: (...any) => (gs : GameState, unit : Unit, targetUnits : Unit[], targetPositions : Pos[], params : any) => void } = {
     damage: (damage : number) => {
@@ -8,6 +9,18 @@ export const EffectTemplates : { [key:string]: (...any) => (gs : GameState, unit
             if (!targetUnits) { return }
             targetUnits.forEach(t => {
                 damageUnit(gs, t, damage);                
+            });
+        };
+    },
+    damageZone: (damage : number, radius : number) => {
+        return (gs : GameState, unit : Unit, targetUnits : Unit[], targetPositions : Pos[]) => {            
+            if (!targetUnits) { return }
+            targetUnits.forEach(t => {
+                gs.battle.units
+                    .filter(u => getDistance(u.position, t.position) <= radius)
+                    .forEach(u => {
+                        damageUnit(gs, u, damage);
+                    });                                
             });
         };
     },
