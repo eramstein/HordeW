@@ -2,7 +2,12 @@ import { FullState } from "../../model";
 import { Ability } from "../../../engine/battle/model";
 import { getEligibleTargetUnits } from "../../../engine/battle/ability/ability";
 
-export function onClickAbility(state : FullState, clickedAbility : Ability) {    
+export function onClickAbility(state : FullState, clickedAbility : Ability) {
+    
+    if (!clickedAbility) {
+        return;
+    }
+
     const isAbility = state.ui.selected.ability && state.ui.selected.ability.name === clickedAbility.name;
     if (isAbility) {
         state.ui.selected.ability = null;

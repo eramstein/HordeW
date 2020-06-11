@@ -68,10 +68,12 @@
                     <td>Hit Points</td>
                     <td>{ unit.hp } / { unit.hpMax }</td>
                 </tr>
+                {#if unit.energy !== undefined}
                 <tr class="block-end">
-                    <td>Morale</td>
-                    <td>{ unit.morale } / { unit.moraleInit }</td>
+                    <td>Energy</td>
+                    <td>{ unit.energy } / { unit.energyMax }</td>
                 </tr>
+                {/if}
                 <tr class="block-end">
                     <td>Movement</td>
                     <td>{ unit.movement }</td>

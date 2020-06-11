@@ -12,12 +12,14 @@ export function makeUnit(template : string, faction : number, pos : Pos) : Unit 
     unit.id = template + Math.floor(Math.random() * 1000000000000000);
     unit.owner = faction;
     unit.position = pos;
-    unit.hp = unit.hpMax;
-    unit.morale = unit.moraleInit;
+    unit.hp = unit.hpMax;    
     unit.used = false;
     unit.movesCount = 0;
     unit.attacksCount = 0;
     unit.abilities = UNITS[template].abilities.map(a => newAbility(a));
+    if (unit.energyMax) {
+        unit.energy = unit.energyMax;
+    }
     return unit;
 }
 
@@ -26,7 +28,11 @@ export function restoreUnitAbilities(unit : Unit) {
 }
 
 export function checkIfUnitExhausted(gs : GameState, unit : Unit) {
-    if (unit.attacksCount > 0 && unit.movesCount > 0) {
+    const minAbilityCost = unit.abilities.reduce((agg, ability) => {
+        return Math.min(ability.cost || 0, agg);
+    }, Infinity);
+    const enoughEnergyForAbility = unit.energy && unit.energy >= minAbilityCost;    
+    if (unit.attacksCount > 0 && unit.movesCount > 0 && !enoughEnergyForAbility) {
         unit.used = true;
     }
 }

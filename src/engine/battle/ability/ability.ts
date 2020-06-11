@@ -2,6 +2,7 @@ import { Ability, Unit, TargetType, Pos, LogType } from "../model";
 import { GameState } from "../../game";
 import { nextTurn } from "../turn";
 import { addLog } from "../log";
+import { checkIfUnitExhausted } from "../unit";
 
 export function newAbility(template : Ability) : Ability {
     return {
@@ -45,7 +46,7 @@ export function playAbility(gs : GameState, unit : Unit, ability : Ability, targ
 
     // NEXT ROUND
     // ----------------------------------------------------------------------
-    if (!ability.fast) {        
+    if (!ability.fast) {
         nextTurn(gs);
     }
     
@@ -61,18 +62,26 @@ function ccPreventsAbility(gs : GameState, unit : Unit) : boolean {
 }
 
 function payAbilityCost(gs : GameState, unit : Unit, ability : Ability) : boolean {
-    // TODO
-    // const payed = true;
-    // if (payed === false) {
-    //     console.log("NOT ENOUGH MANA");
-    //     return false;
-    // }
+    const cost = ability.cost || 0;
+    if (unit.energy < cost) {
+        console.log("NOT ENOUGH ENERGY");
+        return false;
+    }
+
+    unit.energy -= cost;
+    
+    if (ability.exhausts) {    
+        unit.used = true;
+    } else {
+        checkIfUnitExhausted(gs, unit);
+    }
+    
     return true;
 }
 
 function allTargetUnitsEligible(gs : GameState, unit : Unit, ability : Ability, targets : Unit[]) : boolean {
     if (ability.target && ability.target.type !== TargetType.Self) {    
-        const eligibleTargets = getEligibleTargetUnits(gs, unit, ability);    
+        const eligibleTargets = getEligibleTargetUnits(gs, unit, ability);        
         const targetsValid = checkEligibility(targets, eligibleTargets);    
         if (targetsValid === false) {
             console.log("INVALID TARGET", ability, targets);
@@ -100,15 +109,15 @@ export function checkEligibility(targets : Unit[], eligible : Unit[]) : boolean 
     if (eligible === null) {
         return true;
     }
-    for (let index = 0; index < targets.length; index++) {
-        const t = targets[index];
-        let found = false;        
-        eligible.forEach(e => {
-            if (e.id === t.id) {
-                found = true;
-            }            
-        });
-        return found;
-    }
-    return true;
+    const eligibleMap = eligible.reduce((agg, unit) => {
+        agg[unit.id] = true;
+        return agg;
+    }, {});
+    let allGood = true;
+    targets.forEach(target => {
+        if (!eligibleMap[target.id]) {
+            allGood = false;
+        }
+    });
+    return allGood;
 }

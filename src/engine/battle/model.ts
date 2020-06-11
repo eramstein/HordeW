@@ -69,7 +69,7 @@ export interface Unit {
     id?: string,
     owner?: number,
     hp?: number,
-    morale?: number,
+    energy?: number,
     position?: Pos,
     used?: boolean,
     movesCount?: number,
@@ -80,7 +80,9 @@ export interface Unit {
     category: UnitCategory,
     type?: UnitType,
     hpMax: number,
-    moraleInit: number,    
+    armor: number,    
+    abilities: Ability[],
+    movement: number,
     meleeDefense: number,    
     rangeDefense: number,
     meleeAttack: number,
@@ -88,9 +90,7 @@ export interface Unit {
     range?: number,
     rangeAttack?: number,
     rangeDamage?: Damage,
-    armor: number,    
-    abilities: Ability[],
-    movement: number,
+    energyMax?: number,    
     // special optional stuff
     surviveCondition?: boolean, // lose if all destroyed
     loseCondition?: boolean,  // lose if any destroyed    
@@ -200,5 +200,4 @@ export interface AbilityParams {
     target?: Target,
     trigger?: Trigger,
     fast?: boolean,
-    exhausts?: boolean,
 }

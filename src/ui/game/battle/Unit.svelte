@@ -75,13 +75,13 @@
         { unit.name }
     </circle>
     {#if unit.movesCount > 0 && !unit.used}        
-        <text class="unit-info" x={13} y={5}
+        <text class="unit-info" x={13} y={12}
             in:fade="{{ delay: unit.owner === 0 ? 0 : PLAYER_ANIMATION_DURATION }}">
             M
         </text>
     {/if}
     {#if unit.attacksCount > 0 && !unit.used}        
-        <text class="unit-info" x={13} y={5}
+        <text class="unit-info" x={14} y={-4}
             in:fade="{{ delay: unit.owner === 0 ? 0 : PLAYER_ANIMATION_DURATION }}">
             A
         </text>
