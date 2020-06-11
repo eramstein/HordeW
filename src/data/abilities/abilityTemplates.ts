@@ -30,4 +30,14 @@ export const DataAbilityTemplates : { [key:string]:(AbilityParams, ...any) => Ab
             ...p,
         };
     },
+    mezz: (p, { value, count, range }) => {
+        return {            
+            text: "Mezz " + value,
+            visualEffect: "Spell",
+            trigger: ACT,
+            target: ENEMIES({ count, range }),
+            effect: ET.mezz(value),
+            ...p,
+        };
+    },
 }

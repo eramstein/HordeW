@@ -74,6 +74,9 @@ export interface Unit {
     used?: boolean,
     movesCount?: number,
     attacksCount?: number,
+    endOfRound?: TemporaryEffects,
+    endOfTurn?: TemporaryEffects,
+    cc?: CrowdControl,
     // template
     template: string,
     name: string,
@@ -90,7 +93,7 @@ export interface Unit {
     range?: number,
     rangeAttack?: number,
     rangeDamage?: Damage,
-    energyMax?: number,    
+    energyMax?: number,
     // special optional stuff
     surviveCondition?: boolean, // lose if all destroyed
     loseCondition?: boolean,  // lose if any destroyed    
@@ -111,6 +114,19 @@ export enum UnitAiPerso {
     Raider = "RAIDER",
     Hunter = "HUNTER",
     Survivor = "SURVIVOR",
+}
+
+export interface TemporaryEffects {
+    meleeAttack: number,
+    damageShield: number,
+    dot: number,
+    hot: number,
+}
+
+export interface CrowdControl {
+    mezz: number,
+    stun: number,
+    root: number,
 }
 
 export interface Damage {

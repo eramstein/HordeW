@@ -1,8 +1,11 @@
 import { GameState } from "../game";
 import { Unit } from "./model";
+import { damageUnit, healUnit, canUnitDoAnything } from "./unit";
 
 export function nextTurn(gs : GameState) {
-    console.log("next turn");    
+    console.log("next turn");
+
+    resetTurnEffects(gs);
 
     gs.battle.currentFaction = (gs.battle.currentFaction + 1) % gs.battle.factions.length;
 
@@ -23,6 +26,8 @@ export function nextTurn(gs : GameState) {
 }
 
 export function nextRound(gs : GameState) {
+    applyRoundEffects(gs);
+    resetRoundEffects(gs);
     gs.battle.round++;
     gs.battle.units.forEach(u => {
         u.movesCount = 0;
@@ -42,6 +47,43 @@ export function factionDone(gs : GameState, faction : number) : boolean {
 
 export function unitsDone(gs : GameState, units : Unit[]) : boolean {
     return !units.filter(u => !u.passive).some(u => {
-        return u.used === false;
+        return canUnitDoAnything(gs, u);
     });
+}
+
+function resetRoundEffects(gs : GameState) {
+    gs.battle.units.forEach(u => { updateTempEffects(u, true) });
+    gs.battle.units.forEach(u => { updateCC(u) });
+}
+
+function resetTurnEffects(gs : GameState) {
+    gs.battle.units.forEach(u => { updateTempEffects(u, false) });    
+}
+
+function applyRoundEffects(gs : GameState) {
+    gs.battle.units.forEach(u => {
+        if (u.endOfRound.dot) {
+            damageUnit(gs, u, u.endOfRound.dot);
+        }
+        if (u.endOfRound.hot) {
+            healUnit(gs, u, u.endOfRound.hot);
+        }
+    });
+}
+
+function updateCC(unit : Unit) {
+    unit.cc = {
+        mezz: Math.max(unit.cc.mezz - 1, 0),
+        stun: Math.max(unit.cc.stun - 1, 0),
+        root: Math.max(unit.cc.root - 1, 0),
+    };
+}
+
+function updateTempEffects(unit : Unit, endOfRound : boolean) {
+    const effects = endOfRound ? unit.endOfRound : unit.endOfTurn;
+    if (effects.meleeAttack !== 0) {
+        unit.meleeAttack -= effects.meleeAttack;
+    }
+    effects.meleeAttack = 0;
+    effects.damageShield = 0;
 }

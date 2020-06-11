@@ -85,14 +85,14 @@
                 <tr>
                     <td>Melee Attack</td>
                     <td>{ unit.meleeAttack }</td>
+                </tr>                
+                <tr class="block-end">
+                    <td>Melee Damage</td>
+                    <td>{ unit.meleeDamage.min } to { unit.meleeDamage.max }</td>
                 </tr>
                 <tr>
                     <td>Melee Defense</td>
                     <td>{ unit.meleeDefense }</td>
-                </tr>
-                <tr class="block-end">
-                    <td>Melee Damage</td>
-                    <td>{ unit.meleeDamage.min } to { unit.meleeDamage.max }</td>
                 </tr>
                 {#if unit.range}
                 <tr>
@@ -103,15 +103,31 @@
                     <td>Range Attack</td>
                     <td>{ unit.rangeAttack }</td>
                 </tr>
-                {/if}
-                <tr>
-                    <td>Range Defense</td>
-                    <td>{ unit.rangeDefense }</td>
-                </tr>
-                {#if unit.range}
                 <tr>
                     <td>Range Damage</td>
                     <td>{ unit.rangeDamage.min } to { unit.rangeDamage.max }</td>
+                </tr>
+                {/if}
+                <tr class="block-end">
+                    <td>Range Defense</td>
+                    <td>{ unit.rangeDefense }</td>
+                </tr>
+                {#if unit.cc.mezz}
+                <tr>
+                    <td>Mezz</td>
+                    <td>{ unit.cc.mezz } rounds</td>
+                </tr>
+                {/if}
+                {#if unit.cc.stund}
+                <tr>
+                    <td>Stunned</td>
+                    <td>{ unit.cc.stund } rounds</td>
+                </tr>
+                {/if}
+                {#if unit.cc.root}
+                <tr>
+                    <td>Rooted</td>
+                    <td>{ unit.cc.root } rounds</td>
                 </tr>
                 {/if}
             </tbody>

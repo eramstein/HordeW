@@ -17,11 +17,32 @@ export function makeUnit(template : string, faction : number, pos : Pos) : Unit 
     unit.movesCount = 0;
     unit.attacksCount = 0;
     unit.abilities = UNITS[template].abilities.map(a => newAbility(a));
+    unit.endOfRound = defaultTempEffects();
+    unit.endOfTurn = defaultTempEffects();
+    unit.cc = defaultCrowdControl();
     if (unit.energyMax) {
         unit.energy = unit.energyMax;
     }
     return unit;
 }
+
+export const defaultTempEffects = () => {
+    return {
+        meleeAttack: 0,
+        damageShield: 0,
+        dot: 0,
+        hot: 0,        
+    };    
+};
+
+export const defaultCrowdControl = () => {
+    return {
+        mezz: 0,
+        stun: 0,
+        root: 0,
+    };    
+};
+
 
 export function restoreUnitAbilities(unit : Unit) {
     unit.abilities = UNITS[unit.template].abilities.map(a => newAbility(a));
@@ -49,12 +70,16 @@ export function passUnitTurn(gs : GameState, unit : Unit) {
     nextTurn(gs);
 }
 
+export function canUnitDoAnything(gs : GameState, unit : Unit) : boolean {
+    return unit.used === false && !unit.cc.mezz && !unit.cc.stun;
+}
+
 export function canUnitMove(gs : GameState, unit : Unit) : boolean {    
-    return !unit.used && unit.movement > 0 && unit.movesCount === 0;
+    return !unit.used && !unit.cc.mezz && !unit.cc.stun && !unit.cc.root && unit.movement > 0 && unit.movesCount === 0;
 }
 
 export function canUnitAttack(gs : GameState, unit : Unit) : boolean {    
-    return !unit.used && !unit.defender && unit.attacksCount === 0;
+    return !unit.used && !unit.cc.mezz && !unit.cc.stun && !unit.defender && unit.attacksCount === 0;
 }
 
 export function canUnitOpportunityAttack(gs : GameState, unit : Unit) : boolean {    
@@ -239,4 +264,21 @@ export function canSeeUnit(gs : GameState, unit : Unit, targetUnitPos : Pos) : b
     }
 
     return false;
+}
+
+export function healUnit(gs : GameState, unit : Unit, value : number) {        
+    unit.hp += value;
+    unit.hp = Math.min(unit.hp, unit.hpMax);
+}
+
+export function mezzUnit(gs : GameState, unit : Unit, value : number) {        
+    unit.cc.mezz += value;
+}
+
+export function stunUnit(gs : GameState, unit : Unit, value : number) {        
+    unit.cc.stun += value;
+}
+
+export function energizeUnit(gs : GameState, unit : Unit, value : number) {
+    unit.energy += value;
 }
