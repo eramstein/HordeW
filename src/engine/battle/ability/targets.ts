@@ -18,4 +18,11 @@ export const TargetEligibilityTemplates : { [key:string]: (...any) => (gs : Game
             });
         };
     },
+    unitsCloserThan: (n) => {
+        return (gs : GameState, unit : Unit, ability : Ability) => {
+            return gs.battle.units.filter(u => {
+                return getDistance(unit.position, u.position) <= n;
+            });
+        };
+    },
 }

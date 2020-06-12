@@ -1,7 +1,9 @@
 import { GameState } from "../../game";
-import { Unit, Pos, TemporaryEffects } from "../model";
+import { Unit, Pos, TemporaryEffects, Ability } from "../model";
 import { damageUnit, healUnit, mezzUnit, stunUnit } from "../unit";
 import { getDistance } from "../board";
+import { newAbility } from "./ability";
+import { DataAbilities } from "../../../data/abilities/abilities";
 
 export const EffectTemplates : { [key:string]: (...any) => (gs : GameState, unit : Unit, targetUnits : Unit[], targetPositions : Pos[], params : any) => void } = {
     damage: (damage : number) => {
@@ -24,18 +26,18 @@ export const EffectTemplates : { [key:string]: (...any) => (gs : GameState, unit
             });
         };
     },
-    // damageAttacker: (damage : number) => {
-    //     return (gs : GameState, unit : Unit, targets : Unit[], targetPositions : Pos[], params : { attacker : Unit }) => {
-    //         if (!params || !params.attacker) { return }
-    //         damageUnit(gs, params.attacker, damage, false);
-    //     };
-    // },
-    // damageMover: (damage : number) => {
-    //     return (gs : GameState, unit : Unit, targets : Unit[], targetPositions : Pos[], params : { mover : Unit }) => {
-    //         if (!params || !params.mover) { return }
-    //         damageUnit(gs, params.mover, damage, false);
-    //     };
-    // },
+    damageAttacker: (damage : number) => {
+        return (gs : GameState, unit : Unit, targets : Unit[], targetPositions : Pos[], params : { attacker : Unit }) => {
+            if (!params || !params.attacker) { return }
+            damageUnit(gs, params.attacker, damage);
+        };
+    },
+    damageMover: (damage : number) => {
+        return (gs : GameState, unit : Unit, targets : Unit[], targetPositions : Pos[], params : { mover : Unit }) => {
+            if (!params || !params.mover) { return }
+            damageUnit(gs, params.mover, damage);
+        };
+    },
     heal: (value : number) => {
         return (gs : GameState, unit : Unit, targets : Unit[], targetPositions : Pos[]) => {
             if (!targets) { return }
@@ -57,6 +59,19 @@ export const EffectTemplates : { [key:string]: (...any) => (gs : GameState, unit
             if (!targets) { return }
             targets.forEach(t => {
                 stunUnit(gs, t, value);
+            });
+        };
+    },
+    addAbility: (abilityName : string, duration : number) => {        
+        return (gs : GameState, unit : Unit, targets : Unit[], targetPositions : Pos[]) => {
+            const template = DataAbilities[abilityName];
+            if (!targets) { return }
+            targets.forEach(t => {
+                const ability = newAbility(template);
+                if (duration) {
+                    ability.duration = duration;
+                }
+                t.abilities.push(ability);
             });
         };
     },

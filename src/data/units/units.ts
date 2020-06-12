@@ -30,7 +30,7 @@ export const UNITS : { [key : string] : Unit } = {
         rangeDefense: 0,
         meleeDamage: { min: 2, max: 3 },
         armor: 2,    
-        abilities: [AB.magicMissile, AB.multiMissile, AB.fireball, AB.mezz, AB.furied],
+        abilities: [AB.magicMissile, AB.multiMissile, AB.fireball, AB.mezz, AB.applyFuried],
         movement: 3,
         range: 3,
         rangeAttack: 3,

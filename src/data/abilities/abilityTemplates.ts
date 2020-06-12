@@ -1,5 +1,5 @@
 import { Ability } from "../../engine/battle/model";
-import { ACT, ENEMIES, BEFORE_I_MOVE, MYSELF } from "./shortcuts";
+import { ACT, ENEMIES, BEFORE_I_MOVE, MYSELF, UNITS } from "./shortcuts";
 import { EffectTemplates as ET } from "../../engine/battle/ability/effects";
 
 export const DataAbilityTemplates : { [key:string]:(AbilityParams, ...any) => Ability } = {
@@ -47,6 +47,15 @@ export const DataAbilityTemplates : { [key:string]:(AbilityParams, ...any) => Ab
             trigger: BEFORE_I_MOVE,
             target: MYSELF,
             effect: ET.damage(damage),
+            ...p,
+        };
+    },
+    addAbility: (p, { count, range, abilityName }) => {
+        return {
+            text: "Add " + abilityName,
+            trigger: ACT,
+            target: UNITS({ count, range }),
+            effect: ET.addAbility(abilityName),
             ...p,
         };
     },

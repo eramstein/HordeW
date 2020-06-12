@@ -51,3 +51,11 @@ export function ENEMIES({ range, count }) {
         eligible: TargetEligibilityTemplates.enemiesCloserThan(range),
     };    
 };
+
+export function UNITS({ range, count }) {
+    return {
+        type: TargetType.Unit,
+        count: count,
+        eligible: TargetEligibilityTemplates.unitsCloserThan(range),
+    };    
+};
