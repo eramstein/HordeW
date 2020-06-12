@@ -56,7 +56,7 @@
         stroke:#333;
         transition: all .4s ease;
     }
-    .attack-icon {
+    .attack-icon, .cc-icon {
         width: 20px;
         height: 20px;
     }
@@ -97,12 +97,30 @@
             x={TILE_WIDTH/2-20-1}
             y={-1}
             href="assets/icons/bow.png" alt="" />
-    {/if}
+    {/if}    
     {#if abilityTargettable}        
         <image class="attack-icon"
             x={TILE_WIDTH/2-20-1}
             y={-1}
             href="assets/icons/target.png" alt="" />
+    {/if}
+    {#if unit.cc.root}        
+        <image class="cc-icon"
+            x={-2}
+            y={-2}
+            href="assets/icons/root.png" alt="" />
+    {/if}
+    {#if unit.cc.mezz}        
+        <image class="cc-icon"
+            x={-2}
+            y={-2}
+            href="assets/icons/mezz.png" alt="" />
+    {/if}
+    {#if unit.cc.stun}        
+        <image class="cc-icon"
+            x={-2}
+            y={-2}
+            href="assets/icons/stun.png" alt="" />
     {/if}
     {#each hpBars as hpBar,i}
         <rect

@@ -18,7 +18,7 @@ export function onClickAbility(state : FullState, clickedAbility : Ability) {
 
     state.ui.selected.ability = clickedAbility;
 
-    // HIGHLIGHT ELIGIBLE TARGETS
+    // HIGHLIGHT ELIGIBLE TARGETS    
     const eligibleTargets = getEligibleTargetUnits(state.game, state.ui.selected.unit, clickedAbility);            
     eligibleTargets.forEach(u => {
         state.ui.highlighted.abilityTargettableUnits[u.id] = true;

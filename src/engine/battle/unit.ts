@@ -22,7 +22,7 @@ export function makeUnit(template : string, faction : number, pos : Pos) : Unit 
     unit.cc = defaultCrowdControl();
     if (unit.energyMax) {
         unit.energy = unit.energyMax;
-    }
+    }    
     return unit;
 }
 
@@ -45,7 +45,7 @@ export const defaultCrowdControl = () => {
 
 
 export function restoreUnitAbilities(unit : Unit) {
-    unit.abilities = UNITS[unit.template].abilities.map(a => newAbility(a));
+    unit.abilities = UNITS[unit.template].abilities.map(a => newAbility(a));    
 }
 
 export function checkIfUnitExhausted(gs : GameState, unit : Unit) {
@@ -217,6 +217,8 @@ export function damageUnit(gs : GameState, unit : Unit, damage : number) {
     });
 
     unit.hp -= damage;
+    unit.cc.mezz = null;
+
     if (unit.hp <= 0) {
         destroyUnit(gs, unit);
     }

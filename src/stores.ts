@@ -10,6 +10,7 @@ import { onClickBenchUnit, onClickEndDeployment } from "./ui/game/battle/bench";
 import { finishDeployment, DEPLOYMENT_RANGE } from "./engine/battle/deployment";
 import { MAP_SIZE } from "./engine/battle/board";
 import { onClickAbility } from "./ui/game/battle/ability";
+import { TriggerType } from "./engine/battle/model";
 
 export const State = createFullState();
 
@@ -42,7 +43,7 @@ function createFullState() {
         passUnitTurn: (unit) => update(s => { passUnitTurn(s.game, unit); unselect(s); return s; }),
         passTurn: () => update(s => { nextTurn(s.game); return s; }),
         unselect: () => update(s => { unselect(s); return s; }),
-        selectAbility: (i) => update(s => { onClickAbility(s, s.ui.selected.unit.abilities[i]); return s; }),
+        selectAbility: (i) => update(s => { onClickAbility(s, s.ui.selected.unit.abilities.filter(a => a.trigger.type === TriggerType.Activated)[i]); return s; }),
     };
 }
 
@@ -89,7 +90,8 @@ export function loadState(): FullState {
       return getNewState()
     } else {
       const parsedData : FullState = JSON.parse(savedData)
-      parsedData.game.battle.units.forEach(u => { restoreUnitAbilities(u) });      
+      parsedData.game.battle.units.forEach(u => { restoreUnitAbilities(u) });
+      restoreUnitAbilities(parsedData.ui.selected.unit);
       return parsedData
     }
 }

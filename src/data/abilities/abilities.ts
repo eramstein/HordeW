@@ -8,8 +8,5 @@ export const DataAbilities : { [key:string]:Ability } = {
     mezz: AT.mezz({ name: 'Mezz', cost: 2 }, { value : 5, range : 3, count : 1 }),
     furied: AT.furied({ name: 'Piquotage', cost: 1 }, { damage : 5 }),
     applyFuried: AT.addAbility({ name: 'Enfury', cost: 1 }, { count : 1, range : 5, abilityName : 'furied' }),
-}
-
-export function getAbility(name : string) : Ability {
-    return DataAbilities[name];
+    buffAttack: AT.tempEffect({ name: 'Buff Attack', cost: 1 }, { count : 1, range : 5, effect : { meleeAttack: 3 } }),
 }

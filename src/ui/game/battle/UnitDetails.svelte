@@ -1,11 +1,15 @@
 <script>
     import { State } from '../../../stores';
     import { sendAction, ActionType } from "./actions";
+    import { TriggerType } from "../../../engine/battle/model";
 
     export let unit;
 
     $: owner = $State.game.battle.factions[unit.owner];
     $: selectedAbilityName = $State.ui.selected.ability && $State.ui.selected.ability.name;
+
+    $: activatedAbilities = unit.abilities.filter(a => a.trigger.type === TriggerType.Activated);
+    $: passiveAbilities = unit.abilities.filter(a => a.trigger.type !== TriggerType.Activated || !a.trigger.type);
 
     function onClickPass() {
         sendAction($State.game, ActionType.Pass, {
@@ -14,14 +18,17 @@
         State.unselect();
     }
 
+    function getBuffColor(unit, buffType) {
+        const value = (unit.endOfTurn[buffType] || 0) + (unit.endOfRound[buffType] || 0);        
+        return value === 0 ? null :
+            (value > 0 ? 'green' : 'red');
+    }
+
 </script>
 
 <style>
     .unit-card {
         width: 100%;
-        padding-bottom: 10px;
-        margin-bottom: 10px;
-        border-bottom: 1px solid #ccc;
     }
     .name {
         font-weight: bold;
@@ -38,16 +45,26 @@
     .block-end td {
         padding-bottom: 10px;
     }
-    .ability {
-        border: 1px solid #ccc;
+    .ability-active {
+        border-top: 1px solid #ccc;
         padding: 10px 20px;
         width: 80%;
         text-align: center;
-        margin-bottom: 10px;
+    }
+    .ability-passive {
+        border-top: 1px solid #ccc;
+        padding: 10px 0px;
+        text-align: center;
+        background-color: #f1f1f1;
     }
     .ability-name {
         font-weight: bold;
         margin-bottom: 5px;
+    }
+    .pass-button {
+        border-top: 1px solid #ccc;
+        padding-top: 20px;
+        text-align: center;
     }
 </style>
 
@@ -84,7 +101,7 @@
                 </tr>
                 <tr>
                     <td>Melee Attack</td>
-                    <td>{ unit.meleeAttack }</td>
+                    <td style="color:{ getBuffColor(unit, 'meleeAttack') }">{ unit.meleeAttack }</td>
                 </tr>                
                 <tr class="block-end">
                     <td>Melee Damage</td>
@@ -133,16 +150,22 @@
             </tbody>
         </table>
     </div>
-    {#each unit.abilities as ability}
-        <div class="ability"
-            style="background-color:{ ability.name === selectedAbilityName ? '#f1c1c1' : null }"
+    {#each activatedAbilities as ability}
+        <div class="ability-active"
+            style="background-color:{ ability.name === selectedAbilityName ? 'rgb(255, 179, 84)' : null }"
             on:click={() => State.onClickAbility(ability)}
         >
             <div class="ability-name">{ ability.name }</div>
             <div class="ability-text">{ ability.text }</div>
         </div>
     {/each}
-    <div>
+    {#each passiveAbilities as ability}
+        <div class="ability-passive">
+            <div class="ability-name">{ ability.name }</div>
+            <div class="ability-text">{ ability.text }</div>
+        </div>
+    {/each}
+    <div class="pass-button">
         <button on:click={onClickPass}>PASS</button>
     </div>
 </div>

@@ -37,25 +37,26 @@
     <div class="sidebar">
         {#if selectedUnit}
             <UnitDetails unit={selectedUnit} />
-        {/if}        
-        <div class="stage">
+        {:else}
+            <div class="stage">
             {#if battle.stage === BattleStage.Deployment}
                 Deployment
             {:else}
                 Round {battle.round}
             {/if}
-        </div>        
-        <div>
-            {#each battle.log as log}
-                <div>{ log.text }</div>
-            {/each}
-        </div>
-        {#if terrainEditor}
-            <MapEditor />
-        {/if}
-        {#if battle.stage === BattleStage.Deployment}
-            <Bench />
-        {/if}
+            </div>
+            <div>
+                {#each battle.log as log}
+                    <div>{ log.text }</div>
+                {/each}
+            </div>
+            {#if terrainEditor}
+                <MapEditor />
+            {/if}
+            {#if battle.stage === BattleStage.Deployment}
+                <Bench />
+            {/if}
+        {/if}        
     </div>        
 </div>
 

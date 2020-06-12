@@ -4,7 +4,7 @@ import { nextTurn } from "../turn";
 import { addLog } from "../log";
 import { checkIfUnitExhausted } from "../unit";
 
-export function newAbility(template : Ability) : Ability {
+export function newAbility(template : Ability) : Ability {    
     return {
         ...template,
     }
@@ -101,7 +101,7 @@ export function getEligibleTargetUnits(gs : GameState, unit : Unit, ability : Ab
     }
     if (!ability.target.eligible) {
         // TODO
-    }
+    }    
     return ability.target.eligible(gs, unit, ability);
 }
 

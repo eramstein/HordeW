@@ -8,7 +8,7 @@ export const DataAbilityTemplates : { [key:string]:(AbilityParams, ...any) => Ab
         damage = damage || 1;
         range = range || 1;
         return {
-            text: "PING +" + damage,
+            text: "PING " + damage,
             visualEffect: "Bzzt",
             trigger: ACT,
             target: ENEMIES({ count, range }),
@@ -22,7 +22,7 @@ export const DataAbilityTemplates : { [key:string]:(AbilityParams, ...any) => Ab
         range = range || 1;
         radius = radius || 1;
         return {
-            text: "BOOM +" + damage,
+            text: "BOOM " + damage,
             visualEffect: "Boom",
             trigger: ACT,
             target: ENEMIES({ count, range }),
@@ -50,12 +50,21 @@ export const DataAbilityTemplates : { [key:string]:(AbilityParams, ...any) => Ab
             ...p,
         };
     },
-    addAbility: (p, { count, range, abilityName }) => {
+    addAbility: (p, { count, range, abilityName, duration }) => {
         return {
             text: "Add " + abilityName,
             trigger: ACT,
             target: UNITS({ count, range }),
-            effect: ET.addAbility(abilityName),
+            effect: ET.addAbility(abilityName, duration),
+            ...p,
+        };
+    },
+    tempEffect: (p, { count, range, effect, endOfTurn }) => {
+        return {
+            text: JSON.stringify(effect),
+            trigger: ACT,
+            target: UNITS({ count, range }),
+            effect: ET.temporaryEffect(effect, endOfTurn),
             ...p,
         };
     },
