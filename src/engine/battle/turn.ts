@@ -62,6 +62,7 @@ function resetTurnEffects(gs : GameState) {
 
 function applyRoundEffects(gs : GameState) {
     gs.battle.units.forEach(u => {
+        decrementAbilitiesDuration(u);
         if (u.endOfRound.dot) {
             damageUnit(gs, u, u.endOfRound.dot);
         }
@@ -69,6 +70,13 @@ function applyRoundEffects(gs : GameState) {
             healUnit(gs, u, u.endOfRound.hot);
         }
     });
+}
+
+function decrementAbilitiesDuration(unit : Unit) {
+    unit.abilities.filter(a => a.duration !== undefined).forEach((a, i) => {
+        a.duration--;
+    });
+    unit.abilities = unit.abilities.filter(a => a.duration !== 0);
 }
 
 function updateCC(unit : Unit) {

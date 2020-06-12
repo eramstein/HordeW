@@ -1,49 +1,23 @@
 import { GameState } from "../../game";
 import { TriggerType, Unit, Pos } from "../model";
-import { getEligibleTargets } from "./ability";
+import { getEligibleTargetUnits } from "./ability";
 
-function triggerAbilities(gs : GameState, type : TriggerType, ...rest) {
+export function triggerAbilities(gs : GameState, type : TriggerType, params : {}) {
+    // TODO: register/unregister unit/ability to TriggerTypes, to avoid looping all abilities every time?
     gs.battle.units.forEach(u => {
         u.abilities.forEach(a => {
             if (a.trigger.type === type) {                
-                if (!a.trigger.condition || a.trigger.condition(gs, u, ...rest)) {
+                if (!a.trigger.condition || a.trigger.condition(gs, u, params)) {
                     // TODO: if a.target, ask player or AI for targets
                     // (store ability in a "pendingTriggeredAbilities" array ?)
-                    console.log(u.name + " triggers " + a.name, a, ...rest);
-                    let targets = null;
-                    let params : any = {};                    
+                    let targetUnits = null;
+                    let targetPositions = null;
                     if (a.target) {
-                        targets = getEligibleTargets(gs, u, a);
-                    }                    
-                    if (type === TriggerType.AfterCombat) {
-                        params.attacker = rest[0];                        
+                        targetUnits = getEligibleTargetUnits(gs, u, a);
                     }
-                    if (type === TriggerType.BeforeMove) {
-                        params.mover = rest[0];                        
-                    }
-                    a.effect(gs, u, targets, params);
+                    a.effect(gs, u, targetUnits, targetPositions, params);
                 }
             }
         });
     });
-}
-
-export function onDamageUnit(gs : GameState, unit : Unit, damage : number, isCombatDamage : boolean) {
-    triggerAbilities(gs, TriggerType.BeforeDamage, damage, isCombatDamage, unit);
-}
-
-export function onCombatResolution(gs : GameState, attacker : Unit, defender : Unit) {
-    triggerAbilities(gs, TriggerType.AfterCombat, attacker, defender);
-}
-
-export function onMoveUnit(gs : GameState, unit : Unit, pos : Pos) {
-    triggerAbilities(gs, TriggerType.BeforeMove, unit, pos);
-}
-
-export function onSummonUnit(gs : GameState, unit : Unit, pos : Pos, owned : boolean) {
-    triggerAbilities(gs, TriggerType.OnSummon, unit, pos);
-}
-
-export function onUnitDeath(gs : GameState, unit : Unit) {
-    triggerAbilities(gs, TriggerType.AfterDeath, unit);
 }

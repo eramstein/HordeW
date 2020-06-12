@@ -1,5 +1,5 @@
 import { Ability } from "../../engine/battle/model";
-import { ACT, ENEMIES } from "./shortcuts";
+import { ACT, ENEMIES, BEFORE_I_MOVE, MYSELF } from "./shortcuts";
 import { EffectTemplates as ET } from "../../engine/battle/ability/effects";
 
 export const DataAbilityTemplates : { [key:string]:(AbilityParams, ...any) => Ability } = {
@@ -7,7 +7,7 @@ export const DataAbilityTemplates : { [key:string]:(AbilityParams, ...any) => Ab
         count = count || 1;
         damage = damage || 1;
         range = range || 1;
-        return {            
+        return {
             text: "PING +" + damage,
             visualEffect: "Bzzt",
             trigger: ACT,
@@ -21,7 +21,7 @@ export const DataAbilityTemplates : { [key:string]:(AbilityParams, ...any) => Ab
         damage = damage || 1;
         range = range || 1;
         radius = radius || 1;
-        return {            
+        return {
             text: "BOOM +" + damage,
             visualEffect: "Boom",
             trigger: ACT,
@@ -31,12 +31,22 @@ export const DataAbilityTemplates : { [key:string]:(AbilityParams, ...any) => Ab
         };
     },
     mezz: (p, { value, count, range }) => {
-        return {            
+        return {
             text: "Mezz " + value,
             visualEffect: "Spell",
             trigger: ACT,
             target: ENEMIES({ count, range }),
             effect: ET.mezz(value),
+            ...p,
+        };
+    },
+    furied: (p, { damage }) => {
+        return {
+            text: "Dmg on move " + damage,
+            visualEffect: "Ouch",
+            trigger: BEFORE_I_MOVE,
+            target: MYSELF,
+            effect: ET.damage(damage),
             ...p,
         };
     },

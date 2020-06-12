@@ -181,11 +181,12 @@ export interface Ability {
     exhausts?: boolean,
     template?: string,
     visualEffect?: string,
+    duration?: number,
 }
 
 export interface Trigger {    
     type: TriggerType,
-    condition?(gs : GameState, unit : Unit, ...any): boolean,
+    condition?(gs : GameState, unit : Unit, params : {}): boolean,
 }
 
 export interface Target {    

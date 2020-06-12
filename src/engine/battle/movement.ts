@@ -1,10 +1,11 @@
-import { Pos, Unit, LogType } from "./model";
+import { Pos, Unit, LogType, TriggerType } from "./model";
 import { GameState } from "../game";
 import { nextTurn } from "./turn";
 import { addLog } from "./log";
 import { getReachablePositions, checkIfUnitExhausted, destroyUnit } from "./unit";
 import { getAdjacentPositions, getDistance } from "./board";
 import { attack } from "./combat";
+import { triggerAbilities } from "./ability/listeners";
 
 export function moveUnit(gs: GameState, unit: Unit, pos: Pos) {
 
@@ -16,8 +17,9 @@ export function moveUnit(gs: GameState, unit: Unit, pos: Pos) {
 
     triggerOpportunityAttacks(gs, unit);
 
-    unit.position = pos;
-    unit.movesCount++;
+    triggerAbilities(gs, TriggerType.BeforeMove, { mover: unit });
+
+    applyMove(unit, pos);   
 
     addLog(gs, {
         type: LogType.Move,
@@ -37,4 +39,9 @@ export function triggerOpportunityAttacks(gs: GameState, unit: Unit) {
         .forEach(u => {
             attack(gs, u, unit, true);
         });
+}
+
+function applyMove(unit: Unit, pos: Pos) {
+    unit.position = pos;
+    unit.movesCount++;
 }

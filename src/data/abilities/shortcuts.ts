@@ -14,22 +14,27 @@ export const BEFORE_DAMAGE = {
 
 export const BEFORE_DAMAGE_ME = {
     type: TriggerType.BeforeDamage,
-    condition: ConditionTemplates.damageOnMe(),
+    condition: ConditionTemplates.isMe('damagedUnit'),
+};
+
+export const BEFORE_I_MOVE = {
+    type: TriggerType.BeforeMove,
+    condition: ConditionTemplates.isMe('mover'),
 };
 
 export const BEFORE_ENEMY_MOVE = {
     type: TriggerType.BeforeMove,
-    condition: ConditionTemplates.ennemyMove(),
+    condition: ConditionTemplates.isEnnemy('mover'),
 };
 
 export const AFTER_ATTACKED_ME = {
     type: TriggerType.AfterCombat,
-    condition: ConditionTemplates.attackOnMe(),
+    condition: ConditionTemplates.isMe('defender'),
 };
 
 export const AFTER_DEATH_OF_ME = {
     type: TriggerType.AfterDeath,
-    condition: ConditionTemplates.deathOfMe(),
+    condition: ConditionTemplates.isMe('deadUnit'),
 };
 
 // Targets
