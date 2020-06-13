@@ -30,6 +30,7 @@ function createFullState() {
         setGameState: (gs) => update(s => { s.game = gs; return s; }),
 
         setTools: (tools) => update(s => { s.ui.tools = { ...s.ui.tools, ...tools }; return s; }),
+        setTooltip: (tooltip) => update(s => { s.ui.tooltip = tooltip; return s; }),
 
         onClickTile: (x, y) => update(s => { onClickTile(s, x, y); return s; }),
         onClickRightTile: (x, y) => update(s => { onClickRightTile(s, x, y); return s; }),
@@ -74,6 +75,7 @@ function initUiState() {
             abilityTargettablePositions: {},
             tiles: {},
         },
+        tooltip: null,
     };    
     // highlight deployment tiles
     // for (let y = MAP_SIZE - DEPLOYMENT_RANGE; y < MAP_SIZE; y++) {

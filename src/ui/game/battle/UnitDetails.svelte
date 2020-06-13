@@ -235,9 +235,11 @@
             <div class="ability-name">{ ability.name }</div>
             <div class="ability-text">{ ability.text }</div>
         </div>
-    {/each}
+    {/each}    
+    {#if unit.owner === 0}
     <div class="pass-button">
         <button on:click={onClickPass}>PASS</button>
     </div>
+    {/if}
 </div>
 

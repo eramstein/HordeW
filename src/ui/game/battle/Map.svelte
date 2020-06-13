@@ -6,6 +6,7 @@
     import Tile from './Tile.svelte';
     import Unit from './Unit.svelte';
     import ActionLabel from './ActionLabel.svelte';
+    import Tooltip from './Tooltip.svelte';
     
     $: tiles = $State.game.battle.tiles;
     $: units = $State.game.battle.units;
@@ -86,6 +87,9 @@
                 data={actionLabel}
             />
         {/each}
+        {#if $State.ui.tooltip}
+        <Tooltip />
+        {/if}
     </svg>
 </div>
 

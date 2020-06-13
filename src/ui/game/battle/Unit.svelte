@@ -1,6 +1,8 @@
 <script>
     import { fade } from 'svelte/transition';
-    import { State } from '../../../stores';    
+    import { State } from '../../../stores';
+    import { TooltipType } from '../../model';
+    import { getAttackExpectation } from "../../../engine/battle/uiUtils";
     import { getTilePixelPos, isUnitActive, TILE_WIDTH, TILE_HEIGHT } from './map';
     import { AI_ANIMATION_DELAY, PLAYER_ANIMATION_DURATION, AI_ANIMATION_DURATION } from './config';
     
@@ -41,6 +43,39 @@
     $: hpColor = unit.owner === 0 ? 'green' : '#ce0e0e';
     $: circleStroke = selected || active ? "red" : (abilityTargetted ? "blue" : "black");
 
+    function setAttackPreview() {
+        const attackPreview = getAttackExpectation($State.game, $State.ui.selected.unit, unit);
+        State.setTooltip({
+            position: { x: pos.tx, y: pos.ty },
+            type: TooltipType.CombatPreview,
+            data: {
+                "Hit Chance": attackPreview.hitChance * 100 + '%',
+                "Damage Range": attackPreview.damageRange.min + ' to ' + attackPreview.damageRange.max,
+            },
+        });
+    }
+    function setCcPreview() {
+        let data = {};
+        if (unit.cc.mezz) {
+            data.Mezz = unit.cc.mezz + ' turns';
+        }
+        if (unit.cc.stun) {
+            data.Stun = unit.cc.stun + ' turns';
+        }
+        if (unit.cc.root) {
+            data.Root = unit.cc.root + ' turns';
+        }
+        State.setTooltip({
+            position: { x: pos.tx, y: pos.ty },
+            type: TooltipType.CombatPreview,
+            data,
+        });
+    }
+    function removeTooltip() {
+        State.setTooltip(null);
+    }
+
+
 </script>
 
 <style>
@@ -75,14 +110,12 @@
         { unit.name }
     </circle>
     {#if unit.movesCount > 0 && !unit.used}        
-        <text class="unit-info" x={13} y={12}
-            in:fade="{{ delay: unit.owner === 0 ? 0 : PLAYER_ANIMATION_DURATION }}">
+        <text class="unit-info" x={13} y={12}>
             M
         </text>
     {/if}
     {#if unit.attacksCount > 0 && !unit.used}        
-        <text class="unit-info" x={14} y={-4}
-            in:fade="{{ delay: unit.owner === 0 ? 0 : PLAYER_ANIMATION_DURATION }}">
+        <text class="unit-info" x={14} y={-4}>
             A
         </text>
     {/if}
@@ -90,14 +123,18 @@
         <image class="attack-icon"
             x={TILE_WIDTH/2-20-1}
             y={-1}
+            on:mouseenter={() => setAttackPreview()}
+            on:mouseleave={() => removeTooltip()} 
             href="assets/icons/sword.png" alt="" />
     {/if}
     {#if rangeAttackable}        
         <image class="attack-icon"
             x={TILE_WIDTH/2-20-1}
             y={-1}
+            on:mouseenter={() => setAttackPreview()}
+            on:mouseleave={() => removeTooltip()}
             href="assets/icons/bow.png" alt="" />
-    {/if}    
+    {/if}
     {#if abilityTargettable}        
         <image class="attack-icon"
             x={TILE_WIDTH/2-20-1}
@@ -106,20 +143,26 @@
     {/if}
     {#if unit.cc.root}        
         <image class="cc-icon"
-            x={-2}
+            x={-10}
             y={-2}
+            on:mouseenter={() => setCcPreview()}
+            on:mouseleave={() => removeTooltip()}
             href="assets/icons/root.png" alt="" />
     {/if}
     {#if unit.cc.mezz}        
         <image class="cc-icon"
-            x={-2}
+            x={-10}
             y={-2}
+            on:mouseenter={() => setCcPreview()}
+            on:mouseleave={() => removeTooltip()}
             href="assets/icons/mezz.png" alt="" />
     {/if}
     {#if unit.cc.stun}        
         <image class="cc-icon"
-            x={-2}
+            x={-10}
             y={-2}
+            on:mouseenter={() => setCcPreview()}
+            on:mouseleave={() => removeTooltip()}
             href="assets/icons/stun.png" alt="" />
     {/if}
     {#each hpBars as hpBar,i}

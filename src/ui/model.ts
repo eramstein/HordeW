@@ -11,6 +11,10 @@ export enum Screen {
     Battle = "BATTLE",
 }
 
+export enum TooltipType {
+    CombatPreview = "COMBAT_PREVIEW",
+}
+
 export interface UI {
     openScreen: Screen;
     screenParameters: any;
@@ -29,11 +33,17 @@ export interface UI {
         abilityTargettableUnits: {},
         abilityTargettablePositions: {},
     };
+    tooltip: Tooltip;
 }
 
 export interface Tools {
     terrainEditor: boolean;
     terrainType: TerrainType;
-    aiTileValues: AiTileValue[][],
+    aiTileValues: AiTileValue[][];
 }
 
+export interface Tooltip {
+    position: { x: number, y: number };
+    type: TooltipType;
+    data: {};
+}

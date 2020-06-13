@@ -29,11 +29,11 @@ export function onClickTile(state : FullState, x, y) {
     if (state.game.battle.stage === BattleStage.Deployment && state.ui.selected.benchUnit) {
         deployUnit(state.game, state.ui.selected.benchUnit, { x, y });
     }
+    state.ui.tooltip = null;
 }
 
 export function onClickRightTile(state : FullState, x, y) {
     const selectedUnit = state.ui.selected.unit;
-
     // UNIT MOVE
     if (selectedUnit &&
         selectedUnit.owner === 0 &&
@@ -45,6 +45,7 @@ export function onClickRightTile(state : FullState, x, y) {
         });
         unselect(state);
     }
+    state.ui.tooltip = null;
 }
 
 export function getTilePixelPos(x, y : number) : { tx: number, ty : number} {
@@ -128,6 +129,7 @@ export function unselect(state : FullState) {
     state.ui.highlighted.abilityTargettableUnits = {};
     state.ui.selected.abilityTargettedUnits = {};
     state.ui.selected.ability = null;
+    state.ui.tooltip = null;
 }
 
 export function getActionLabels(logs : Log[]) : ActionLabel[] {

@@ -45,7 +45,7 @@ export function getNextStepTowards(gs : GameState, reachablePositions : Pos[], t
 
 export function damageExpectationMelee(gs : GameState, attacker : Unit, defender : Unit) : number {
     const avgDamage = (attacker.meleeDamage.max + attacker.meleeDamage.min) / 2;
-    const hitChance = getHitChance(getMeleeSkillDiff(gs, attacker, defender));    
+    const hitChance = getHitChance(getMeleeSkillDiff(attacker, defender));    
     return hitChance * avgDamage;
 }
 

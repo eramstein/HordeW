@@ -77,7 +77,7 @@ export function attack(gs : GameState, attacker : Unit, defender : Unit, free : 
         rangeAttack(gs, attacker, defender);
     } else {
         meleeAttack(gs, attacker, defender);
-    }    
+    }
 
     if (!free) {
         attacker.attacksCount++;
@@ -88,7 +88,7 @@ export function attack(gs : GameState, attacker : Unit, defender : Unit, free : 
 
 function meleeAttack(gs : GameState, attacker : Unit, defender : Unit) {    
     // hit or miss
-    const skillDiff = getMeleeSkillDiff(gs, attacker, defender);
+    const skillDiff = getMeleeSkillDiff(attacker, defender);
     const hits = checkIfHit(gs, attacker, defender, skillDiff);
 
     // damage
@@ -110,8 +110,12 @@ function rangeAttack(gs : GameState, attacker : Unit, defender : Unit) {
 
 function inflictDamage(gs : GameState, attacker : Unit, defender : Unit, min, max : number) {
     let damage = getRandomInt(min, max);
-    damage = Math.max(0, damage - defender.armor);
+    damage = getDamageFinalValue(gs, attacker, defender, damage);
     damageUnit(gs, defender, damage);
+}
+
+export function getDamageFinalValue(gs : GameState, attacker : Unit, defender : Unit, damage : number) : number {
+    return Math.max(0, damage - defender.armor);
 }
 
 function checkIfHit(gs : GameState, attacker : Unit, defender : Unit, skillDiff : number) : boolean {
@@ -152,7 +156,7 @@ export function getHitChance(skillDiff : number) : number {
     return hitChance;
 }
 
-export function getMeleeSkillDiff(gs : GameState, attacker : Unit, defender : Unit) : number {
+export function getMeleeSkillDiff(attacker : Unit, defender : Unit) : number {
     return attacker.meleeAttack - defender.meleeDefense;
 }
 
