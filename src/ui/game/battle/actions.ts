@@ -8,6 +8,7 @@ import { clearTempLog, clearPlayerTempLog } from '../../../engine/battle/log';
 import { PLAYER_ANIMATION_DURATION, AI_ANIMATION_DELAY, AI_ANIMATION_DURATION } from './config';
 import { playAiTurn } from '../../../engine/battle/ai/ai';
 import { playAbility } from '../../../engine/battle/ability/ability';
+import { playSounds } from './sounds';
 
 export enum ActionType {
     Move = "MOVE",
@@ -25,7 +26,7 @@ export function sendAction(gs : GameState, actionType : ActionType, params : any
             break;
 
         case ActionType.Attack:
-            attack(gs, params.attacker, params.defender, false);
+            attack(gs, params.attacker, params.defender, false);            
             break;
 
         case ActionType.Pass:
@@ -56,6 +57,9 @@ export function sendAction(gs : GameState, actionType : ActionType, params : any
 
 function loopTurns(gs, round) {
     console.log("auto turn loop ");
+    console.log(gs.battle.tempLog);
+    
+    playSounds(gs.battle.tempLog);
     if (!gs.battle.factions[gs.battle.currentFaction].isPlayer) {
         console.log("AI turn");        
         playAiTurn(gs);

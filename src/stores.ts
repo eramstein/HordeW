@@ -91,9 +91,12 @@ export function loadState(): FullState {
     if (!savedData || savedData === "undefined" || savedData === "nope") {
       return getNewState()
     } else {
-      const parsedData : FullState = JSON.parse(savedData)
+      const parsedData : FullState = JSON.parse(savedData);
+      if (parsedData.ui.selected.unit) {
+        const selectedUnit = parsedData.game.battle.units.filter(u => u.id === parsedData.ui.selected.unit.id)[0];        
+        parsedData.ui.selected.unit = selectedUnit;        
+      }
       parsedData.game.battle.units.forEach(u => { restoreUnitAbilities(u) });
-      restoreUnitAbilities(parsedData.ui.selected.unit);
       return parsedData
     }
 }

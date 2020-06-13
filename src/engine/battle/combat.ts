@@ -61,7 +61,7 @@ export function isValidAttackTarget(gs : GameState, attacker : Unit, target : Un
 export function attack(gs : GameState, attacker : Unit, defender : Unit, free : boolean) {    
     if (!free && !isValidAttackTarget(gs, attacker, defender)) {
         console.log("invalid target");        
-        return false;
+        return 0;
     }
 
     addLog(gs, {
