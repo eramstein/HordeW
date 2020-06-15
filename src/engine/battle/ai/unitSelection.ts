@@ -7,7 +7,7 @@ export function selectUnit(gs : GameState) : Unit {
     let unit;    
     const perso = gs.battle.factions[gs.battle.currentFaction].perso;
     const activeUnits = getActiveUnits(gs, gs.battle.currentFaction);
-
+    
     switch (perso) {
         case BossPersoType.Random:
             unit = selectUnitRandom(gs, activeUnits);
@@ -17,6 +17,7 @@ export function selectUnit(gs : GameState) : Unit {
             console.log("selectUnit - perso not found", perso);
             break;
     }
+    console.log('SELECTED UNIT: ', activeUnits.length, unit);
     
     return unit;
 }

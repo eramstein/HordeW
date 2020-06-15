@@ -34,6 +34,31 @@ export function onClickTile(state : FullState, x, y) {
 
 export function onClickRightTile(state : FullState, x, y) {
     const selectedUnit = state.ui.selected.unit;
+    const selectedAbility = state.ui.selected.ability;
+
+    // ABILITY USE
+    if (selectedAbility && selectedAbility.target) {
+        if (state.ui.selected.abilityTargettedPositions[x + "." + y]) {
+            delete state.ui.selected.abilityTargettedPositions[x + "." + y];
+        } else {
+            state.ui.selected.abilityTargettedPositions[x + "." + y] = true;        
+            if (Object.keys(state.ui.selected.abilityTargettedPositions).length === selectedAbility.target.count) {
+                const targetPositions = Object.keys(state.ui.selected.abilityTargettedPositions).map(k => {
+                    const vals = k.split(".");
+                    return { x: vals[0], y: vals[1] };
+                });
+                sendAction(state.game, ActionType.Ability, { 
+                    unit: selectedUnit,
+                    ability: selectedAbility,
+                    targetUnits: [],
+                    targetPositions: targetPositions,
+                });
+                unselect(state);                
+            }
+        }        
+        return;
+    }
+
     // UNIT MOVE
     if (selectedUnit &&
         selectedUnit.owner === 0 &&
@@ -101,7 +126,7 @@ export function onClickRightUnit(state : FullState, clickedUnit : Unit) {
                     unit: selectedUnit,
                     ability: selectedAbility,
                     targetUnits: targetUnits,
-                    targetPositions: state.ui.selected.abilityTargettedPositions,
+                    targetPositions: [],
                 });
                 unselect(state);                
             }
@@ -127,7 +152,9 @@ export function unselect(state : FullState) {
     state.ui.highlighted.meleeAttackableUnits = {};
     state.ui.highlighted.rangeAttackableUnits = {};
     state.ui.highlighted.abilityTargettableUnits = {};
+    state.ui.highlighted.abilityTargettablePositions = {};
     state.ui.selected.abilityTargettedUnits = {};
+    state.ui.selected.abilityTargettedPositions = {};
     state.ui.selected.ability = null;
     state.ui.tooltip = null;
 }

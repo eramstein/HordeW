@@ -64,6 +64,10 @@ export enum UnitType {
     Chariot = "CHARIOT",
 }
 
+export enum UnitSize {
+    Large = "LARGE",
+}
+
 export interface Unit {
     // state
     id?: string,
@@ -83,7 +87,7 @@ export interface Unit {
     category: UnitCategory,
     type?: UnitType,
     hpMax: number,
-    armor: number,    
+    armor?: number,    
     abilities: Ability[],
     movement: number,
     meleeDefense: number,    
@@ -94,6 +98,7 @@ export interface Unit {
     rangeAttack?: number,
     rangeDamage?: Damage,
     energyMax?: number,
+    size?: UnitSize,
     // special optional stuff
     surviveCondition?: boolean, // lose if all destroyed
     loseCondition?: boolean,  // lose if any destroyed    
@@ -193,7 +198,7 @@ export interface Target {
     type: TargetType,
     count?: number,
     range?: number,
-    eligible?(gs : GameState, unit : Unit, ability : Ability): Unit[],
+    eligible?(gs : GameState, unit : Unit, ability : Ability): Unit[] | Pos[],
 }
 
 export enum TriggerType {

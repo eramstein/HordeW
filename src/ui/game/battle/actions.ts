@@ -56,9 +56,7 @@ export function sendAction(gs : GameState, actionType : ActionType, params : any
 }
 
 function loopTurns(gs, round) {
-    console.log("auto turn loop ");
-    console.log(gs.battle.tempLog);
-    
+    console.log("auto turn loop ");    
     playSounds(gs.battle.tempLog);
     if (!gs.battle.factions[gs.battle.currentFaction].isPlayer) {
         console.log("AI turn");        

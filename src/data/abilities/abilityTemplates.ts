@@ -1,5 +1,5 @@
 import { Ability } from "../../engine/battle/model";
-import { ACT, ENEMIES, BEFORE_I_MOVE, MYSELF, UNITS } from "./shortcuts";
+import { ACT, ENEMIES, BEFORE_I_MOVE, MYSELF, UNITS, TILES } from "./shortcuts";
 import { EffectTemplates as ET } from "../../engine/battle/ability/effects";
 
 export const DataAbilityTemplates : { [key:string]:(AbilityParams, ...any) => Ability } = {
@@ -40,6 +40,16 @@ export const DataAbilityTemplates : { [key:string]:(AbilityParams, ...any) => Ab
             ...p,
         };
     },
+    root: (p, { value, count, range }) => {
+        return {
+            text: "Root " + value,
+            visualEffect: "Spell",
+            trigger: ACT,
+            target: ENEMIES({ count, range }),
+            effect: ET.root(value),
+            ...p,
+        };
+    },
     furied: (p, { damage }) => {
         return {
             text: "Dmg on move " + damage,
@@ -47,6 +57,16 @@ export const DataAbilityTemplates : { [key:string]:(AbilityParams, ...any) => Ab
             trigger: BEFORE_I_MOVE,
             target: MYSELF,
             effect: ET.damage(damage),
+            ...p,
+        };
+    },
+    updateTerrain: (p, { terrain, range, count }) => {
+        return {
+            text: "Transform into " + terrain,
+            visualEffect: "Abracadabra",
+            trigger: ACT,
+            target: TILES({ range, count }),
+            effect: ET.updateTerrain(terrain),
             ...p,
         };
     },

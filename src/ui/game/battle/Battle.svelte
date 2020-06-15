@@ -7,7 +7,7 @@
     import MapEditor from '../../tools/MapEditor.svelte';
     import Bench from './Bench.svelte';
 
-    const EDIT_MODE = false;
+    const EDIT_MODE = false;    
     
     $: battle = $State.game.battle;
     $: selectedUnit = $State.ui.selected.unit;

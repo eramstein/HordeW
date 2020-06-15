@@ -21,7 +21,7 @@ export interface UI {
     console: {
         open: boolean,
         value: string,
-    }
+    };
     tools: Tools;
     selected: {
         unit?: Unit,

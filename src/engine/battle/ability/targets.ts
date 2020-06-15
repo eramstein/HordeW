@@ -1,15 +1,8 @@
 import { GameState } from "../../game";
 import { Unit, Ability, Pos } from "../model";
-import { getDistance } from "../board";
+import { getDistance, getPositionsInRangeRange } from "../board";
 
 export const TargetEligibilityTemplates : { [key:string]: (...any) => (gs : GameState, unit : Unit, ability : Ability) => Unit[] | Pos[] } = {
-    distanceLowerThan: (n) => {
-        return (gs : GameState, unit : Unit, ability : Ability) => {
-            return gs.battle.units.filter(u => {
-                return getDistance(unit.position, u.position) <= n;
-            });
-        };
-    },
     enemiesCloserThan: (n) => {
         return (gs : GameState, unit : Unit, ability : Ability) => {
             return gs.battle.units.filter(u => {
@@ -23,6 +16,11 @@ export const TargetEligibilityTemplates : { [key:string]: (...any) => (gs : Game
             return gs.battle.units.filter(u => {
                 return getDistance(unit.position, u.position) <= n;
             });
+        };
+    },
+    tilesCloserThan: (n) => {
+        return (gs : GameState, unit : Unit, ability : Ability) => {            
+            return getPositionsInRangeRange(unit.position, n, 1);
         };
     },
 }

@@ -16,6 +16,7 @@ export function makeUnit(template : string, faction : number, pos : Pos) : Unit 
     unit.used = false;
     unit.movesCount = 0;
     unit.attacksCount = 0;
+    unit.armor = unit.armor || 0;
     unit.abilities = UNITS[template].abilities.map(a => newAbility(a));
     unit.endOfRound = defaultTempEffects();
     unit.endOfTurn = defaultTempEffects();
@@ -45,7 +46,7 @@ export const defaultCrowdControl = () => {
 
 
 export function restoreUnitAbilities(unit : Unit) {
-    unit.abilities = UNITS[unit.template].abilities.map(a => newAbility(a));    
+    unit.abilities = UNITS[unit.template] && UNITS[unit.template].abilities.map(a => newAbility(a));    
 }
 
 export function checkIfUnitExhausted(gs : GameState, unit : Unit) {
@@ -279,6 +280,10 @@ export function mezzUnit(gs : GameState, unit : Unit, value : number) {
 
 export function stunUnit(gs : GameState, unit : Unit, value : number) {        
     unit.cc.stun += value;
+}
+
+export function rootUnit(gs : GameState, unit : Unit, value : number) {        
+    unit.cc.root += value;
 }
 
 export function energizeUnit(gs : GameState, unit : Unit, value : number) {

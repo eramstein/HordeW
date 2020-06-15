@@ -1,6 +1,6 @@
 import { FullState } from "../../model";
-import { Ability } from "../../../engine/battle/model";
-import { getEligibleTargetUnits } from "../../../engine/battle/ability/ability";
+import { Ability, TargetType } from "../../../engine/battle/model";
+import { getEligibleTargetUnits, getEligibleTargetTiles } from "../../../engine/battle/ability/ability";
 
 export function onClickAbility(state : FullState, clickedAbility : Ability) {
     
@@ -12,16 +12,25 @@ export function onClickAbility(state : FullState, clickedAbility : Ability) {
     if (isAbility) {
         state.ui.selected.ability = null;
         state.ui.highlighted.abilityTargettableUnits = {};
+        state.ui.highlighted.abilityTargettablePositions = {};
         state.ui.selected.abilityTargettedUnits = {};
+        state.ui.selected.abilityTargettedPositions = {};
         return;
     }
 
     state.ui.selected.ability = clickedAbility;
 
-    // HIGHLIGHT ELIGIBLE TARGETS    
-    const eligibleTargets = getEligibleTargetUnits(state.game, state.ui.selected.unit, clickedAbility);            
-    eligibleTargets.forEach(u => {
-        state.ui.highlighted.abilityTargettableUnits[u.id] = true;
-    });
-
+    // HIGHLIGHT ELIGIBLE TARGETS
+    if (clickedAbility.target && clickedAbility.target.type === TargetType.Unit) {
+        const eligibleTargetUnits = getEligibleTargetUnits(state.game, state.ui.selected.unit, clickedAbility);    
+        eligibleTargetUnits.forEach(u => {
+            state.ui.highlighted.abilityTargettableUnits[u.id] = true;
+        });
+    }
+    if (clickedAbility.target && clickedAbility.target.type === TargetType.Tile) {
+        const eligibleTargetTiles = getEligibleTargetTiles(state.game, state.ui.selected.unit, clickedAbility);    
+        eligibleTargetTiles.forEach(u => {
+            state.ui.highlighted.abilityTargettablePositions[u.x + "." + u.y] = true;
+        });
+    }
 }

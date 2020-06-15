@@ -11,7 +11,8 @@ export function newAbility(template : Ability) : Ability {
 }
 
 export function playAbility(gs : GameState, unit : Unit, ability : Ability, targetUnits : Unit[], targetPositions : Pos[]) {
-    console.log(unit.name + " uses " + ability.name + " on " + (targetUnits && targetUnits.map(t => t.name).join(", ")));
+    const targetsString = (targetUnits && targetUnits.map(t => t.name).join(", ")) + (targetPositions && targetPositions.map(t => t.x + "." + t.y).join(", "));
+    console.log(unit.name + " uses " + ability.name + " on " + targetsString);
     
     // CHECKS + COSTS
     // ----------------------------------------------------------------------
@@ -24,6 +25,10 @@ export function playAbility(gs : GameState, unit : Unit, ability : Ability, targ
     }
 
     if (allTargetUnitsEligible(gs, unit, ability, targetUnits) === false) {
+        return;
+    }
+
+    if (allTargetPositionsEligible(gs, unit, ability, targetPositions) === false) {
         return;
     }
     
@@ -41,7 +46,7 @@ export function playAbility(gs : GameState, unit : Unit, ability : Ability, targ
         type: LogType.Ability,
         entity: { ...unit },
         data: { name: ability.visualEffect || ability.name },
-        text: `${unit.name} used ${ability.name} on ${targetUnits && targetUnits.map(t => t.name).join(", ")}`,
+        text: `${unit.name} used ${ability.name} on ${targetsString}`,
     });
 
     // NEXT ROUND
@@ -80,9 +85,22 @@ function payAbilityCost(gs : GameState, unit : Unit, ability : Ability) : boolea
 }
 
 function allTargetUnitsEligible(gs : GameState, unit : Unit, ability : Ability, targets : Unit[]) : boolean {
-    if (ability.target && ability.target.type !== TargetType.Self) {    
+    if (ability.target && ability.target.type === TargetType.Unit) {    
         const eligibleTargets = getEligibleTargetUnits(gs, unit, ability);        
-        const targetsValid = checkEligibility(targets, eligibleTargets);    
+        const targetsValid = checkTargetUnitsEligibility(targets, eligibleTargets);    
+        if (targetsValid === false) {
+            console.log("INVALID TARGET", ability, targets);
+            return false;
+        }
+        return true;
+    }
+    return true;
+}
+
+function allTargetPositionsEligible(gs : GameState, unit : Unit, ability : Ability, targets : Pos[]) : boolean {
+    if (ability.target && ability.target.type === TargetType.Unit) {    
+        const eligibleTargets = getEligibleTargetTiles(gs, unit, ability);        
+        const targetsValid = checkTargetPositionsEligibility(targets, eligibleTargets);    
         if (targetsValid === false) {
             console.log("INVALID TARGET", ability, targets);
             return false;
@@ -93,7 +111,7 @@ function allTargetUnitsEligible(gs : GameState, unit : Unit, ability : Ability, 
 }
 
 export function getEligibleTargetUnits(gs : GameState, unit : Unit, ability : Ability) : Unit[] {    
-    if (!ability.target) {
+    if (!ability.target || ability.target.type === TargetType.Tile) {
         return null;
     }
     if (ability.target && ability.target.type === TargetType.Self) {
@@ -102,10 +120,17 @@ export function getEligibleTargetUnits(gs : GameState, unit : Unit, ability : Ab
     if (!ability.target.eligible) {
         // TODO
     }    
-    return ability.target.eligible(gs, unit, ability);
+    return <Unit[]>ability.target.eligible(gs, unit, ability);
 }
 
-export function checkEligibility(targets : Unit[], eligible : Unit[]) : boolean {
+export function getEligibleTargetTiles(gs : GameState, unit : Unit, ability : Ability) : Pos[] {    
+    if (!ability.target || ability.target.type !== TargetType.Tile) {
+        return null;
+    }
+    return <Pos[]>ability.target.eligible(gs, unit, ability);
+}
+
+export function checkTargetUnitsEligibility(targets : Unit[], eligible : Unit[]) : boolean {
     if (eligible === null) {
         return true;
     }
@@ -116,6 +141,23 @@ export function checkEligibility(targets : Unit[], eligible : Unit[]) : boolean 
     let allGood = true;
     targets.forEach(target => {
         if (!eligibleMap[target.id]) {
+            allGood = false;
+        }
+    });
+    return allGood;
+}
+
+export function checkTargetPositionsEligibility(targets : Pos[], eligible : Pos[]) : boolean {
+    if (eligible === null) {
+        return true;
+    }
+    const eligibleMap = eligible.reduce((agg, pos) => {
+        agg[pos.x + "." + pos.y] = true;
+        return agg;
+    }, {});
+    let allGood = true;
+    targets.forEach(target => {
+        if (!eligibleMap[target.x + "." + target.y]) {
             allGood = false;
         }
     });

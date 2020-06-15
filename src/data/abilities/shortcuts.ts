@@ -44,6 +44,14 @@ export const MYSELF = {
     type: TargetType.Self,
 };
 
+export function TILES({ range, count }) {
+    return {
+        type: TargetType.Tile,
+        count: count,
+        eligible: TargetEligibilityTemplates.tilesCloserThan(range),
+    };    
+};
+
 export function ENEMIES({ range, count }) {
     return {
         type: TargetType.Unit,

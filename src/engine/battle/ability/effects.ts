@@ -1,6 +1,6 @@
 import { GameState } from "../../game";
-import { Unit, Pos, TemporaryEffects, Ability } from "../model";
-import { damageUnit, healUnit, mezzUnit, stunUnit } from "../unit";
+import { Unit, Pos, TemporaryEffects, Ability, TerrainType } from "../model";
+import { damageUnit, healUnit, mezzUnit, stunUnit, rootUnit } from "../unit";
 import { getDistance } from "../board";
 import { newAbility } from "./ability";
 import { DataAbilities } from "../../../data/abilities/abilities";
@@ -60,6 +60,21 @@ export const EffectTemplates : { [key:string]: (...any) => (gs : GameState, unit
             targets.forEach(t => {
                 stunUnit(gs, t, value);
             });
+        };
+    },
+    root: (value : number) => {
+        return (gs : GameState, unit : Unit, targets : Unit[], targetPositions : Pos[]) => {
+            if (!targets) { return }
+            targets.forEach(t => {
+                rootUnit(gs, t, value);
+            });
+        };
+    },
+    updateTerrain: (terrain : TerrainType) => {
+        return (gs : GameState, unit : Unit, targets : Unit[], targetPositions : Pos[]) => {
+            targetPositions.forEach(pos => {
+                gs.battle.tiles[pos.x][pos.y].terrain = terrain;
+            });            
         };
     },
     addAbility: (abilityName : string, duration : number) => {        

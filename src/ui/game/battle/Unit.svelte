@@ -106,7 +106,7 @@
     filter={ unit.used && !active ? "url('#shade')" : null }
 >
     <circle r={ r } fill="white" stroke={circleStroke} stroke-width={selected || active || abilityTargetted ? "2" : "0.5"} />
-    <circle r={ r - 5 } fill="url(#{unit.template}) white">
+    <circle r={ r - 4 } fill="url(#{unit.template}) white">
         { unit.name }
     </circle>
     {#if unit.movesCount > 0 && !unit.used}        

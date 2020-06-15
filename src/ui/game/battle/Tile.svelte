@@ -7,6 +7,8 @@
     export let y;
     export let highlighted;
 
+    $: abilityTargetted = $State.ui.selected.abilityTargettedPositions[x + "." + y];
+
     const hexPolygonPoints =
         (TILE_WIDTH * 0.5) + ',0 ' +
         TILE_WIDTH + ',' + (TILE_HEIGHT * 0.25) + ' ' +
@@ -40,14 +42,13 @@
     <polygon class="hex"
         points={hexPolygonPoints}
         fill="url(#{data.terrain})"
+        style="stroke: { abilityTargetted ? 'blue' : null }; stroke-width: { abilityTargetted ? 3 : 1 }"
         filter={highlighted ? "url('#highlight')" : null }></polygon>
-        <!--
         <text
             x={15}
             y={TILE_HEIGHT/2 + 5}>
             {x}.{y}
         </text>
-        -->
         <!--
         <text
             x={0}

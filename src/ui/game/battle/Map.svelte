@@ -12,9 +12,12 @@
     $: units = $State.game.battle.units;
     $: graveyard = $State.game.battle.graveyard;
     $: highlighted = $State.ui.highlighted.tiles || {};
+    $: targettable = $State.ui.highlighted.abilityTargettablePositions;
     $: unitPatterns = units.concat(graveyard).map(u => u.template);
 
     $: actionLabels = getActionLabels($State.game.battle.tempLog);
+
+    $: highlightTargets = Object.keys(targettable).length > 0;
 
 </script>
 
@@ -73,7 +76,7 @@
                     x={x}
                     y={y}
                     data={tile}
-                    highlighted={highlighted[x + "." + y]}
+                    highlighted={ highlightTargets ? targettable[x + "." + y] : highlighted[x + "." + y] }
                 />
             {/each}
 	    {/each}
