@@ -15,7 +15,7 @@ import { TriggerType } from "./engine/battle/model";
 export const State = createFullState();
 
 function createFullState() {
-    const initialState = loadState();
+    const initialState = loadState("");
 
     const { subscribe, set, update } = writable(initialState);
 
@@ -26,6 +26,7 @@ function createFullState() {
         initialize: () => set(getNewState()),
         load: data => set(data),
         tempTest: () => update(s => { return s; }),
+        toggleConsole: () => update(s => { s.ui.console.open = !s.ui.console.open; return s; }),
 
         setGameState: (gs) => update(s => { s.game = gs; return s; }),
 
@@ -59,6 +60,10 @@ function initUiState() {
     const init = {
         openScreen: Screen.Battle,
         screenParameters: null,
+        console: {
+            open: false,
+            value: '',
+        },
         tools: {
             terrainEditor: true,
             terrainType: null,
@@ -86,10 +91,10 @@ function initUiState() {
     return init;
 }
 
-export function loadState(): FullState {
-    const savedData = localStorage.getItem("hordewar") || "nope"
+export function loadState(saveName : string): FullState {
+    const savedData = localStorage.getItem("hordewar" + saveName) || "nope";    
     if (!savedData || savedData === "undefined" || savedData === "nope") {
-      return getNewState()
+      return getNewState();
     } else {
       const parsedData : FullState = JSON.parse(savedData);
       if (parsedData.ui.selected.unit) {
@@ -97,13 +102,13 @@ export function loadState(): FullState {
         parsedData.ui.selected.unit = selectedUnit;        
       }
       parsedData.game.battle.units.forEach(u => { restoreUnitAbilities(u) });
-      return parsedData
+      return parsedData;
     }
 }
   
-export function saveState() {
+export function saveState(saveName : string) {
     const savedData = get(State);
-    localStorage.setItem("hordewar", JSON.stringify(savedData))
+    localStorage.setItem("hordewar" + saveName, JSON.stringify(savedData))
 }
 
 export function printState() {
@@ -112,7 +117,7 @@ export function printState() {
 
 export function resetState() {
     State.initialize();
-    saveState();
+    saveState("");
 }
 
 export function tempTest() {

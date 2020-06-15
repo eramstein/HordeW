@@ -19,7 +19,6 @@ export function playSounds(logs : Log[]) {
 
 function getFileName(log : Log) : string {
     let fileName = null;
-    console.log(log);
     switch (log.type) {        
         case LogType.Attack:
             if (log.result === LogResult.Miss) {

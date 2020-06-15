@@ -18,6 +18,10 @@ export enum TooltipType {
 export interface UI {
     openScreen: Screen;
     screenParameters: any;
+    console: {
+        open: boolean,
+        value: string,
+    }
     tools: Tools;
     selected: {
         unit?: Unit,

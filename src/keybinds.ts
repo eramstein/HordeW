@@ -1,11 +1,26 @@
+import { get } from "svelte/store";
 import { resetState, saveState, State, printState, tempTest, passUnit } from "./stores";
+import { executeConsoleContents } from "./console";
 
-export function handleKeyPress(event) {    
+export function handleKeyPress(event) {
+    const state = get(State);
+
+    // ENTER -> trigger console
+    if (state.ui.console.open) { 
+        if (event.charCode === 13) {
+            executeConsoleContents();
+        }
+        return;
+    }
 
     switch(event.charCode) {        
+
+        case 99: // c -> console
+        State.toggleConsole();
+        break;
         
         case 115: // s -> save
-        saveState();
+        saveState("");
         break;
 
         case 108: // l -> log state
