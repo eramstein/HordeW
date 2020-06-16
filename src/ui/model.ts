@@ -38,6 +38,8 @@ export interface UI {
         abilityTargettablePositions: {},
     };
     tooltip: Tooltip;
+    actionLabels: ActionLabel[];
+    delayAnimationTime: number;
 }
 
 export interface Tools {
@@ -50,4 +52,11 @@ export interface Tooltip {
     position: { x: number, y: number };
     type: TooltipType;
     data: {};
+}
+
+export interface ActionLabel {
+    color: string,
+    text: string,
+    unit: Unit,
+    isPlayer: boolean,
 }

@@ -159,6 +159,7 @@ export enum LogType {
     Pass = "PASS",
     Ability = "ABILITY",
     Damage = "DAMAGE",
+    RoundEnd = "ROUND_END",
 }
 
 export enum LogResult {

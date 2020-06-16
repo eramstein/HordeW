@@ -6,8 +6,7 @@
     import UnitDetails from './UnitDetails.svelte';
     import MapEditor from '../../tools/MapEditor.svelte';
     import Bench from './Bench.svelte';
-
-    const EDIT_MODE = false;    
+    import { EDIT_MODE } from './config.js';
     
     $: battle = $State.game.battle;
     $: selectedUnit = $State.ui.selected.unit;

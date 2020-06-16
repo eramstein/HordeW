@@ -4,7 +4,7 @@
     import { TooltipType } from '../../model';
     import { getAttackExpectation } from "../../../engine/battle/uiUtils";
     import { getTilePixelPos, isUnitActive, TILE_WIDTH, TILE_HEIGHT } from './map';
-    import { AI_ANIMATION_DELAY, PLAYER_ANIMATION_DURATION, AI_ANIMATION_DURATION } from './config';
+    import { LOG_ANIMATION_DURATION } from './animateLog';
     
     export let unit;
 
@@ -82,14 +82,10 @@
     .unit {
         transition: all .4s ease;
     }
-    .unit-info {
-        font-size: 12px;
-        font-weight: bold;
-    }
     rect.hp {
         stroke-width:0.5;
         stroke:#333;
-        transition: all .4s ease;
+        transition: all .2s ease;
     }
     .attack-icon, .cc-icon {
         width: 20px;
@@ -99,26 +95,19 @@
 
 <g class="unit"
     transform={translate}
-    style="transition-delay:{ unit.owner === 0 ? '0s' : (PLAYER_ANIMATION_DURATION + AI_ANIMATION_DELAY) + 'ms'}"
+    style="transition-delay:{ unit.owner === 0 ? '0s' : $State.ui.delayAnimationTime + 'ms'}"
     on:click={() => State.onClickUnit(unit)}
     on:contextmenu={() => State.onClickRightUnit(unit)}
-    out:fade="{{ delay: unit.owner === 0 ? PLAYER_ANIMATION_DURATION + AI_ANIMATION_DELAY + AI_ANIMATION_DURATION : 0 }}"
+    out:fade="{{ delay: unit.owner === 0 ? 0 : LOG_ANIMATION_DURATION }}"
     filter={ unit.used ? "url('#shade')" : (selected ? "url('#highlight')" : null) }
 >
-    <circle r={ r } fill="white" stroke={circleStroke} stroke-width={selected || active || abilityTargetted ? "2" : "0.5"} />
+    <circle r={ r }
+        fill="white"
+        stroke={circleStroke} stroke-width={selected || active || abilityTargetted ? "2" : "0.5"}
+    />
     <circle r={ r - 4 } fill="url(#{unit.template}) white">
         { unit.name }
     </circle>
-    {#if unit.movesCount > 0 && !unit.used}        
-        <text class="unit-info" x={13} y={12}>
-            M
-        </text>
-    {/if}
-    {#if unit.attacksCount > 0 && !unit.used}        
-        <text class="unit-info" x={14} y={-4}>
-            A
-        </text>
-    {/if}
     {#if meleeAttackable}        
         <image class="attack-icon"
             x={TILE_WIDTH/2-20-1}
@@ -172,7 +161,7 @@
             y={HP_BAR_SHIFT + HP_BAR_SIZE/hpBars.length*i}
             width="5"
             height={HP_BAR_SIZE/hpBars.length}
-            style="fill:{hpBar === 'full' ? hpColor : 'gray'}"
+            style="fill:{hpBar === 'full' ? hpColor : 'gray'};transition-delay:{ unit.owner === 0 ? '0s' : $State.ui.delayAnimationTime + 'ms'}"
         />
     {/each}
 </g>

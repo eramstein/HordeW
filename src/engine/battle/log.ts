@@ -14,5 +14,5 @@ export function clearPlayerTempLog(gs : GameState) {
 export function addLog(gs : GameState, log : Log) {
     log.currentFaction = gs.battle.currentFaction;
     gs.battle.log.push(log);
-    gs.battle.tempLog.push(log);
+    gs.battle.tempLog.push(log);  
 }

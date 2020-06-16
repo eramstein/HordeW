@@ -1,6 +1,7 @@
 import { GameState } from "../game";
-import { Unit } from "./model";
+import { Unit, LogType } from "./model";
 import { damageUnit, healUnit, canUnitDoAnything } from "./unit";
+import { addLog } from "./log";
 
 export function nextTurn(gs : GameState) {
     console.log("next turn", gs.battle.currentFaction);
@@ -27,6 +28,11 @@ export function nextTurn(gs : GameState) {
 }
 
 export function nextRound(gs : GameState) {
+    addLog(gs, {
+        type: LogType.RoundEnd,
+        entity: gs.battle.round,
+        text: `End of round ${gs.battle.round}`,
+    });
     applyRoundEffects(gs);
     resetRoundEffects(gs);
     gs.battle.round++;
@@ -35,7 +41,7 @@ export function nextRound(gs : GameState) {
         u.attacksCount = 0;
         u.used = false;
     });
-    gs.battle.currentFaction = 0;
+    gs.battle.currentFaction = 0;    
 }
 
 export function allDone(gs : GameState) : boolean {

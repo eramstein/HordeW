@@ -2,14 +2,13 @@
     import { fade } from 'svelte/transition';
     import { State } from '../../../stores';
     import { getTilePixelPos, TILE_WIDTH, TILE_HEIGHT } from './map';
-    import { PLAYER_ANIMATION_DURATION, AI_ANIMATION_DELAY, AI_ANIMATION_DURATION } from './config';
     
     export let data;
 
     let pos;
     let translate;
 
-    $: {
+    $: {        
         pos = getTilePixelPos(data.unit.position.x, data.unit.position.y);
         pos.tx += TILE_WIDTH/2;
         pos.ty += TILE_HEIGHT/2;
@@ -26,11 +25,8 @@
     }
 </style>
 
-<g class="action-label"
-    in:fade="{{ delay: data.isPlayer ? 0 : PLAYER_ANIMATION_DURATION + AI_ANIMATION_DELAY }}"
-    transform={translate}
->
+<g class="action-label" transform={translate}>
     <rect x={-TILE_WIDTH/2} y="-9" width={TILE_WIDTH} height="20" stroke="black" stroke-width="1px" fill="white"/>
-    <text x="0" y="5" fill={ data.color }>{ data.done ? 'DONE' : data.text }</text> 
+    <text x="0" y="5" fill={ data.color }>{ data.text }</text> 
 </g>
 

@@ -5,10 +5,9 @@ import { moveUnit } from "../../../engine/battle/movement";
 import { factionDone, nextTurn, allDone } from "../../../engine/battle/turn";
 import { attack } from '../../../engine/battle/combat';
 import { clearTempLog, clearPlayerTempLog } from '../../../engine/battle/log';
-import { PLAYER_ANIMATION_DURATION, AI_ANIMATION_DELAY, AI_ANIMATION_DURATION } from './config';
 import { playAiTurn } from '../../../engine/battle/ai/ai';
 import { playAbility } from '../../../engine/battle/ability/ability';
-import { playSounds } from './sounds';
+import { animateLog } from './animateLog';
 
 export enum ActionType {
     Move = "MOVE",
@@ -41,40 +40,38 @@ export function sendAction(gs : GameState, actionType : ActionType, params : any
             break;
     }
 
-    // remove labels
-    setTimeout((gs) => {
-        clearPlayerTempLog(gs);
-        State.setGameState(gs);
-    }, PLAYER_ANIMATION_DURATION, gs);
-    setTimeout((gs) => {
-        clearTempLog(gs);
-        State.setGameState(gs);
-    }, PLAYER_ANIMATION_DURATION + AI_ANIMATION_DELAY + AI_ANIMATION_DURATION, gs);
+    const animationTime = animateLog(gs.battle.tempLog);
+    clearPlayerTempLog(gs);
 
-    loopTurns(gs, gs.battle.round);
+    if (!gs.battle.factions[gs.battle.currentFaction].isPlayer) {
+        loopAiTurns(gs, gs.battle.round, animationTime);
+    }    
     
 }
 
-function loopTurns(gs, round) {
-    console.log("auto turn loop ", gs.battle.tempLog);
-    if (!gs.battle.factions[gs.battle.currentFaction].isPlayer) {
-        console.log("AI turn");        
-        playAiTurn(gs);
-    }
-    playSounds(gs.battle.tempLog);
-    if (factionDone(gs, 0) && !allDone(gs)) {
+function loopAiTurns(gs, round, waitFor) {
+    console.log("Loop AI turn", waitFor);
+
+    playAiTurn(gs);
+    State.setAnimationDelay(waitFor);
+    setTimeout((gs) => {
+        const animationTime = animateLog(gs.battle.tempLog);
         setTimeout((gs) => {
-            nextTurn(gs);
             clearTempLog(gs);
-            playAiTurn(gs);
             State.setGameState(gs);
-            loopTurns(gs, round);
-        }, PLAYER_ANIMATION_DURATION + AI_ANIMATION_DELAY + AI_ANIMATION_DURATION, gs);        
-    }
+        }, animationTime, gs);
+
+        if (factionDone(gs, 0) && !allDone(gs)) {
+            setTimeout((gs) => {
+                nextTurn(gs);
+                clearTempLog(gs);
+                loopAiTurns(gs, round, animationTime);
+            }, animationTime, gs);
+        }
+
+    }, waitFor, gs);
+    
     if (gs.battle.round !== round) {
-        setTimeout((gs) => {
-            clearTempLog(gs);
-            State.setGameState(gs);
-        }, PLAYER_ANIMATION_DURATION + AI_ANIMATION_DELAY + AI_ANIMATION_DURATION, gs);
+        // TODO: new round banner
     }
 }

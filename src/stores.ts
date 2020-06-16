@@ -30,6 +30,8 @@ function createFullState() {
 
         setGameState: (gs) => update(s => { s.game = gs; return s; }),
 
+        setActionLabels: (labels) => update(s => { s.ui.actionLabels = labels; return s; }),
+        setAnimationDelay: (delay) => update(s => { s.ui.delayAnimationTime = delay; return s; }),
         setTools: (tools) => update(s => { s.ui.tools = { ...s.ui.tools, ...tools }; return s; }),
         setTooltip: (tooltip) => update(s => { s.ui.tooltip = tooltip; return s; }),
 
@@ -81,6 +83,8 @@ function initUiState() {
             tiles: {},
         },
         tooltip: null,
+        actionLabels: [],
+        delayAnimationTime: 0,
     };    
     // highlight deployment tiles
     // for (let y = MAP_SIZE - DEPLOYMENT_RANGE; y < MAP_SIZE; y++) {

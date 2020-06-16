@@ -1,7 +1,6 @@
 import { BattleState, Tile, Faction, Unit, BattleOutcome, BattleStage, BossPersoType } from "./model";
 import { MAP_BROCELIANDE } from "../../data/maps/broceliande";
 import { makeUnit } from "./unit";
-import { GameState } from "../game";
 
 export function initBattleState() : BattleState {
     const playerRoster = [];
@@ -14,15 +13,15 @@ export function initBattleState() : BattleState {
     const aiRoster = [];
     aiRoster.push(makeUnit("spearman", 1, { x: 5, y: 4 }));
     // aiRoster.push(makeUnit("spearman", 1, { x: 6, y: 4 }));
-    // aiRoster.push(makeUnit("spearman", 1, { x: 7, y: 4 }));
-    aiRoster.push(makeUnit("spearman", 1, { x: 15, y: 5 }));
+    aiRoster.push(makeUnit("spearman", 1, { x: 7, y: 4 }));
+    //  aiRoster.push(makeUnit("spearman", 1, { x: 15, y: 5 }));
     aiRoster.push(makeUnit("swordman", 1, { x: 15, y: 4 }));
     // aiRoster.push(makeUnit("swordman", 1, { x: 16, y: 4 }));
-    // aiRoster.push(makeUnit("swordman", 1, { x: 17, y: 5 }));
+    aiRoster.push(makeUnit("swordman", 1, { x: 17, y: 5 }));
     // aiRoster.push(makeUnit("swordman", 1, { x: 18, y: 5 }));
-    aiRoster.push(makeUnit("archer", 1, { x: 5, y: 3 }));
-    // aiRoster.push(makeUnit("archer", 1, { x: 6, y: 3 }));
-    // aiRoster.push(makeUnit("archer", 1, { x: 15, y: 3 }));
+    // aiRoster.push(makeUnit("archer", 1, { x: 5, y: 3 }));
+    aiRoster.push(makeUnit("archer", 1, { x: 6, y: 3 }));
+    aiRoster.push(makeUnit("archer", 1, { x: 15, y: 3 }));
     // aiRoster.push(makeUnit("archer", 1, { x: 16, y: 3 }));
 
     const initFactions : Faction[] = [

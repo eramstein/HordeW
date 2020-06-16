@@ -1,8 +1,5 @@
 <script>
     import { State } from '../../../stores';
-
-    import { getActionLabels } from './map';
-
     import Tile from './Tile.svelte';
     import Unit from './Unit.svelte';
     import ActionLabel from './ActionLabel.svelte';
@@ -14,8 +11,7 @@
     $: highlighted = $State.ui.highlighted.tiles || {};
     $: targettable = $State.ui.highlighted.abilityTargettablePositions;
     $: unitPatterns = units.concat(graveyard).map(u => u.template);
-
-    $: actionLabels = getActionLabels($State.game.battle.tempLog);
+    $: actionLabels = $State.ui.actionLabels;
 
     $: highlightTargets = Object.keys(targettable).length > 0;
 

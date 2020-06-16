@@ -11,14 +11,6 @@ export const PADDING = 20;
 export const TILE_HEIGHT = 75;
 export const TILE_WIDTH = Math.sqrt(3)/2 * TILE_HEIGHT;
 
-export interface ActionLabel {
-    color: string,
-    text: string,
-    unit: Unit,
-    done: boolean,
-    isPlayer: boolean,
-}
-
 export function onClickTile(state : FullState, x, y) {
     // TERRAIN EDIT
     if (state.ui.tools.terrainEditor && state.ui.tools.terrainType) {
@@ -156,50 +148,6 @@ export function unselect(state : FullState) {
     state.ui.selected.abilityTargettedPositions = {};
     state.ui.selected.ability = null;
     state.ui.tooltip = null;
-}
-
-export function getActionLabels(logs : Log[]) : ActionLabel[] {
-    const labels : ActionLabel[] = [];    
-    logs.forEach(log => {
-        if (log.type === LogType.Attack) {
-            labels.push({
-                unit: log.entity,
-                color: 'black',
-                text: 'WHAAAG',
-                done: false,
-                isPlayer: log.currentFaction === 0,
-            });
-            if (log.result === LogResult.Miss) {
-                labels.push({
-                    unit: log.target,
-                    color: 'green',
-                    text: 'MISS',
-                    done: false,
-                    isPlayer: log.currentFaction === 0,
-                });
-            }
-        }
-        if (log.type === LogType.Damage) {
-            labels.push({
-                unit: log.entity,
-                color: 'red',
-                text: log.data.damage,
-                done: false,
-                isPlayer: log.currentFaction === 0,
-            });
-        }
-        if (log.type === LogType.Ability) {
-            labels.push({
-                unit: log.entity,
-                color: 'black',
-                text: log.data.name,
-                done: false,
-                isPlayer: log.currentFaction === 0,
-            });
-        }
-    });    
-
-    return labels;
 }
 
 export function isUnitActive(unit : Unit, logs : Log[]) : boolean {
