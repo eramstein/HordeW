@@ -7,7 +7,7 @@ const FILES = {
 };
 
 export function playSounds(logs : Log[]) {
-    const audioElement = document.querySelector('#audio') as HTMLMediaElement;
+    const audioElement = document.querySelector('#audio') as HTMLMediaElement;    
     logs.forEach(log => {
         const src = getFileName(log);        
         if (src) {
@@ -20,7 +20,7 @@ export function playSounds(logs : Log[]) {
 function getFileName(log : Log) : string {
     let fileName = null;
     switch (log.type) {        
-        case LogType.Attack:
+        case LogType.Attack:            
             if (log.result === LogResult.Miss) {
                 fileName = FILES.AttackMiss;
             }

@@ -8,6 +8,7 @@ export interface BattleState {
     units: Unit[],
     graveyard: Unit[],
     currentFaction: number,
+    currentUnit: string,
     round: number,
     log: Log[];
     tempLog: Log[];
@@ -182,7 +183,6 @@ export interface Ability {
     trigger: Trigger,
     target?: Target,
     cost?: number,
-    fast?: boolean,
     exhausts?: boolean,
     template?: string,
     visualEffect?: string,

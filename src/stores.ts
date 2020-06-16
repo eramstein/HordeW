@@ -126,10 +126,15 @@ export function tempTest() {
 
 export function passUnit() {
     const state = get(State);
-    sendAction(state.game, ActionType.Pass, {
-        unit: state.game.battle.units.filter(u => u.id === state.ui.selected.unit.id)[0], 
-    });
-    State.unselect();
+    const unit = state.game.battle.currentUnit ?
+        state.game.battle.units.filter(u => u.id === state.game.battle.currentUnit)[0]
+        :
+        state.ui.selected.unit ? 
+            state.game.battle.units.filter(u => u.id === state.ui.selected.unit.id)[0] : null;
+    if (unit) {
+        sendAction(state.game, ActionType.Pass, { unit });
+        State.unselect();
+    }    
 }
 
 window.onbeforeunload = () => {

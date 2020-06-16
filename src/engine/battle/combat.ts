@@ -37,12 +37,13 @@ import { Unit, LogType, LogResult, Pos } from "./model";
 import { canUnitAttack, damageUnit, checkIfUnitExhausted, getAttackableUnits } from "./unit";
 import { getDistance } from "./board";
 import { getRandomInt } from "../../utils/random";
-import { nextTurn } from "./turn";
+import { nextTurn, checkandSetCurrentUnit } from "./turn";
 import { addLog } from "./log";
 
 export function isValidAttackTarget(gs : GameState, attacker : Unit, target : Unit) : boolean {
 
     if (!canUnitAttack(gs, attacker)) {
+        console.log("not the active unit - combat");
         return false;
     }
 
@@ -59,6 +60,11 @@ export function isValidAttackTarget(gs : GameState, attacker : Unit, target : Un
 }
 
 export function attack(gs : GameState, attacker : Unit, defender : Unit, free : boolean) {    
+
+    if (!free && checkandSetCurrentUnit(gs, attacker) === false) {
+        return;
+    }
+
     if (!free && !isValidAttackTarget(gs, attacker, defender)) {
         console.log("invalid target");        
         return 0;

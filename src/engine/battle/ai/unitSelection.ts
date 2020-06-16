@@ -17,8 +17,7 @@ export function selectUnit(gs : GameState) : Unit {
             console.log("selectUnit - perso not found", perso);
             break;
     }
-    console.log('SELECTED UNIT: ', activeUnits.length, unit);
-    
+    console.log('SELECTED UNIT: ', activeUnits.length, unit);    
     return unit;
 }
 

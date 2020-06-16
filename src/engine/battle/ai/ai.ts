@@ -10,8 +10,10 @@ export function playAiTurn(gs : GameState) {
     const t0 = performance.now();
 
     const activeUnit = selectUnit(gs);
+    gs.battle.currentUnit = activeUnit.id;
     if (activeUnit) {
         useUnit(gs, activeUnit);
+        gs.battle.currentUnit = null;
     } else {
         nextTurn(gs);
     }

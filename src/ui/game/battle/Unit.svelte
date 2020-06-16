@@ -16,7 +16,7 @@
     $: rangeAttackable = $State.ui.highlighted.rangeAttackableUnits[unit.id];
     $: abilityTargettable = $State.ui.highlighted.abilityTargettableUnits[unit.id];
     $: abilityTargetted = $State.ui.selected.abilityTargettedUnits[unit.id];
-    $: active = $State.game.battle.tempLog.length > 0 && isUnitActive(unit, $State.game.battle.tempLog);
+    $: active = $State.game.battle.currentUnit === unit.id || $State.game.battle.tempLog.length > 0 && isUnitActive(unit, $State.game.battle.tempLog);
 
     let pos;
     let translate;
@@ -41,7 +41,7 @@
     }
 
     $: hpColor = unit.owner === 0 ? 'green' : '#ce0e0e';
-    $: circleStroke = selected || active ? "red" : (abilityTargetted ? "blue" : "black");
+    $: circleStroke = active ? "red" : (abilityTargetted ? "blue" : "black");
 
     function setAttackPreview() {
         const attackPreview = getAttackExpectation($State.game, $State.ui.selected.unit, unit);
@@ -103,7 +103,7 @@
     on:click={() => State.onClickUnit(unit)}
     on:contextmenu={() => State.onClickRightUnit(unit)}
     out:fade="{{ delay: unit.owner === 0 ? PLAYER_ANIMATION_DURATION + AI_ANIMATION_DELAY + AI_ANIMATION_DURATION : 0 }}"
-    filter={ unit.used && !active ? "url('#shade')" : null }
+    filter={ unit.used ? "url('#shade')" : (selected ? "url('#highlight')" : null) }
 >
     <circle r={ r } fill="white" stroke={circleStroke} stroke-width={selected || active || abilityTargetted ? "2" : "0.5"} />
     <circle r={ r - 4 } fill="url(#{unit.template}) white">

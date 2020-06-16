@@ -10,11 +10,14 @@ export function useUnitZombie(gs : GameState, unit : Unit) {
     const attackTargets = getAttackableUnits(gs, unit);
     if (attackTargets.length > 0) {
         doAttack(gs, unit, attackTargets);
-    } else if (canUnitMove(gs, unit) && getVisibleEnemiesInRange(gs, unit).length === 0) {
-        doMove(gs, unit);
-    } else {
-        passUnitTurn(gs, unit);
     }
+    if (canUnitMove(gs, unit) && getVisibleEnemiesInRange(gs, unit).length === 0) {
+        doMove(gs, unit);
+    }
+    if (attackTargets.length > 0) {
+        doAttack(gs, unit, attackTargets);
+    }
+    passUnitTurn(gs, unit);
 }
 
 // move towards nearest caravan

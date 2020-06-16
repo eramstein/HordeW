@@ -1,6 +1,6 @@
-import { Ability, Unit, TargetType, Pos, LogType } from "../model";
+import { Ability, Unit, TargetType, Pos, LogType, TriggerType } from "../model";
 import { GameState } from "../../game";
-import { nextTurn } from "../turn";
+import { nextTurn, checkandSetCurrentUnit } from "../turn";
 import { addLog } from "../log";
 import { checkIfUnitExhausted } from "../unit";
 
@@ -16,6 +16,12 @@ export function playAbility(gs : GameState, unit : Unit, ability : Ability, targ
     
     // CHECKS + COSTS
     // ----------------------------------------------------------------------
+    if (ability.trigger.type === TriggerType.Activated) {
+        if (checkandSetCurrentUnit(gs, unit) === false) {
+            return;
+        }        
+    }
+    
     if (ccPreventsAbility(gs, unit)) {
         return;
     }
@@ -48,27 +54,20 @@ export function playAbility(gs : GameState, unit : Unit, ability : Ability, targ
         data: { name: ability.visualEffect || ability.name },
         text: `${unit.name} used ${ability.name} on ${targetsString}`,
     });
-
-    // NEXT ROUND
-    // ----------------------------------------------------------------------
-    if (!ability.fast) {
-        nextTurn(gs);
-    }
     
 }
 
 function ccPreventsAbility(gs : GameState, unit : Unit) : boolean {
-    // if (unit && (unit.cc.mezz > 0 || unit.cc.stun > 0 || unit.cc.dazed)) {
-    //     console.log("Mezzed or Stunned or Dazed - skip ability");
-    //     unit.cc.dazed = false;        
-    //     return true;
-    // }
+    if (unit && (unit.cc.mezz > 0 || unit.cc.stun > 0)) {
+        console.log("Mezzed or Stunned - skip ability");
+        return true;
+    }
     return false;
 }
 
 function payAbilityCost(gs : GameState, unit : Unit, ability : Ability) : boolean {
     const cost = ability.cost || 0;
-    if (unit.energy < cost) {
+    if (!unit.energy || unit.energy < cost) {
         console.log("NOT ENOUGH ENERGY");
         return false;
     }

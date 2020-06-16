@@ -22,6 +22,7 @@ Default behaviour:
             N -> Is there any tile with better value ?
                 Y -> Move towards highest tile
                 N -> pass
+    After move, check if now attack is possible
 
 TODO
 Special cases:
@@ -31,12 +32,15 @@ Special cases:
 - support: based on their abilities, TBD
 */
 
-export function useUnitGeneral(gs : GameState, unit : Unit) {    
-    const enemiesInRange = getVisibleEnemiesInRange(gs, unit);
+export function useUnitGeneral(gs : GameState, unit : Unit) {
+    let enemiesInRange;
     
-    if (canUnitAttack(gs, unit) && enemiesInRange.length > 0) {
-        doAttack(gs, unit, enemiesInRange);
-        return;
+    if (canUnitAttack(gs, unit)) {
+        enemiesInRange = getVisibleEnemiesInRange(gs, unit);
+        if (enemiesInRange.length > 0) {
+            doAttack(gs, unit, enemiesInRange);
+            return;
+        }
     }
 
     const enemiesThatCanOpportunityAttack = gs.battle.units.filter(u => {
@@ -51,8 +55,13 @@ export function useUnitGeneral(gs : GameState, unit : Unit) {
     }
 
     if (canUnitMove(gs, unit)) {
-        const didMove = doMove(gs, unit);
-        if (didMove) {
+        doMove(gs, unit);
+    }
+    
+    if (canUnitAttack(gs, unit)) {
+        enemiesInRange = getVisibleEnemiesInRange(gs, unit);
+        if (enemiesInRange.length > 0) {
+            doAttack(gs, unit, enemiesInRange);
             return;
         }        
     }
@@ -119,7 +128,7 @@ function doMove(gs : GameState, unit : Unit) : boolean {
         didMove = true;
     }
 
-    if (bestOverallTileValue > currentTileValue) {
+    if (!didMove && bestOverallTileValue > currentTileValue) {
         const target = getNextStepTowards(gs, reachablePositions, bestOverallTile);
         console.log('MOVE TO BEST OVERALL: ', bestOverallTile, target, unit);
         moveTo(gs, unit, target);

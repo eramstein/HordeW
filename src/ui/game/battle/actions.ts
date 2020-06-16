@@ -30,7 +30,7 @@ export function sendAction(gs : GameState, actionType : ActionType, params : any
             break;
 
         case ActionType.Pass:
-            passUnitTurn(gs, params.unit);
+            passUnitTurn(gs, params.unit);           
             break;
 
         case ActionType.Ability:
@@ -56,12 +56,12 @@ export function sendAction(gs : GameState, actionType : ActionType, params : any
 }
 
 function loopTurns(gs, round) {
-    console.log("auto turn loop ");    
-    playSounds(gs.battle.tempLog);
+    console.log("auto turn loop ", gs.battle.tempLog);
     if (!gs.battle.factions[gs.battle.currentFaction].isPlayer) {
         console.log("AI turn");        
         playAiTurn(gs);
     }
+    playSounds(gs.battle.tempLog);
     if (factionDone(gs, 0) && !allDone(gs)) {
         setTimeout((gs) => {
             nextTurn(gs);

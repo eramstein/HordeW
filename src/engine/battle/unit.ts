@@ -54,12 +54,18 @@ export function checkIfUnitExhausted(gs : GameState, unit : Unit) {
         return Math.min(ability.cost || 0, agg);
     }, Infinity);
     const enoughEnergyForAbility = unit.energy && unit.energy >= minAbilityCost;    
-    if (unit.attacksCount > 0 && unit.movesCount > 0 && !enoughEnergyForAbility) {
+    if (unit.attacksCount > 0) {
         unit.used = true;
+    }
+    if (unit.movesCount > 0 && !enoughEnergyForAbility) {
+        const enemiesInRange = getAttackableUnits(gs, unit);
+        if (getAttackableUnits.length === 0) {
+            unit.used = true;
+        }        
     }
 }
 
-export function passUnitTurn(gs : GameState, unit : Unit) {
+export function passUnitTurn(gs : GameState, unit : Unit) {    
     unit.used = true;
 
     addLog(gs, {
@@ -79,7 +85,7 @@ export function canUnitMove(gs : GameState, unit : Unit) : boolean {
     return !unit.used && !unit.cc.mezz && !unit.cc.stun && !unit.cc.root && unit.movement > 0 && unit.movesCount === 0;
 }
 
-export function canUnitAttack(gs : GameState, unit : Unit) : boolean {    
+export function canUnitAttack(gs : GameState, unit : Unit) : boolean {
     return !unit.used && !unit.cc.mezz && !unit.cc.stun && !unit.defender && unit.attacksCount === 0;
 }
 

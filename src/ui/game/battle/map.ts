@@ -53,7 +53,9 @@ export function onClickRightTile(state : FullState, x, y) {
                     targetUnits: [],
                     targetPositions: targetPositions,
                 });
-                unselect(state);                
+                state.ui.selected.abilityTargettedPositions = {};
+                state.ui.highlighted.abilityTargettablePositions = {};
+                state.ui.selected.ability = null;
             }
         }        
         return;
@@ -68,7 +70,11 @@ export function onClickRightTile(state : FullState, x, y) {
             unit: selectedUnit, 
             pos: { x, y },
         });
-        unselect(state);
+        highlightAttackableUnits(state);
+        state.ui.highlighted.tiles = {};
+    }
+    if (selectedUnit && selectedUnit.used) {
+        state.ui.selected.unit = null;
     }
     state.ui.tooltip = null;
 }
@@ -91,15 +97,7 @@ export function onClickUnit(state : FullState, clickedUnit : Unit) {
             state.ui.highlighted.tiles[t.x + "." + t.y] = true;
         });
         // HIGHLIGHT ATTACKABLE UNITS
-        const attackableUnits = getAttackableUnits(state.game, clickedUnit);        
-        attackableUnits.forEach(u => {
-            const distance = getDistance(clickedUnit.position, u.position);
-            if (distance === 1) {
-                state.ui.highlighted.meleeAttackableUnits[u.id] = true;
-            } else {
-                state.ui.highlighted.rangeAttackableUnits[u.id] = true;
-            }            
-        });
+        highlightAttackableUnits(state);
     }
 
     // TOOLS : AI TILE VALUES
@@ -128,7 +126,8 @@ export function onClickRightUnit(state : FullState, clickedUnit : Unit) {
                     targetUnits: targetUnits,
                     targetPositions: [],
                 });
-                unselect(state);                
+                state.ui.selected.abilityTargettedUnits = {};
+                state.ui.selected.ability = null;
             }
         }        
         return;
@@ -198,15 +197,6 @@ export function getActionLabels(logs : Log[]) : ActionLabel[] {
                 isPlayer: log.currentFaction === 0,
             });
         }
-        if (log.type === LogType.Pass && log.currentFaction !== 0) {
-            labels.push({
-                unit: log.entity,
-                color: 'black',
-                text: 'PASS',
-                done: false,
-                isPlayer: false,
-            });
-        }
     });    
 
     return labels;
@@ -227,4 +217,20 @@ export function isUnitActive(unit : Unit, logs : Log[]) : boolean {
         });    
 
     return active;
+}
+
+function highlightAttackableUnits(state : FullState) {
+    const unit = state.ui.selected.unit;
+    if (!unit) {
+        return;
+    }
+    const attackableUnits = getAttackableUnits(state.game, unit);        
+    attackableUnits.forEach(u => {
+        const distance = getDistance(unit.position, u.position);
+        if (distance === 1) {
+            state.ui.highlighted.meleeAttackableUnits[u.id] = true;
+        } else {
+            state.ui.highlighted.rangeAttackableUnits[u.id] = true;
+        }            
+    });
 }

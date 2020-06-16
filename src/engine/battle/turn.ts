@@ -3,11 +3,12 @@ import { Unit } from "./model";
 import { damageUnit, healUnit, canUnitDoAnything } from "./unit";
 
 export function nextTurn(gs : GameState) {
-    console.log("next turn");
+    console.log("next turn", gs.battle.currentFaction);
 
     resetTurnEffects(gs);
 
-    gs.battle.currentFaction = (gs.battle.currentFaction + 1) % gs.battle.factions.length;
+    gs.battle.currentUnit = null;
+    gs.battle.currentFaction = (gs.battle.currentFaction + 1) % gs.battle.factions.length;    
 
     const isPlayer = gs.battle.factions[gs.battle.currentFaction].isPlayer;
 
@@ -94,4 +95,13 @@ function updateTempEffects(unit : Unit, endOfRound : boolean) {
     }
     effects.meleeAttack = 0;
     effects.damageShield = 0;
+}
+
+export function checkandSetCurrentUnit(gs : GameState, unit : Unit) : boolean {
+    if (gs.battle.currentUnit && gs.battle.currentUnit !== unit.id) {
+        console.log("this is not the active unit");
+        return false;
+    }
+    gs.battle.currentUnit = unit.id;
+    return true;
 }
