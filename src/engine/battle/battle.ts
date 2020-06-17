@@ -11,17 +11,17 @@ export function initBattleState() : BattleState {
     playerRoster.push(makeUnit("caravan", 0, { x: 17, y: 17 }));
 
     const aiRoster = [];
-    aiRoster.push(makeUnit("spearman", 1, { x: 5, y: 4 }));
+    // aiRoster.push(makeUnit("spearman", 1, { x: 5, y: 4 }));
     // aiRoster.push(makeUnit("spearman", 1, { x: 6, y: 4 }));
-    aiRoster.push(makeUnit("spearman", 1, { x: 7, y: 4 }));
+    // aiRoster.push(makeUnit("spearman", 1, { x: 7, y: 4 }));
     //  aiRoster.push(makeUnit("spearman", 1, { x: 15, y: 5 }));
     aiRoster.push(makeUnit("swordman", 1, { x: 15, y: 4 }));
     // aiRoster.push(makeUnit("swordman", 1, { x: 16, y: 4 }));
-    aiRoster.push(makeUnit("swordman", 1, { x: 17, y: 5 }));
+    // aiRoster.push(makeUnit("swordman", 1, { x: 17, y: 5 }));
     // aiRoster.push(makeUnit("swordman", 1, { x: 18, y: 5 }));
     // aiRoster.push(makeUnit("archer", 1, { x: 5, y: 3 }));
-    aiRoster.push(makeUnit("archer", 1, { x: 6, y: 3 }));
-    aiRoster.push(makeUnit("archer", 1, { x: 15, y: 3 }));
+    // aiRoster.push(makeUnit("archer", 1, { x: 6, y: 3 }));
+    // aiRoster.push(makeUnit("archer", 1, { x: 15, y: 3 }));
     // aiRoster.push(makeUnit("archer", 1, { x: 16, y: 3 }));
 
     const initFactions : Faction[] = [

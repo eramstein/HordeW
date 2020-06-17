@@ -168,11 +168,13 @@ export function isUnitActive(unit : Unit, logs : Log[]) : boolean {
 }
 
 function highlightAttackableUnits(state : FullState) {
+    state.ui.highlighted.meleeAttackableUnits = {};
+    state.ui.highlighted.rangeAttackableUnits = {};
     const unit = state.ui.selected.unit;
     if (!unit) {
         return;
     }
-    const attackableUnits = getAttackableUnits(state.game, unit);        
+    const attackableUnits = getAttackableUnits(state.game, unit);    
     attackableUnits.forEach(u => {
         const distance = getDistance(unit.position, u.position);
         if (distance === 1) {

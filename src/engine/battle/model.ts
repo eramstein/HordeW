@@ -105,6 +105,7 @@ export interface Unit {
     loseCondition?: boolean,  // lose if any destroyed    
     passive?: boolean, // auto-skip even if not used
     defender?: boolean, // can't attack
+    terrains?: { [key in TerrainType]?: boolean }, // terrain types it can move through for 1
     // ai stuff
     ai?: UnitAi,
     aiValue?: number, // how much the AI values killing it - computed by default based on stats, this is for special cases

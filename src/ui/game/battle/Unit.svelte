@@ -49,7 +49,7 @@
             position: { x: pos.tx, y: pos.ty },
             type: TooltipType.CombatPreview,
             data: {
-                "Hit Chance": attackPreview.hitChance * 100 + '%',
+                "Hit Chance": Math.floor(attackPreview.hitChance * 100) + '%',
                 "Damage Range": attackPreview.damageRange.min + ' to ' + attackPreview.damageRange.max,
             },
         });

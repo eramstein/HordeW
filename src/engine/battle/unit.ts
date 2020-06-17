@@ -120,11 +120,13 @@ export function getReachablePositions(gs : GameState, unit : Unit) : Pos[] {
         if (movesLeft > 0) {
             const adj = getAdjacentPositions(pos);            
             adj.forEach(p => {
-                const terrain = TERRAIN_SPECS[gs.battle.tiles[p.x][p.y].terrain];
-                const movesLeftAfter = movesLeft - terrain.movementCost;
+                const tile = gs.battle.tiles[p.x][p.y];
+                const terrain = TERRAIN_SPECS[tile.terrain];
+                const cost = unit.terrains && unit.terrains[tile.terrain] ? 1 : terrain.movementCost;                
+                const movesLeftAfter = movesLeft - cost;
                 const bestVisitBefore = visited[p.x + "." + p.y] === undefined ? -1 : visited[p.x + "." + p.y];
                 if (!terrain.blocksMovement &&
-                    movesLeft >= terrain.movementCost &&
+                    movesLeft >= cost &&
                     // all units, ennemies or allies, block (to change, check if occupied === unit.owner)
                     occupied[p.x + "." + p.y] === undefined &&
                     movesLeftAfter > bestVisitBefore) {

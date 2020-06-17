@@ -1,4 +1,4 @@
-import { Unit, UnitType, UnitCategory, UnitAiPerso } from "../../engine/battle/model";
+import { Unit, UnitType, UnitCategory, UnitAiPerso, TerrainType } from "../../engine/battle/model";
 import { DataAbilities as AB } from "../abilities/abilities";
 
 export const UNITS : { [key : string] : Unit } = {
@@ -112,5 +112,6 @@ export const UNITS : { [key : string] : Unit } = {
         rangeAttack: 4,
         rangeDamage: { min: 2, max: 3 },
         energyMax: 8,
+        terrains: { [TerrainType.Forest] : true }
     },
 }
