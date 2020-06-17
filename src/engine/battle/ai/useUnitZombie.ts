@@ -24,13 +24,17 @@ export function useUnitZombie(gs : GameState, unit : Unit) {
 function doMove(gs : GameState, unit : Unit) {
     const target = getClosestEnemyLoseCondition(gs, unit) || getClosestEnemySurviveCondition(gs, unit);
     const canMoveTo = getReachablePositions(gs, unit);
+    const reachableTilesMap = canMoveTo.reduce((agg, pos) => {
+        agg[pos.x + "." + pos.y] = true;
+        return agg;
+    }, {});
 
     if (!target || canMoveTo.length === 0 || getDistance(unit.position, target.position) === 1) {
         passUnitTurn(gs, unit);
         return;
     }
 
-    const goTo = getNextStepTowards(gs, canMoveTo, target.position);
+    const goTo = getNextStepTowards(gs, unit, reachableTilesMap, target.position);
     moveUnit(gs, unit, goTo);
 }
 

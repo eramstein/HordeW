@@ -6,6 +6,7 @@ import { sendAction, ActionType } from "./actions";
 import { deployUnit } from "../../../engine/battle/deployment";
 import { TOOL_TILE_VALUES } from "./config";
 import { preProcessTiles } from "../../../engine/battle/ai/preProcessTiles";
+import { getPathTo } from "../../../engine/battle/ai/pathfinding";
 
 export const PADDING = 20;
 export const TILE_HEIGHT = 75;
@@ -98,6 +99,13 @@ export function onClickUnit(state : FullState, clickedUnit : Unit) {
         console.log('preProcessTiles', tiles);
         state.ui.tools.aiTileValues = tiles;
     }
+
+    // PATHFINDING DEBUG
+    // const path = getPathTo(state.game, clickedUnit, { x: 16, y: 0});
+    // state.ui.highlighted.tiles = {};
+    // path.forEach(t => {
+    //     state.ui.highlighted.tiles[t.x + "." + t.y] = true;
+    // });
 }
 
 export function onClickRightUnit(state : FullState, clickedUnit : Unit) {

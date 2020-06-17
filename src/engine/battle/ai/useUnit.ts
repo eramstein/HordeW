@@ -129,7 +129,7 @@ function doMove(gs : GameState, unit : Unit) : boolean {
     }
 
     if (!didMove && bestOverallTileValue > currentTileValue) {
-        const target = getNextStepTowards(gs, reachablePositions, bestOverallTile);
+        const target = getNextStepTowards(gs, unit, reachableTilesMap, bestOverallTile);
         console.log('MOVE TO BEST OVERALL: ', bestOverallTile, target, unit);
         moveTo(gs, unit, target);
         didMove = true;

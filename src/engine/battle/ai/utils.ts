@@ -3,6 +3,7 @@ import { Unit, Pos } from "../model";
 import { getDistance } from "../board";
 import { getHitChance, getRangeSkillDiff, getRangeSkillDiffFromPos, getMeleeSkillDiff } from "../combat";
 import { UNIT_PREFS } from "./config";
+import { getPathTo } from "./pathfinding";
 
 export const MAX_UNIT_VAL = 100;
 
@@ -28,19 +29,19 @@ export function getClosestEnemySurviveCondition(gs : GameState, unit : Unit) : U
     return sorted[0];
 }
 
-// what is the closest position from target among the possible ones?
-export function getNextStepTowards(gs : GameState, reachablePositions : Pos[], targetPosition : Pos) : Pos {    
-    // dumb version: just consider distance
-    let closestDistance = Infinity;
-    let closestPos;    
-    reachablePositions.forEach(pos => {      
-        const dist = getDistance(pos, targetPosition);
-        if (dist < closestDistance) {
-            closestPos = pos;
-            closestDistance = dist;
+export function getNextStepTowards(gs : GameState, unit : Unit, reachableTilesMap : {}, goal : Pos) : Pos {    
+    const path = getPathTo(gs, unit, goal);
+    let i = 0;
+    let target;    
+    while (i < path.length) {
+        if (reachableTilesMap[path[i].x + '.' + path[i].y]) {
+            target = path[i];
+        } else {
+            break;
         }
-    });
-    return closestPos;
+        i++;
+    }
+    return target;
 }
 
 export function damageExpectationMelee(gs : GameState, attacker : Unit, defender : Unit) : number {
