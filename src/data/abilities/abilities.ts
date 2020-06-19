@@ -11,4 +11,6 @@ export const DataAbilities : { [key:string]: Ability } = {
     applyFuried: AT.addAbility({ name: 'Enfury', cost: 1 }, { count : 1, range : 5, abilityName : 'furied' }),
     buffAttack: AT.tempEffect({ name: 'Buff Attack', cost: 1 }, { count : 1, range : 5, effect : { meleeAttack: 3 } }),
     makeForests: AT.updateTerrain({ name: 'Make Forests', cost: 1 }, { count : 3, range : 5, terrain: TerrainType.Forest }),
+    summonBears: AT.summon({ name: 'Summon bears', cost: 1 }, { count : 1, range : 5, template: 'bears' }),
+    transformIntoBear: AT.transormTilesIntoUnit({ name: 'Forest to bear', cost: 1 }, { count : 1, range : 5, template: 'bears', terrainType: TerrainType.Forest }),
 }

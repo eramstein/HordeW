@@ -6,7 +6,7 @@
     import { getTilePixelPos, isUnitActive, TILE_WIDTH, TILE_HEIGHT } from './map';
     import { LOG_ANIMATION_DURATION } from './animateLog';
     
-    export let unit;
+    export let unit;    
 
     const HP_BAR_SIZE = TILE_HEIGHT * 0.5;
     const HP_BAR_SHIFT = -TILE_HEIGHT * 0.25;
@@ -24,7 +24,7 @@
     let hpBars = [];
 
     $: {
-        pos = getTilePixelPos(unit.position.x, unit.position.y);
+        pos = getTilePixelPos(unit.position.x, unit.position.y);        
         pos.tx += TILE_WIDTH/2;
         pos.ty += TILE_HEIGHT/2;
         translate = "translate(" + pos.tx + "," + pos.ty + ")";

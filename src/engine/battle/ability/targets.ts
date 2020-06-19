@@ -1,5 +1,5 @@
 import { GameState } from "../../game";
-import { Unit, Ability, Pos } from "../model";
+import { Unit, Ability, Pos, TerrainType } from "../model";
 import { getDistance, getPositionsInRangeRange } from "../board";
 
 export const TargetEligibilityTemplates : { [key:string]: (...any) => (gs : GameState, unit : Unit, ability : Ability) => Unit[] | Pos[] } = {
@@ -18,9 +18,13 @@ export const TargetEligibilityTemplates : { [key:string]: (...any) => (gs : Game
             });
         };
     },
-    tilesCloserThan: (n) => {
-        return (gs : GameState, unit : Unit, ability : Ability) => {            
-            return getPositionsInRangeRange(unit.position, n, 1);
+    tilesCloserThan: (n, terrainType : TerrainType) => {
+        return (gs : GameState, unit : Unit, ability : Ability) => {     
+            let positionsInRange = getPositionsInRangeRange(unit.position, n, 1);
+            if (terrainType) {
+                positionsInRange = positionsInRange.filter(p => gs.battle.tiles[p.x][p.y].terrain === terrainType);
+            }            
+            return positionsInRange;
         };
     },
 }

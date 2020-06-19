@@ -1,11 +1,22 @@
 import { GameState } from "../../game";
 import { Unit, Pos, TemporaryEffects, Ability, TerrainType } from "../model";
-import { damageUnit, healUnit, mezzUnit, stunUnit, rootUnit } from "../unit";
+import { damageUnit, healUnit, mezzUnit, stunUnit, rootUnit, makeUnit } from "../unit";
 import { getDistance } from "../board";
 import { newAbility } from "./ability";
 import { DataAbilities } from "../../../data/abilities/abilities";
 
-export const EffectTemplates : { [key:string]: (...any) => (gs : GameState, unit : Unit, targetUnits : Unit[], targetPositions : Pos[], params : any) => void } = {
+export type EffectFunction =
+    (gs : GameState, unit : Unit, targetUnits : Unit[], targetPositions : Pos[], params : any) => void;
+
+export function mergeEffects(effectsFunctions : EffectFunction[]) : EffectFunction {
+    return (gs : GameState, unit : Unit, targetUnits : Unit[], targetPositions : Pos[], params : any) => {            
+        effectsFunctions.forEach(f => {
+            f(gs, unit, targetUnits, targetPositions, params);
+        });
+    };
+}
+
+export const EffectTemplates : { [key:string]: (...any) => EffectFunction } = {
     damage: (damage : number) => {
         return (gs : GameState, unit : Unit, targetUnits : Unit[], targetPositions : Pos[]) => {            
             if (!targetUnits) { return }
@@ -87,6 +98,15 @@ export const EffectTemplates : { [key:string]: (...any) => (gs : GameState, unit
                     ability.duration = duration;
                 }
                 t.abilities.push(ability);
+            });
+        };
+    },
+    summon: (unitTemplate : string, otherFaction : number) => {
+        return (gs : GameState, unit : Unit, targets : Unit[], targetPositions : Pos[]) => {
+            const faction = otherFaction === undefined ? unit.owner : otherFaction;
+            targetPositions.forEach(pos => {
+                const summonedUnit = makeUnit(unitTemplate, faction, pos);
+                gs.battle.units.push(summonedUnit);
             });
         };
     },

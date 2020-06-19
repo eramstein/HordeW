@@ -97,7 +97,7 @@ function allTargetUnitsEligible(gs : GameState, unit : Unit, ability : Ability, 
 }
 
 function allTargetPositionsEligible(gs : GameState, unit : Unit, ability : Ability, targets : Pos[]) : boolean {
-    if (ability.target && ability.target.type === TargetType.Unit) {    
+    if (ability.target && ability.target.type === TargetType.Tile) {    
         const eligibleTargets = getEligibleTargetTiles(gs, unit, ability);        
         const targetsValid = checkTargetPositionsEligibility(targets, eligibleTargets);    
         if (targetsValid === false) {

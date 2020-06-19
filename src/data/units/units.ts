@@ -106,7 +106,7 @@ export const UNITS : { [key : string] : Unit } = {
         meleeDefense: 2,
         rangeDefense: 0,
         meleeDamage: { min: 3, max: 3 },
-        abilities: [AB.root, AB.makeForests],
+        abilities: [AB.root, AB.makeForests, AB.summonBears, AB.transformIntoBear],
         movement: 2,
         range: 3,
         rangeAttack: 4,

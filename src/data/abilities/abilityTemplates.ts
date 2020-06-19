@@ -1,12 +1,9 @@
-import { Ability } from "../../engine/battle/model";
+import { Ability, TerrainType } from "../../engine/battle/model";
 import { ACT, ENEMIES, BEFORE_I_MOVE, MYSELF, UNITS, TILES } from "./shortcuts";
-import { EffectTemplates as ET } from "../../engine/battle/ability/effects";
+import { EffectTemplates as ET, mergeEffects } from "../../engine/battle/ability/effects";
 
 export const DataAbilityTemplates : { [key:string]:(AbilityParams, ...any) => Ability } = {
-    directDamage: (p, { damage, range, count }) => {
-        count = count || 1;
-        damage = damage || 1;
-        range = range || 1;
+    directDamage: (p, { damage = 1, count = 1, range = 1 }) => {
         return {
             text: "PING " + damage,
             visualEffect: "Bzzt",
@@ -16,11 +13,7 @@ export const DataAbilityTemplates : { [key:string]:(AbilityParams, ...any) => Ab
             ...p,
         };
     },
-    zoneDamage: (p, { damage, range, count, radius }) => {
-        count = count || 1;
-        damage = damage || 1;
-        range = range || 1;
-        radius = radius || 1;
+    zoneDamage: (p, { damage = 1, count = 1, range = 1, radius = 1 }) => {
         return {
             text: "BOOM " + damage,
             visualEffect: "Boom",
@@ -60,12 +53,12 @@ export const DataAbilityTemplates : { [key:string]:(AbilityParams, ...any) => Ab
             ...p,
         };
     },
-    updateTerrain: (p, { terrain, range, count }) => {
+    updateTerrain: (p, { terrain, count, range }) => {
         return {
             text: "Transform into " + terrain,
             visualEffect: "Abracadabra",
             trigger: ACT,
-            target: TILES({ range, count }),
+            target: TILES({ count, range }),
             effect: ET.updateTerrain(terrain),
             ...p,
         };
@@ -85,6 +78,24 @@ export const DataAbilityTemplates : { [key:string]:(AbilityParams, ...any) => Ab
             trigger: ACT,
             target: UNITS({ count, range }),
             effect: ET.temporaryEffect(effect, endOfTurn),
+            ...p,
+        };
+    },
+    summon: (p, { count, range, template }) => {
+        return {
+            text: "Summon " + count + " " + template,
+            trigger: ACT,
+            target: TILES({ count, range }),
+            effect: ET.summon(template),
+            ...p,
+        };
+    },
+    transormTilesIntoUnit: (p, { count, range, terrainType, template }) => {
+        return {
+            text: "Tranform " + terrainType + " into " + template,
+            trigger: ACT,
+            target: TILES({ count, range, terrainType }),
+            effect: mergeEffects([ET.summon(template), ET.updateTerrain(TerrainType.Plains)]) ,
             ...p,
         };
     },

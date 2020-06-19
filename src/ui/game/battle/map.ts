@@ -6,7 +6,6 @@ import { sendAction, ActionType } from "./actions";
 import { deployUnit } from "../../../engine/battle/deployment";
 import { TOOL_TILE_VALUES } from "./config";
 import { preProcessTiles } from "../../../engine/battle/ai/preProcessTiles";
-import { getPathTo } from "../../../engine/battle/ai/pathfinding";
 
 export const PADDING = 20;
 export const TILE_HEIGHT = 75;
@@ -37,7 +36,7 @@ export function onClickRightTile(state : FullState, x, y) {
             state.ui.selected.abilityTargettedPositions[x + "." + y] = true;        
             if (Object.keys(state.ui.selected.abilityTargettedPositions).length === selectedAbility.target.count) {
                 const targetPositions = Object.keys(state.ui.selected.abilityTargettedPositions).map(k => {
-                    const vals = k.split(".");
+                    const vals = k.split(".").map(a => <number><unknown>a*1);
                     return { x: vals[0], y: vals[1] };
                 });
                 sendAction(state.game, ActionType.Ability, { 
@@ -117,7 +116,7 @@ export function onClickRightUnit(state : FullState, clickedUnit : Unit) {
         if (state.ui.selected.abilityTargettedUnits[clickedUnit.id]) {
             delete state.ui.selected.abilityTargettedUnits[clickedUnit.id];
         } else {
-            state.ui.selected.abilityTargettedUnits[clickedUnit.id] = true;        
+            state.ui.selected.abilityTargettedUnits[clickedUnit.id] = true;
             if (Object.keys(state.ui.selected.abilityTargettedUnits).length === selectedAbility.target.count) {
                 const targetUnits = state.game.battle.units.filter(u => state.ui.selected.abilityTargettedUnits[u.id]);
                 sendAction(state.game, ActionType.Ability, { 
@@ -129,7 +128,7 @@ export function onClickRightUnit(state : FullState, clickedUnit : Unit) {
                 state.ui.selected.abilityTargettedUnits = {};
                 state.ui.selected.ability = null;
             }
-        }        
+        }
         return;
     }
 

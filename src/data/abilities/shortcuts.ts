@@ -1,4 +1,4 @@
-import { TriggerType, TargetType } from "../../engine/battle/model";
+import { TriggerType, TargetType, TerrainType } from "../../engine/battle/model";
 import { ConditionTemplates } from "../../engine/battle/ability/conditions";
 import { TargetEligibilityTemplates } from "../../engine/battle/ability/targets";
 
@@ -44,11 +44,11 @@ export const MYSELF = {
     type: TargetType.Self,
 };
 
-export function TILES({ range, count }) {
+export function TILES({ range, count, terrainType = null }) {
     return {
         type: TargetType.Tile,
         count: count,
-        eligible: TargetEligibilityTemplates.tilesCloserThan(range),
+        eligible: TargetEligibilityTemplates.tilesCloserThan(range, terrainType),
     };    
 };
 
