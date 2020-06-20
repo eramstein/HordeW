@@ -45,9 +45,13 @@ export function onClickRightTile(state : FullState, x, y) {
                     targetUnits: [],
                     targetPositions: targetPositions,
                 });
-                state.ui.selected.abilityTargettedPositions = {};
-                state.ui.highlighted.abilityTargettablePositions = {};
-                state.ui.selected.ability = null;
+                if (selectedAbility.exhausts) {
+                    unselect(state);
+                } else {
+                    state.ui.selected.abilityTargettedPositions = {};
+                    state.ui.highlighted.abilityTargettablePositions = {};
+                    state.ui.selected.ability = null;
+                }                
             }
         }        
         return;

@@ -37,6 +37,10 @@ export const AFTER_DEATH_OF_ME = {
     condition: ConditionTemplates.isMe('deadUnit'),
 };
 
+export const END_OF_ROUND = {
+    type: TriggerType.EndOfRound,
+};
+
 // Targets
 //-------------------------------------------------
 

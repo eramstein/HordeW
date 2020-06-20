@@ -69,8 +69,10 @@ function heuristic(goal : Pos, pos : Pos) : number {
 function rollBackPath(cameFrom : {}, goal : Pos, start : Pos) : Pos[] {
     let path = [];
     let current = goal;
-
+    console.log(cameFrom);
+    
     while (posToString(current) !== posToString(start)) {
+        console.log(current);
         current = cameFrom[posToString(current)];
         path.push(current);
     }

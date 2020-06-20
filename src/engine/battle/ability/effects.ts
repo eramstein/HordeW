@@ -1,5 +1,5 @@
 import { GameState } from "../../game";
-import { Unit, Pos, TemporaryEffects, Ability, TerrainType } from "../model";
+import { Unit, Pos, TemporaryEffects, TemporaryAttributes, TerrainType } from "../model";
 import { damageUnit, healUnit, mezzUnit, stunUnit, rootUnit, makeUnit } from "../unit";
 import { getDistance } from "../board";
 import { newAbility } from "./ability";
@@ -33,7 +33,7 @@ export const EffectTemplates : { [key:string]: (...any) => EffectFunction } = {
                     .filter(u => getDistance(u.position, t.position) <= radius)
                     .forEach(u => {
                         damageUnit(gs, u, damage);
-                    });                                
+                    });
             });
         };
     },
@@ -62,6 +62,18 @@ export const EffectTemplates : { [key:string]: (...any) => EffectFunction } = {
             if (!targets) { return }
             targets.forEach(t => {
                 mezzUnit(gs, t, value);
+            });
+        };
+    },
+    mezzZone: (value : number, radius : number) => {
+        return (gs : GameState, unit : Unit, targets : Unit[], targetPositions : Pos[]) => {
+            if (!targets) { return }
+            targets.forEach(t => {
+                gs.battle.units
+                    .filter(u => getDistance(u.position, t.position) <= radius)
+                    .forEach(u => {
+                        mezzUnit(gs, u, value);
+                    });
             });
         };
     },
@@ -110,27 +122,48 @@ export const EffectTemplates : { [key:string]: (...any) => EffectFunction } = {
             });
         };
     },
-    temporaryEffect: (effect : TemporaryEffects, endOfTurn : boolean) => {
-        function mergeEffects(current : TemporaryEffects, added : TemporaryEffects) : TemporaryEffects {
-            return {
-                meleeAttack: (current.meleeAttack || 0) + (added.meleeAttack || 0),
-                damageShield: (current.damageShield || 0) + (added.damageShield || 0),
-                dot: (current.dot || 0) + (added.dot || 0),
-                hot: (current.hot || 0) + (added.hot || 0),
-            }
+    temporaryEffect: (effect : TemporaryEffects, endOfTurn : boolean, radius : number) => {
+        function mergeEffects(current : TemporaryEffects, added : TemporaryEffects) {
+            Object.entries(added.effects).forEach(effect => {
+                const attribute = effect[0];
+                const value = effect[1];
+                current.effects[attribute] = (current.effects[attribute] || 0) + (value || 0);
+            });
         }
         return (gs : GameState, unit : Unit, targets : Unit[], targetPositions : Pos[]) => {
             if (!targets || targets.length === 0) { return }                       
-            targets.forEach(t => {                
-                if (effect.meleeAttack) {
-                    t.meleeAttack += effect.meleeAttack;
-                }
-                if (endOfTurn) {
-                    t.endOfTurn = mergeEffects(t.endOfTurn, effect);
-                } else {
-                    t.endOfRound = mergeEffects(t.endOfRound, effect);
-                }
+            targets.forEach(t => {
+                let affectedUnits = [t];
+                if (radius) {
+                    affectedUnits = gs.battle.units
+                        .filter(u => getDistance(u.position, t.position) <= radius);
+                }                
+                affectedUnits.forEach(t => {
+                    applyTempEffects(effect.effects, t, false);
+                    if (endOfTurn) {
+                        mergeEffects(t.endOfTurn, effect);
+                    } else {
+                        t.endOfRound.push(effect);
+                    }
+                });                
             });            
         };
     },
+}
+
+export function applyTempEffects(effects : TemporaryAttributes, unit : Unit, reverse: boolean) {
+    Object.entries(effects).forEach(effect => {
+        const attribute = effect[0];
+        const value = effect[1];
+        const direction = reverse ? - 1 : 1;
+        if (attribute === 'meleeDamage') {
+            unit.meleeDamage.min += value * direction;
+            unit.meleeDamage.max += value * direction;
+        } else if (attribute === 'rangeDamage') {
+            unit.rangeDamage.min += value * direction;
+            unit.rangeDamage.max += value * direction;
+        } else {
+            unit[attribute] += value * direction;
+        }
+    });
 }

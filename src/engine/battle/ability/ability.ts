@@ -54,7 +54,10 @@ export function playAbility(gs : GameState, unit : Unit, ability : Ability, targ
         data: { name: ability.visualEffect || ability.name },
         text: `${unit.name} used ${ability.name} on ${targetsString}`,
     });
-    
+
+    if (unit.used) {
+        nextTurn(gs);
+    }
 }
 
 function ccPreventsAbility(gs : GameState, unit : Unit) : boolean {

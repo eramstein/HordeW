@@ -1,7 +1,9 @@
 import { GameState } from "../game";
-import { Unit, LogType } from "./model";
+import { Unit, LogType, TriggerType } from "./model";
 import { damageUnit, healUnit, canUnitDoAnything } from "./unit";
 import { addLog } from "./log";
+import { applyTempEffects } from "./ability/effects";
+import { triggerAbilities } from "./ability/listeners";
 
 export function nextTurn(gs : GameState) {
     console.log("next turn", gs.battle.currentFaction);
@@ -33,6 +35,7 @@ export function nextRound(gs : GameState) {
         entity: gs.battle.round,
         text: `End of round ${gs.battle.round}`,
     });
+    triggerAbilities(gs, TriggerType.EndOfRound, {});
     applyRoundEffects(gs);
     resetRoundEffects(gs);
     gs.battle.round++;
@@ -59,23 +62,17 @@ export function unitsDone(gs : GameState, units : Unit[]) : boolean {
 }
 
 function resetRoundEffects(gs : GameState) {
-    gs.battle.units.forEach(u => { updateTempEffects(u, true) });
+    gs.battle.units.forEach(u => { updateRoundTempEffects(u) });
     gs.battle.units.forEach(u => { updateCC(u) });
 }
 
 function resetTurnEffects(gs : GameState) {
-    gs.battle.units.forEach(u => { updateTempEffects(u, false) });    
+    gs.battle.units.forEach(u => { updateTurnTempEffects(u) });    
 }
 
 function applyRoundEffects(gs : GameState) {
     gs.battle.units.forEach(u => {
         decrementAbilitiesDuration(u);
-        if (u.endOfRound.dot) {
-            damageUnit(gs, u, u.endOfRound.dot);
-        }
-        if (u.endOfRound.hot) {
-            healUnit(gs, u, u.endOfRound.hot);
-        }
     });
 }
 
@@ -94,13 +91,19 @@ function updateCC(unit : Unit) {
     };
 }
 
-function updateTempEffects(unit : Unit, endOfRound : boolean) {
-    const effects = endOfRound ? unit.endOfRound : unit.endOfTurn;
-    if (effects.meleeAttack !== 0) {
-        unit.meleeAttack -= effects.meleeAttack;
-    }
-    effects.meleeAttack = 0;
-    effects.damageShield = 0;
+function updateRoundTempEffects(unit : Unit) {
+    unit.endOfRound.forEach(tempEffect => {
+        tempEffect.duration--;
+        if (tempEffect.duration <= 0) {
+            applyTempEffects(tempEffect.effects, unit, true);
+        }        
+    });
+    unit.endOfRound = unit.endOfRound.filter(t => t.duration > 0);
+}
+
+function updateTurnTempEffects(unit : Unit) {
+    applyTempEffects(unit.endOfTurn.effects, unit, true);
+    unit.endOfTurn.effects = {};
 }
 
 export function checkandSetCurrentUnit(gs : GameState, unit : Unit) : boolean {

@@ -5,7 +5,8 @@ import { makeUnit } from "./unit";
 export function initBattleState() : BattleState {
     const playerRoster = [];
     playerRoster.push(makeUnit("coeurebene", 0, { x: 8, y: 13 }));
-    playerRoster.push(makeUnit("bears", 0, { x: 5, y: 6 }));
+    playerRoster.push(makeUnit("capucine", 0, { x: 16, y: 6 }));
+    playerRoster.push(makeUnit("bears", 0, { x: 15, y: 6 }));
     // playerRoster.push(makeUnit("bears", 0, { x: 6, y: 7 }));
     // playerRoster.push(makeUnit("bears", 0, { x: 6, y: 6 }));
     playerRoster.push(makeUnit("caravan", 0, { x: 7, y: 17 }));

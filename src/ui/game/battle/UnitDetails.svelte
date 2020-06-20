@@ -236,7 +236,7 @@
             <div class="ability-text">{ ability.text }</div>
         </div>
     {/each}    
-    {#if unit.owner === 0}
+    {#if unit.owner === 0 && (!$State.game.battle.currentUnit || $State.game.battle.currentUnit === unit.id)}
     <div class="pass-button">
         <button on:click={onClickPass}>PASS</button>
     </div>

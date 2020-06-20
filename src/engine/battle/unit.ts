@@ -18,23 +18,14 @@ export function makeUnit(template : string, faction : number, pos : Pos) : Unit 
     unit.attacksCount = 0;
     unit.armor = unit.armor || 0;
     unit.abilities = UNITS[template].abilities.map(a => newAbility(a));
-    unit.endOfRound = defaultTempEffects();
-    unit.endOfTurn = defaultTempEffects();
+    unit.endOfRound = [];
+    unit.endOfTurn = { duration: null, effects: {}};
     unit.cc = defaultCrowdControl();
     if (unit.energyMax) {
         unit.energy = unit.energyMax;
     }    
     return unit;
 }
-
-export const defaultTempEffects = () => {
-    return {
-        meleeAttack: 0,
-        damageShield: 0,
-        dot: 0,
-        hot: 0,        
-    };    
-};
 
 export const defaultCrowdControl = () => {
     return {

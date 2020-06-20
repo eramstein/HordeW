@@ -22,7 +22,7 @@ export const TERRAIN_SPECS : { [key in TerrainType] : TerrainSpecs } = {
         altitude: 0,
     },
     [TerrainType.Hills]: {
-        movementCost: 1,
+        movementCost: 2,
         altitude: 1,
     },
     [TerrainType.Mountain]: {

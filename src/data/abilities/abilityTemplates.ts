@@ -1,5 +1,5 @@
 import { Ability, TerrainType } from "../../engine/battle/model";
-import { ACT, ENEMIES, BEFORE_I_MOVE, MYSELF, UNITS, TILES } from "./shortcuts";
+import { ACT, ENEMIES, BEFORE_I_MOVE, MYSELF, UNITS, TILES, END_OF_ROUND } from "./shortcuts";
 import { EffectTemplates as ET, mergeEffects } from "../../engine/battle/ability/effects";
 
 export const DataAbilityTemplates : { [key:string]:(AbilityParams, ...any) => Ability } = {
@@ -23,6 +23,26 @@ export const DataAbilityTemplates : { [key:string]:(AbilityParams, ...any) => Ab
             ...p,
         };
     },
+    heal: (p, { value = 1, count = 1, range = 1 }) => {
+        return {
+            text: "HEAL " + value,
+            visualEffect: "Pchhhh",
+            trigger: ACT,
+            target: UNITS({ count, range }),
+            effect: ET.heal(value),
+            ...p,
+        };
+    },
+    regeneration: (p, { value = 1 }) => {
+        return {
+            text: "Regeneration " + value,
+            visualEffect: "Pchhhh",
+            trigger: END_OF_ROUND,
+            target: MYSELF,
+            effect: ET.heal(value),
+            ...p,
+        };
+    },
     mezz: (p, { value, count, range }) => {
         return {
             text: "Mezz " + value,
@@ -30,6 +50,16 @@ export const DataAbilityTemplates : { [key:string]:(AbilityParams, ...any) => Ab
             trigger: ACT,
             target: ENEMIES({ count, range }),
             effect: ET.mezz(value),
+            ...p,
+        };
+    },
+    mezzZone: (p, { value, radius, range }) => {
+        return {
+            text: "Mezz Zone " + value,
+            visualEffect: "Spell",
+            trigger: ACT,
+            target: ENEMIES({ count: 1, range }),
+            effect: ET.mezzZone(value, radius),
             ...p,
         };
     },
@@ -72,12 +102,12 @@ export const DataAbilityTemplates : { [key:string]:(AbilityParams, ...any) => Ab
             ...p,
         };
     },
-    tempEffect: (p, { count, range, effect, endOfTurn }) => {
+    tempEffect: (p, { count = 1, duration = 1, range, effect, endOfTurn = false, radius }) => {
         return {
             text: JSON.stringify(effect),
             trigger: ACT,
             target: UNITS({ count, range }),
-            effect: ET.temporaryEffect(effect, endOfTurn),
+            effect: ET.temporaryEffect({ effects: effect, duration }, endOfTurn, radius),
             ...p,
         };
     },

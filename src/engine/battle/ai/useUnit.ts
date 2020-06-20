@@ -1,11 +1,11 @@
 import { GameState } from "../../game";
-import { Unit, Pos } from "../model";
+import { Unit, Pos, Tile } from "../model";
 import { passUnitTurn, getReachablePositions, canUnitAttack, getVisibleEnemiesInRange, canUnitOpportunityAttack, canUnitMove } from "../unit";
 import { moveUnit } from "../movement";
 import { pickFrom } from "../../../utils/random";
 import { attack } from "../combat";
 import { preProcessTiles } from "./preProcessTiles";
-import { getDistance } from "../board";
+import { getDistance, TERRAIN_SPECS } from "../board";
 import { AiTileValue } from "./model";
 import { getNextStepTowards, MAX_UNIT_VAL, getAttackValue } from "./utils";
 import { UNIT_PREFS } from "./config";
@@ -72,8 +72,8 @@ export function useUnitGeneral(gs : GameState, unit : Unit) {
 }
 
 // bounty - totalThreat * MAX_UNIT_VAL * perso.survival
-function getTileValue(gs : GameState, unit : Unit, tile : AiTileValue) : number {
-    return tile.bounty - tile.threatTotal * MAX_UNIT_VAL * UNIT_PREFS[unit.ai.perso].survival;
+function getTileValue(gs : GameState, unit : Unit, tileAiValue : AiTileValue) : number {    
+    return tileAiValue.bounty - tileAiValue.threatTotal * MAX_UNIT_VAL * UNIT_PREFS[unit.ai.perso].survival;
 }
 
 function moveTo(gs : GameState, unit : Unit, destination : Pos) {
@@ -108,16 +108,23 @@ function doMove(gs : GameState, unit : Unit) : boolean {
         agg[pos.x + "." + pos.y] = true;
         return agg;
     }, {});
+    const occupied = gs.battle.units.reduce((acc, unit) => {
+        acc[unit.position.x + "." + unit.position.y] = true;
+        return acc;
+    }, {});
     for (let x = 0; x < tileValues.length; x++) {
         for (let y = 0; y < tileValues[x].length; y++) {
-            const value = getTileValue(gs, unit, tileValues[x][y]);
-            if (value > bestOverallTileValue) {
-                bestOverallTileValue = value;
-                bestOverallTile = { x, y };
-            }
-            if (reachableTilesMap[x + "." + y] && value > bestReachableTileValue) {
-                bestReachableTileValue = value;
-                bestReachableTile = { x, y };
+            const tile = gs.battle.tiles[x][y];
+            if (!TERRAIN_SPECS[tile.terrain].blocksMovement && !occupied[x + "." + y]) {            
+                const value = getTileValue(gs, unit, tileValues[x][y]);
+                if (value > bestOverallTileValue) {
+                    bestOverallTileValue = value;
+                    bestOverallTile = { x, y };
+                }
+                if (reachableTilesMap[x + "." + y] && value > bestReachableTileValue) {
+                    bestReachableTileValue = value;
+                    bestReachableTile = { x, y };
+                }
             }
         }
     }
@@ -129,8 +136,9 @@ function doMove(gs : GameState, unit : Unit) : boolean {
     }
 
     if (!didMove && bestOverallTileValue > currentTileValue) {
+        console.log('MOVE TO BEST OVERALL: ', bestOverallTile, unit);
         const target = getNextStepTowards(gs, unit, reachableTilesMap, bestOverallTile);
-        console.log('MOVE TO BEST OVERALL: ', bestOverallTile, target, unit);
+        console.log('    TARGET: ', target);        
         moveTo(gs, unit, target);
         didMove = true;
     }

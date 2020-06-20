@@ -53,6 +53,7 @@ export enum UnitCategory {
     Human = "HUMAN",
     Beast = "BEAST",
     Humanoid = "HUMANOID",
+    Vegetal = "VEGETAL",
 }
 
 export enum UnitType {
@@ -79,7 +80,7 @@ export interface Unit {
     used?: boolean,
     movesCount?: number,
     attacksCount?: number,
-    endOfRound?: TemporaryEffects,
+    endOfRound?: TemporaryEffects[],
     endOfTurn?: TemporaryEffects,
     cc?: CrowdControl,
     // template
@@ -91,7 +92,7 @@ export interface Unit {
     armor?: number,    
     abilities: Ability[],
     movement: number,
-    meleeDefense: number,    
+    meleeDefense: number,
     rangeDefense: number,
     meleeAttack: number,
     meleeDamage: Damage,
@@ -124,10 +125,20 @@ export enum UnitAiPerso {
 }
 
 export interface TemporaryEffects {
-    meleeAttack: number,
-    damageShield: number,
-    dot: number,
-    hot: number,
+    duration: number,
+    effects: TemporaryAttributes,    
+}
+
+export interface TemporaryAttributes {
+    range?: number,
+    rangeAttack?: number,
+    rangeDefense?: number,
+    meleeAttack?: number,
+    meleeDefense?: number,
+    movement?: number,
+    meleeDamage?: number,
+    rangeDamage?: number,
+    armor?: number,
 }
 
 export interface CrowdControl {
@@ -210,6 +221,7 @@ export enum TriggerType {
     BeforeMove = "BEFORE_MOVE",
     AfterDeath = "AFTER_DEATH",
     OnSummon = "ON_SUMMON",
+    EndOfRound = "END_OF_ROUND",
 }
 
 export enum TargetType {
