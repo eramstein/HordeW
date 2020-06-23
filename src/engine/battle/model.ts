@@ -12,11 +12,16 @@ export interface BattleState {
     round: number,
     log: Log[];
     tempLog: Log[];
+    combatModifiers: CombatModifiers;
 }
 
 export enum BattleStage {
     Deployment = "DEPLOYMENT",
     Battle = "BATTLE",
+}
+
+export interface CombatModifiers {
+    defender? : Unit;
 }
 
 export enum BattleOutcome {
@@ -215,8 +220,9 @@ export interface Target {
 }
 
 export enum TriggerType {
-    Activated = "ACTIVATED",
+    Activated = "ACTIVATED",    
     BeforeDamage = "BEFORE_DAMAGE",
+    BeforeCombat = "BEFORE_COMBAT",
     AfterCombat = "AFTER_COMBAT",
     BeforeMove = "BEFORE_MOVE",
     AfterDeath = "AFTER_DEATH",

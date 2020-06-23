@@ -122,6 +122,11 @@ export const EffectTemplates : { [key:string]: (...any) => EffectFunction } = {
             });
         };
     },
+    guard: () => {
+        return (gs : GameState, unit : Unit, targets : Unit[], targetPositions : Pos[]) => {
+            gs.battle.combatModifiers.defender = unit;
+        };
+    },
     temporaryEffect: (effect : TemporaryEffects, endOfTurn : boolean, radius : number) => {
         function mergeEffects(current : TemporaryEffects, added : TemporaryEffects) {
             Object.entries(added.effects).forEach(effect => {

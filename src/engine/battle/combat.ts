@@ -33,12 +33,13 @@ Range
 */
 
 import { GameState } from "../game";
-import { Unit, LogType, LogResult, Pos } from "./model";
+import { Unit, LogType, LogResult, Pos, TriggerType } from "./model";
 import { canUnitAttack, damageUnit, checkIfUnitExhausted, getAttackableUnits } from "./unit";
 import { getDistance } from "./board";
 import { getRandomInt } from "../../utils/random";
 import { nextTurn, checkandSetCurrentUnit } from "./turn";
 import { addLog } from "./log";
+import { triggerAbilities } from "./ability/listeners";
 
 export function isValidAttackTarget(gs : GameState, attacker : Unit, target : Unit) : boolean {
 
@@ -70,19 +71,28 @@ export function attack(gs : GameState, attacker : Unit, defender : Unit, free : 
         return 0;
     }
 
+    gs.battle.combatModifiers = {};
+
+    triggerAbilities(gs, TriggerType.BeforeCombat, { attacker, defender });
+    
+    let actualDefender = defender;
+    if (gs.battle.combatModifiers.defender) {
+        actualDefender = gs.battle.combatModifiers.defender;
+    }    
+
     addLog(gs, {
         type: LogType.Attack,
         entity: { ...attacker },
-        target: { ...defender },
-        text: `${attacker.name} attacks ${defender.name}`,
+        target: { ...actualDefender },
+        text: `${attacker.name} attacks ${actualDefender.name}`,
     });
     
     const isRange = !!(getDistance(attacker.position, defender.position) > 1);
     
     if (isRange) {
-        rangeAttack(gs, attacker, defender);
+        rangeAttack(gs, attacker, actualDefender);
     } else {
-        meleeAttack(gs, attacker, defender);
+        meleeAttack(gs, attacker, actualDefender);
     }
 
     if (!free) {

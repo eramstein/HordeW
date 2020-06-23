@@ -1,6 +1,7 @@
-import { Ability, TerrainType } from "../../engine/battle/model";
+import { Ability, TerrainType, TriggerType } from "../../engine/battle/model";
 import { ACT, ENEMIES, BEFORE_I_MOVE, MYSELF, UNITS, TILES, END_OF_ROUND } from "./shortcuts";
 import { EffectTemplates as ET, mergeEffects } from "../../engine/battle/ability/effects";
+import { ConditionTemplates } from "../../engine/battle/ability/conditions";
 
 export const DataAbilityTemplates : { [key:string]:(AbilityParams, ...any) => Ability } = {
     directDamage: (p, { damage = 1, count = 1, range = 1 }) => {
@@ -126,6 +127,29 @@ export const DataAbilityTemplates : { [key:string]:(AbilityParams, ...any) => Ab
             trigger: ACT,
             target: TILES({ count, range, terrainType }),
             effect: mergeEffects([ET.summon(template), ET.updateTerrain(TerrainType.Plains)]) ,
+            ...p,
+        };
+    },
+    tempEffectOnAttackByTerrain: (p, { effect, terrainType }) => {
+        return {
+            text: JSON.stringify(effect) + " on " + JSON.stringify(terrainType),
+            trigger: {
+                type: TriggerType.BeforeCombat,
+                condition: ConditionTemplates.isOnTerrainType('defender', terrainType),
+            },
+            target: MYSELF,
+            effect: ET.temporaryEffect({ effects: effect }, true, null),
+            ...p,
+        };
+    },
+    guard: (p,  {}) => {
+        return {
+            text: "GUARD",
+            trigger: {
+                type: TriggerType.BeforeCombat,
+                condition: ConditionTemplates.isAdjacentAlly('defender'),
+            },
+            effect: ET.guard(),
             ...p,
         };
     },

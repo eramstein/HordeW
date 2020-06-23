@@ -6,19 +6,19 @@ export function initBattleState() : BattleState {
     const playerRoster = [];
     playerRoster.push(makeUnit("coeurebene", 0, { x: 8, y: 13 }));
     playerRoster.push(makeUnit("capucine", 0, { x: 16, y: 6 }));
-    playerRoster.push(makeUnit("bears", 0, { x: 15, y: 6 }));
-    // playerRoster.push(makeUnit("bears", 0, { x: 6, y: 7 }));
+    playerRoster.push(makeUnit("dryad", 0, { x: 3, y: 3 }));
+    playerRoster.push(makeUnit("bears", 0, { x: 4, y: 4 }));
     // playerRoster.push(makeUnit("bears", 0, { x: 6, y: 6 }));
     playerRoster.push(makeUnit("caravan", 0, { x: 7, y: 17 }));
     playerRoster.push(makeUnit("caravan", 0, { x: 17, y: 17 }));
 
     const aiRoster = [];
-    // aiRoster.push(makeUnit("spearman", 1, { x: 5, y: 4 }));
+    aiRoster.push(makeUnit("spearman", 1, { x: 3, y: 2 }));
     // aiRoster.push(makeUnit("spearman", 1, { x: 6, y: 4 }));
     // aiRoster.push(makeUnit("spearman", 1, { x: 7, y: 4 }));
     // aiRoster.push(makeUnit("spearman", 1, { x: 15, y: 5 }));
     // aiRoster.push(makeUnit("swordman", 1, { x: 15, y: 4 }));
-    aiRoster.push(makeUnit("swordman", 1, { x: 16, y: 4 }));
+    // aiRoster.push(makeUnit("swordman", 1, { x: 16, y: 4 }));
     // aiRoster.push(makeUnit("swordman", 1, { x: 17, y: 5 }));
     // aiRoster.push(makeUnit("swordman", 1, { x: 18, y: 5 }));
     // aiRoster.push(makeUnit("archer", 1, { x: 5, y: 3 }));
@@ -42,5 +42,6 @@ export function initBattleState() : BattleState {
         log: [],
         tempLog: [],
         currentUnit: null,
+        combatModifiers: {},
     };
 }
